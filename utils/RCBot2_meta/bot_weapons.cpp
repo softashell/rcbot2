@@ -104,6 +104,32 @@ const char* g_szSYNWeapons[] =
 	"weapon_bugbait"
 };
 
+const char* g_szDYSWeapons[] =
+{
+	"weapon_cyber",
+	"weapon_crowbar",
+	"weapon_empgrenade",
+	"weapon_machpistol",
+	"weapon_shotgun",
+	"weapon_laserrifle",
+	"weapon_boltgun",
+	"weapon_smartlocks",
+	"weapon_katana",
+	"weapon_grenade",
+	"weapon_assault",
+	"weapon_grenlauncher",
+	"weapon_mk808",
+	"weapon_tesla",
+	"weapon_fist",
+	"weapon_heavymachpistol",
+	"weapon_spidergrenade",
+	"weapon_rocketlauncher",
+	"weapon_minigun",
+	"weapon_ion",
+	"weapon_basilisk",
+	"weapon_lightning"
+};
+
 const char* g_szCSWeapons[] =
 {
 	"weapon_knife", // 0
@@ -282,6 +308,37 @@ WeaponsData_t SYNERGYWeaps[] =
 		{6,SYN_WEAPON_PHYSCANNON,		g_szSYNWeapons[14],	WEAP_FL_GRAVGUN | WEAP_FL_PRIM_ATTACK,0,768,-1,4,0},
 		{4,SYN_WEAPON_MG1,				g_szSYNWeapons[15],	WEAP_FL_PRIM_ATTACK,0,1000,-1,3,0},
 		{6,SYN_WEAPON_BUGBAIT,			g_szSYNWeapons[16],	WEAP_FL_PRIM_ATTACK | WEAP_FL_PROJECTILE,0,300,-1,3,1000.0f},
+		{ 0, 0, "\0", 0, 0, 0, 0, 0, 0 }//signal last weapon
+};
+
+
+WeaponsData_t DYSTOPIAWeaps[] =
+{
+	/*
+		slot, id , weapon name, flags, min dist, max dist, ammo index, preference
+	*/
+		{1,DYS_WEAPON_CYBER,			g_szDYSWeapons[0],	WEAP_FL_PRIM_ATTACK,0,1000,-1,1,1000.0f},
+		{1,DYS_WEAPON_CROWBAR,			g_szDYSWeapons[1],	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE,0,128,-1,1,0},
+		{4,DYS_WEAPON_EMPGRENADE,		g_szDYSWeapons[2],	WEAP_FL_GRENADE | WEAP_FL_EXPLOSIVE,0,180,-1,1,0},
+		{2,DYS_WEAPON_MACHPISTOL,		g_szDYSWeapons[3],	WEAP_FL_PRIM_ATTACK,0,768,-1,2,500.0f},
+		{3,DYS_WEAPON_SHOTGUN,			g_szDYSWeapons[4],	WEAP_FL_PRIM_ATTACK,0,768,-1,2,1000.0f},
+		{3,DYS_WEAPON_LASERRIFLE,		g_szDYSWeapons[5],	WEAP_FL_PRIM_ATTACK,0,1400,-1,2,0},
+		{3,DYS_WEAPON_BOLTGUN,			g_szDYSWeapons[6],	WEAP_FL_PRIM_ATTACK,0,1400,-1,2,0},
+		{3,DYS_WEAPON_SMARTLOCKS,		g_szDYSWeapons[7],	WEAP_FL_PRIM_ATTACK ,0,1400,-1,3,0},
+		{1,DYS_WEAPON_KATANA,			g_szDYSWeapons[8],	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE,0,180,-1,1,0},
+		{4,DYS_WEAPON_GRENADE,			g_szDYSWeapons[9],	WEAP_FL_GRENADE | WEAP_FL_EXPLOSIVE,0,180,-1,1,0},
+		{3,DYS_WEAPON_ASSAULT,			g_szDYSWeapons[10],	WEAP_FL_PRIM_ATTACK,0,2000,-1,2,0},
+		{3,DYS_WEAPON_GRENLAUNCHER,		g_szDYSWeapons[11],	WEAP_FL_PROJECTILE | WEAP_FL_EXPLOSIVE | WEAP_FL_PRIM_ATTACK,100,2000,-1,3,1000.0f},
+		{3,DYS_WEAPON_MK808,			g_szDYSWeapons[12],	WEAP_FL_PRIM_ATTACK,0,180,-1,1,0},
+		{3,DYS_WEAPON_TESLA,			g_szDYSWeapons[13],	WEAP_FL_PRIM_ATTACK,0,768,-1,2,0},
+		{1,DYS_WEAPON_FIST,				g_szDYSWeapons[14],	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE,0,128,-1,4,0},
+		{2,DYS_WEAPON_HEAVYMACHPISTOL,	g_szDYSWeapons[15],	WEAP_FL_PRIM_ATTACK,0,1000,-1,3,0},
+		{4,DYS_WEAPON_SPIDERGRENADE,	g_szDYSWeapons[16],	WEAP_FL_GRENADE | WEAP_FL_EXPLOSIVE,0,300,-1,3,0.0f},
+		{3,DYS_WEAPON_ROCKETLAUNCHER,	g_szDYSWeapons[17],	WEAP_FL_PRIM_ATTACK,0,1000,-1,3,1000.0f},
+		{3,DYS_WEAPON_MINIGUN,			g_szDYSWeapons[18],	WEAP_FL_PRIM_ATTACK,0,1000,-1,3,1000.0f},
+		{3,DYS_WEAPON_ION,				g_szDYSWeapons[19],	WEAP_FL_PRIM_ATTACK,0,1000,-1,3,1000.0f},
+		{3,DYS_WEAPON_BASILISK,			g_szDYSWeapons[20],	WEAP_FL_PRIM_ATTACK,0,1000,-1,3,1000.0f},
+		{3,DYS_WEAPON_LIGHTNING,		g_szDYSWeapons[21],	WEAP_FL_PRIM_ATTACK,0,1000,-1,3,1000.0f},
 		{ 0, 0, "\0", 0, 0, 0, 0, 0, 0 }//signal last weapon
 };
 

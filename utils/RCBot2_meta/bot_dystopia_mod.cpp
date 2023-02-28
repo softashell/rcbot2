@@ -50,7 +50,7 @@
 void CDystopiaMod::initMod()
 {
     //Load weapons
-    CWeapons::loadWeapons(m_szWeaponListName == nullptr ? "DYSTOPIA" : m_szWeaponListName, SYNERGYWeaps);
+    CWeapons::loadWeapons(m_szWeaponListName == nullptr ? "DYSTOPIA" : m_szWeaponListName, DYSTOPIAWeaps);
 }
 
 void CDystopiaMod::mapInit()
