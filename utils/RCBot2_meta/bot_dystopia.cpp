@@ -208,7 +208,7 @@ bool CBotDystopia::needAmmo()
 
 void CBotDystopia::modThink()
 {
-	if(needHealth())
+	if (needHealth())
 		updateCondition(CONDITION_NEED_HEALTH);
 	else
 		removeCondition(CONDITION_NEED_HEALTH);
@@ -217,7 +217,7 @@ void CBotDystopia::modThink()
 		updateCondition(CONDITION_NEED_AMMO);
 	else
 		removeCondition(CONDITION_NEED_AMMO);
-
+		
 	if(onLadder())
 	{
 		setMoveLookPriority(MOVELOOK_OVERRIDE);
@@ -230,24 +230,13 @@ void CBotDystopia::modThink()
 void CBotDystopia::updateConditions()
 {
 	CBot::updateConditions();
-
-	if (m_pEnemy.get() != nullptr)
-	{
-		if(CDataInterface::GetEntityHealth(m_pEnemy.get()->GetNetworkable()->GetBaseEntity()) <= 0)
-		{
-			updateCondition(CONDITION_ENEMY_DEAD);
-			m_pNavigator->belief(getOrigin(), CBotGlobals::entityOrigin(m_pEnemy), bot_belief_fade.GetFloat(), distanceFrom(m_pEnemy), BELIEF_SAFETY);
-			enemyDown(m_pEnemy);
-			m_pEnemy = nullptr;
-		}
-	}
 }
 
 bool CBotDystopia::isEnemy(edict_t *pEdict, bool bCheckWeapons)
 {
 	// TODO: Probably needs fixing in firing methods
 
-	/*const int entity_index = ENTINDEX(pEdict);
+	const int entity_index = ENTINDEX(pEdict);
 	if (entity_index == 0)
 		return false; // worldspawn
 
@@ -257,36 +246,21 @@ bool CBotDystopia::isEnemy(edict_t *pEdict, bool bCheckWeapons)
 	if (m_pEdict == pEdict) // self
 		return false;
 
-	if (!CBotGlobals::isNetworkable(pEdict))
+	if (!CBotGlobals::isAlivePlayer(pEdict))
 		return false;
 
-	IPlayerInfo* p = playerinfomanager->GetPlayerInfo(pEdict);
-
-	if (p == nullptr)
-		return false;
-
-	if (!pEdict->GetUnknown())
-		return false; // left the server
-
-	if (CClassInterface::getPlayerLifeState(pEdict) == LIFE_DEAD || CClassInterface::getPlayerLifeState(pEdict) == LIFE_DYING)
-		return false;
-
-	if (p->GetTeamIndex() >= DYS_TEAM_PUNKS)
+	if (CBotGlobals::getTeam(pEdict) >= DYS_TEAM_PUNKS && getTeam() >= DYS_TEAM_PUNKS)
 	{
-		if (!CBotGlobals::entityIsAlive(pEdict))
-			return false;
-
-		if (p->GetTeamIndex() != getTeam())
+		if (CBotGlobals::getTeam(pEdict) != getTeam())
 		{
 			return true;
 		}
-		else if (rcbot_ffa.GetBool() == true)
+		else if (rcbot_ffa.GetBool())
 		{
 			return true;
 		}
 	}
-	*/
-
+	
     return false;
 }
 
@@ -503,9 +477,7 @@ void CBotDystopia::handleWeapons()
 
 bool CBotDystopia::handleAttack(CBotWeapon *pWeapon, edict_t *pEnemy)
 {
-	const char *szclassname = pEnemy->GetClassName();
-
-	if(pWeapon)
+	if (pWeapon)
 	{
 		clearFailedWeaponSelect();
 
@@ -518,9 +490,7 @@ bool CBotDystopia::handleAttack(CBotWeapon *pWeapon, edict_t *pEnemy)
 			primaryAttack();
 	}
 	else
-	{
 		primaryAttack();
-	}
 
 	return true;
 }
