@@ -231,6 +231,8 @@
     <ClCompile Include="bot_css_mod.cpp" />
     <ClCompile Include="bot_dod_bot.cpp" />
     <ClCompile Include="bot_dod_mod.cpp" />
+    <ClCompile Include="bot_dystopia.cpp" />
+    <ClCompile Include="bot_dystopia_mod.cpp" />
     <ClCompile Include="bot_events.cpp" />
     <ClCompile Include="bot_fortress.cpp" />
     <ClCompile Include="bot_ga.cpp" />
@@ -287,6 +289,7 @@
     <ClInclude Include="bot_css_bot.h" />
     <ClInclude Include="bot_cvars.h" />
     <ClInclude Include="bot_dod_bot.h" />
+    <ClInclude Include="bot_dystopia.h" />
     <ClInclude Include="bot_ehandle.h" />
     <ClInclude Include="bot_event.h" />
     <ClInclude Include="bot_fortress.h" />

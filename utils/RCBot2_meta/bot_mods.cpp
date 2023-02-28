@@ -182,6 +182,11 @@ void CBotMods::parseFile()
 				modtype = MOD_DOD;
 				curmod = new CDODMod();
 			}
+			else if (!strcmpi("DYS", val))
+			{
+				modtype = MOD_DYS;
+				curmod = new CDystopiaMod();
+			}
 			else
 				curmod = new CBotMod();
 		}
@@ -207,6 +212,8 @@ void CBotMods::parseFile()
 				bottype = BOTTYPE_DOD;
 			else if (!strcmpi("SYNERGY", val))
 				bottype = BOTTYPE_SYN;
+			else if (!strcmpi("DYSTOPIA", val))
+				bottype = BOTTYPE_DYS;
 		}
 		else if (curmod && !strcmpi(key, "gamedir"))
 		{
@@ -239,6 +246,7 @@ void CBotMods::readMods()
 		m_Mods.emplace_back(new CHalfLifeDeathmatchMod());
 	#elif SOURCE_ENGINE == SE_SDK2013
 		m_Mods.emplace_back(new CSynergyMod());
+		m_Mods.emplace_back(new CDystopiaMod());
 	#else
 		m_Mods.emplace_back(new CFortressForeverMod());
 

@@ -172,6 +172,7 @@ typedef enum
 	MOD_SYNERGY,
 	MOD_DOD,
 	MOD_CUSTOM,
+	MOD_DYS,
 	MOD_ANY,
 	MOD_MAX
 }eModId;

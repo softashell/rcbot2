@@ -191,6 +191,12 @@
     <ClCompile Include="math_fix.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="bot_dystopia.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bot_dystopia_mod.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bot.h">
@@ -363,6 +369,9 @@
     </ClInclude>
     <ClInclude Include="..\..\sm_ext\smsdk_config.h">
       <Filter>Source Files\sm_ext</Filter>
+    </ClInclude>
+    <ClInclude Include="bot_dystopia.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

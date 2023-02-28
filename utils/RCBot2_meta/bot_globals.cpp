@@ -1113,7 +1113,24 @@ void CBotGlobals :: buildFileName ( char *szOutput, const char *szFile, const ch
 		strcat(szOutput, BOT_FOLDER);
 	}
 	else
-		strcpy(szOutput, m_szRCBotFolder);
+	{
+		// Need to do this workaround since the exe directory is nested
+		CBotMod* mod = CBotGlobals::getCurrentMod();
+		if (mod != nullptr && mod->getModId() == eModId::MOD_DYS)
+		{
+			szOutput[0] = '\0';
+			strcat(szOutput, "..");
+			addDirectoryDelimiter(szOutput);
+			strcat(szOutput, "..");
+			addDirectoryDelimiter(szOutput);
+
+			strcat(szOutput, m_szRCBotFolder);
+		}
+		else
+		{
+			strcpy(szOutput, m_szRCBotFolder);
+		}
+	}
 
 	if ( szOutput[strlen(szOutput)-1] != '\\' && szOutput[strlen(szOutput)-1] != '/' )
 		addDirectoryDelimiter(szOutput);
