@@ -58,6 +58,8 @@ extern IServerGameEnts *servergameents; // for accessing the server game entitie
 void CBotDystopia::init(bool bVarInit)
 {
 	CBot::init(bVarInit); // call base first
+
+	m_fFov = 90.0f;
 }
 
 void CBotDystopia::spawnInit()
@@ -95,14 +97,15 @@ bool CBotDystopia::startGame()
 		kill();
 
 		if (CBotGlobals::numPlayersOnTeam(DYS_TEAM_PUNKS, false) <= CBotGlobals::numPlayersOnTeam(DYS_TEAM_CORPS, false))
-			m_pPlayerInfo->ChangeTeam(DYS_TEAM_PUNKS);
+			selectTeam(DYS_TEAM_PUNKS);
 		else
-			m_pPlayerInfo->ChangeTeam(DYS_TEAM_CORPS);
+			selectTeam(DYS_TEAM_CORPS);
 
-		if (CClassInterface::getDysPlayerClass(m_pEdict) != DYS_CLASS_LIGHT)
+		int iSelectedClass = CDystopiaMod::preferredClassOnTeam(getTeam());
+		if (CClassInterface::getDysPlayerClass(m_pEdict) != iSelectedClass)
 		{
-			CClassInterface::setDysPlayerClass(m_pEdict, DYS_CLASS_LIGHT);
-			selectClass();
+			CClassInterface::setDysPlayerClass(m_pEdict, iSelectedClass);
+			selectClass(iSelectedClass);
 		}
 		
 	}
@@ -110,9 +113,28 @@ bool CBotDystopia::startGame()
 	return true;
 }
 
-void CBotDystopia::selectClass() const
+void CBotDystopia::selectTeam(int iTeam) const
 {
-	const char* cmd = "setclass 1";
+	char cmd[32];
+
+	sprintf(cmd, "jointeam %d\n", iTeam);
+
+	helpers->ClientCommand(m_pEdict, cmd);
+
+	m_pPlayerInfo->ChangeTeam(iTeam);
+}
+
+void CBotDystopia::selectClass(int iClass) const
+{
+	char cmd[32];
+
+	sprintf(cmd, "setclass %d\n", iClass);
+
+	helpers->ClientCommand(m_pEdict, cmd);
+
+	int iSelectedWpn = rand() % 4 + 1;
+	sprintf(cmd, "setweapon %d\n", iSelectedWpn);
+
 	helpers->ClientCommand(m_pEdict, cmd);
 }
 
@@ -319,8 +341,8 @@ void CBotDystopia::getTasks (unsigned int iIgnore)
 	// Utilities
 	/*ADD_UTILITY(BOT_UTIL_GETHEALTHKIT, m_pNearbyHealthKit.get() != NULL, 1.0f - getHealthPercent()); // Pick up health kits
 	ADD_UTILITY(BOT_UTIL_FIND_NEAREST_HEALTH, hasSomeConditions(CONDITION_NEED_HEALTH), 1.0f - getHealthPercent()); // Search for health kits
-	ADD_UTILITY(BOT_UTIL_FIND_NEAREST_AMMO, hasSomeConditions(CONDITION_NEED_AMMO), 0.15f); // Search for ammo
-	ADD_UTILITY(BOT_UTIL_ATTACK_POINT, true, 0.01f); // Go to waypoints with 'goal' flag*/
+	ADD_UTILITY(BOT_UTIL_FIND_NEAREST_AMMO, hasSomeConditions(CONDITION_NEED_AMMO), 0.15f); // Search for ammo*/
+	ADD_UTILITY(BOT_UTIL_ATTACK_POINT, true, 0.01f); // Go to waypoints with 'goal' flag
 	ADD_UTILITY(BOT_UTIL_ROAM, true, 0.0001f); // Roam around
 
 	utils.execute();

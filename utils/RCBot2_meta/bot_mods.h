@@ -791,6 +791,9 @@ public:
 		return "CDYSPlayer";
 	}
 
+	static int	numClassOnTeam(int iTeam, int iClass);
+	static int	preferredClassOnTeam(int iTeam);
+
 	//void entitySpawn ( edict_t *pEntity );
 };
 

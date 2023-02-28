@@ -57,3 +57,42 @@ void CDystopiaMod::mapInit()
 {
     logger->Log(LogLevel::DEBUG, "[Dystopia Mod] map Init.");
 }
+
+int CDystopiaMod::numClassOnTeam(int iTeam, int iClass)
+{
+	int num = 0;
+
+	for (int i = 1; i <= CBotGlobals::numClients(); i++)
+	{
+		edict_t* pEdict = INDEXENT(i);
+
+		if (CBotGlobals::entityIsValid(pEdict))
+		{
+			if (CBotGlobals::getTeam(pEdict) == iTeam)
+			{
+				if (CClassInterface::getDysPlayerClass(pEdict) == iClass)
+					num++;
+			}
+		}
+	}
+
+	return num;
+}
+
+int CDystopiaMod::preferredClassOnTeam(int iTeam)
+{
+	int num = -1;
+	int classNum = 1;
+
+	for (int iClass = 1; iClass <= 3; iClass++)
+	{
+		int tempNum = CDystopiaMod::numClassOnTeam(iTeam, iClass);
+		if (tempNum < num || num == -1)
+		{
+			num = tempNum;
+			classNum = iClass;
+		}
+	}
+
+	return classNum;
+}
