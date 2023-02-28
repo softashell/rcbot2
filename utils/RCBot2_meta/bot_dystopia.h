@@ -41,6 +41,22 @@
 #define DYS_CLASS_MEDIUM 2
 #define DYS_CLASS_HEAVY 3
 
+#define DYS_AMMO_NONE -1
+#define DYS_AMMO_GRENADES 0
+#define DYS_AMMO_SHOTGUN 1
+#define DYS_AMMO_LASER 2
+#define DYS_AMMO_BOLTGUN 3	
+#define DYS_AMMO_DMACHP	4
+#define DYS_AMMO_ASSAULT 5	
+#define DYS_AMMO_GRENLAUNCHER 6
+#define DYS_AMMO_MK808 7
+#define DYS_AMMO_SPARKY 8
+#define DYS_AMMO_ROCKETS 9
+#define DYS_AMMO_MINIGUN 10
+#define DYS_AMMO_ION 11
+#define DYS_AMMO_BASILISK 12
+#define DYS_AMMO_MACHP 13
+
 class CBotDystopia : public CBot
 {
 public:
@@ -66,8 +82,8 @@ public:
     virtual bool wantsToChangeCourseOfAction();
     float getInterruptionTimer() const { return m_flInterruptTime; }
 
-    void selectTeam() const;
-    void selectClass() const;
+    void selectTeam(int iTeam) const;
+    void selectClass(int iClass) const;
     //void selectWeapon() const;
     //void selectImplants() const;
 protected:
