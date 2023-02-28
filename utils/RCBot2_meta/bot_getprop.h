@@ -168,6 +168,7 @@ typedef enum
 	GETPROP_CSS_HOSTAGE_HEALTH,
 	GETPROP_CSS_HOSTAGE_RESCUED,
 	GETPROP_CSS_HOSTAGE_LEADER,
+	GETPROP_DYS_PLAYERCLASS,
 	GET_PROPDATA_MAX
 }getpropdata_id;
 
@@ -524,6 +525,14 @@ public:
 		*m_bProne = g_GetProps[GETPROP_DOD_PRONE].getBool(player,false);
 		if ( m_flStamina )
 			*m_flStamina = g_GetProps[GETPROP_DOD_STAMINA].getFloat(player,0);
+	}
+
+	static int getDysPlayerClass(edict_t* edict) { return g_GetProps[GETPROP_DYS_PLAYERCLASS].getInt(edict, 0); }
+
+	static void setDysPlayerClass(edict_t* edict, int _class)
+	{
+		int* p = g_GetProps[GETPROP_DYS_PLAYERCLASS].getIntPointer(edict);
+		if (p != nullptr) *p = _class;
 	}
 
 	static float getAnimCycle ( edict_t *edict) 

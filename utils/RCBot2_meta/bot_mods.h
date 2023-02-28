@@ -79,6 +79,7 @@ typedef enum
 	BOTTYPE_NS2,
 	BOTTYPE_SYN,
 	BOTTYPE_BMS,
+	BOTTYPE_DYS,
 	BOTTYPE_MAX
 }eBotType;
 
@@ -774,6 +775,25 @@ public:
 	static bool IsCombineMineDisarmed(edict_t *pMine);
 	static bool IsCombineMineArmed(edict_t *pMine);
 	static bool IsCombineMineHeldByPhysgun(edict_t *pMine);
+};
+
+class CDystopiaMod : public CBotMod
+{
+public:
+	CDystopiaMod()
+	{
+		setup("dystopia", MOD_DYS, BOTTYPE_DYS, "DYSTOPIA");
+	}
+
+	void initMod() override;
+	void mapInit() override;
+
+	const char* getPlayerClass() override
+	{
+		return "CDYSPlayer";
+	}
+
+	//void entitySpawn ( edict_t *pEntity );
 };
 
 #define NEWENUM typedef enum {

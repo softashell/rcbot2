@@ -1723,6 +1723,8 @@ bool CWaypoints :: save ( bool bVisiblityMade, edict_t *pPlayer, const char *psz
 
 	if ( !bfp )
 	{
+		CBotGlobals::botMessage(NULL, 0, filename);
+		CBotGlobals::botMessage(NULL, 0, "error: could not open bfp for writing waypoint");
 		return false; // give up
 	}
 

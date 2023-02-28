@@ -206,6 +206,12 @@
     <ClCompile Include="..\..\rcbot\tf2\conditions.cpp">
       <Filter>Source Files\rcbot\tf2</Filter>
     </ClCompile>
+    <ClCompile Include="bot_dystopia.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bot_dystopia_mod.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bot.h">
@@ -387,6 +393,8 @@
     </ClInclude>
     <ClInclude Include="..\..\rcbot\tf2\conditions.h">
       <Filter>Source Files\rcbot\tf2</Filter>
+    <ClInclude Include="bot_dystopia.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -561,6 +561,9 @@ void CClassInterface:: init ()
 		DEFINE_GETPROP(GETPROP_SYN_VEHICLE_DRIVER, "CPropVehicleDriveable", "m_hPlayer", 0);
 		DEFINE_GETPROP(GETPROP_SYN_SUITPOWER, "CSynergyPlayer", "m_flSuitPower", 0);
 
+		// Dystopia
+		DEFINE_GETPROP(GETPROP_DYS_PLAYERCLASS, "CDysPlayer", "m_iClass", 0);
+
 		// Counter-Strike: Source
 		DEFINE_GETPROP(GETPROP_CSS_MONEY, "CCSPlayer", "m_iAccount", 0);
 		DEFINE_GETPROP(GETPROP_CSS_INBUYZONE, "CCSPlayer", "m_bInBuyZone", 0);

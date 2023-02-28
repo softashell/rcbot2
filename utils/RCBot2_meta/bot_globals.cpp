@@ -1104,7 +1104,24 @@ void CBotGlobals :: buildFileName ( char *szOutput, const char *szFile, const ch
 		std::strcat(szOutput, BOT_FOLDER);
 	}
 	else
-		std::strcpy(szOutput, m_szRCBotFolder);
+	{
+		// Need to do this workaround since the exe directory is nested
+		CBotMod* mod = CBotGlobals::getCurrentMod();
+		if (mod != nullptr && mod->getModId() == eModId::MOD_DYS)
+		{
+			szOutput[0] = '\0';
+			std::strcat(szOutput, "..");
+			addDirectoryDelimiter(szOutput);
+			std::strcat(szOutput, "..");
+			addDirectoryDelimiter(szOutput);
+
+			std::strcat(szOutput, m_szRCBotFolder);
+		}
+		else
+		{
+			std::strcpy(szOutput, m_szRCBotFolder);
+		}
+	}
 
 	if ( szOutput[std::strlen(szOutput)-1] != '\\' && szOutput[std::strlen(szOutput)-1] != '/' )
 		addDirectoryDelimiter(szOutput);

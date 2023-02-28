@@ -68,6 +68,7 @@
 #include "bot_hl1dmsrc_bot.h"
 #include "bot_fortress.h"
 #include "bot_synergy.h"
+#include "bot_dystopia.h"
 #include "bot_visibles.h"
 #include "bot_weapons.h"
 #include "bot_profile.h"
@@ -3195,6 +3196,9 @@ void CBots :: init ()
 			break;
 		case BOTTYPE_SYN:
 			m_Bots[i] = new CBotSynergy();
+			break;
+		case BOTTYPE_DYS:
+			m_Bots[i] = new CBotDystopia();
 			break;
 		//case BOTTYPE_BMS:
 		//	m_Bots[i] = new CBotBMS();

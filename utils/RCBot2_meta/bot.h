@@ -589,6 +589,7 @@ public:
 	virtual bool isHLDM () { return false; }
 	virtual bool isTF () { return false; }
 	virtual bool isSYN () { return false; }
+	virtual bool isDYS() { return false; }
 
 	virtual void spawnInit ();
 
