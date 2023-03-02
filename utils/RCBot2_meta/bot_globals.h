@@ -55,6 +55,7 @@ public:
 
 	static void init ();
 	static bool initModFolder ();
+	static bool initMod();
 
 	static bool gameStart ();	
 

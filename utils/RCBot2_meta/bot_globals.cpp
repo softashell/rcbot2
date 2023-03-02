@@ -482,23 +482,6 @@ bool CBotGlobals :: traceVisible (edict_t *pEnt)
 
 bool CBotGlobals::initModFolder() {
 	char szGameFolder[512];
-	engine->GetGameDir(szGameFolder, 512);
-
-	const int iLength = std::strlen(CStrings::getString(szGameFolder));
-	int pos = iLength - 1;
-
-	while (pos > 0 && szGameFolder[pos] != '\\' && szGameFolder[pos] != '/') {
-		pos--;
-	}
-	pos++;
-
-	m_szModFolder = CStrings::getString(&szGameFolder[pos]);
-	return true;
-}
-
-bool CBotGlobals :: gameStart ()
-{
-	char szGameFolder[512];
 	engine->GetGameDir(szGameFolder,512);
 	/*
 	CFileSystemPassThru a;
@@ -518,11 +501,23 @@ bool CBotGlobals :: gameStart ()
 	pos++;
 	
 	m_szModFolder = CStrings::getString(&szGameFolder[pos]);
+	return true;
+}
+
+bool CBotGlobals :: initMod ()
+{
+	if (!CBotGlobals::initModFolder())
+		return false;
 
 	CBotMods::readMods();
-	
+
 	m_pCurrentMod = CBotMods::getMod(m_szModFolder);
 
+	return true;
+}
+
+bool CBotGlobals :: gameStart ()
+{
 	if ( m_pCurrentMod != nullptr)
 	{
 		m_iCurrentMod = m_pCurrentMod->getModId();
