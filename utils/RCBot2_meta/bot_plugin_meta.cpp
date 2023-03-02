@@ -391,6 +391,10 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxle
 	CBotGlobals::readRCBotFolder();
 
 	char filename[512];
+
+	// Need current mod info earlier to get proper directory for Dystopia
+	CBotGlobals::initMod();
+
 	// Load RCBOT2 hook data
 	CBotGlobals::buildFileName(filename, "hookinfo", BOT_CONFIG_FOLDER, "ini");
 
