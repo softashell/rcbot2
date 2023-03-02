@@ -77,6 +77,9 @@ public:
     void updateConditions () override; // Overridden due to Synergy's quirks
     void handleWeapons() override;
     bool handleAttack(CBotWeapon *pWeapon, edict_t *pEnemy) override;
+    void modAim(edict_t* pEntity, Vector& v_origin, Vector* v_desired_offset, Vector& v_size, float fDist, float fDist2D) override;
+    void touchedWpt(CWaypoint* pWaypoint, int iNextWaypoint = -1, int iPrevWaypoint = -1) override;
+    bool canGotoWaypoint(Vector vPrevWaypoint, CWaypoint* pWaypoint, CWaypoint* pPrev = nullptr) override;
     virtual bool needHealth();
     virtual bool needAmmo();
     virtual bool wantsToChangeCourseOfAction();
@@ -87,7 +90,7 @@ public:
     //void selectWeapon() const;
     //void selectImplants() const;
 protected:
-    MyEHandle m_pNearbyWeapon; // weapons
+    MyEHandle m_pNearbyTrigger; // Triggers
     MyEHandle m_pNearbyHealthKit; // Healthkit
     MyEHandle m_pNearbyBattery; // Armor battery
     MyEHandle m_pNearbyAmmo; // ammo pickups

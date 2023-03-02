@@ -795,8 +795,8 @@ public:
 
 	static int	numClassOnTeam(int iTeam, int iClass);
 	static int	preferredClassOnTeam(int iTeam);
-
-	//void entitySpawn ( edict_t *pEntity );
+	static bool GetTriggerFilter(edict_t* pEntity);
+	static int  GetTriggerFilterHandle(edict_t* pEntity);
 };
 
 #define NEWENUM typedef enum {

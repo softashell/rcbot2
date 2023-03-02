@@ -96,3 +96,49 @@ int CDystopiaMod::preferredClassOnTeam(int iTeam)
 
 	return classNum;
 }
+
+/**
+ * Checks if the given entity is locked. (Door, buttons)
+ *
+ * @param pEntity   The entity to check
+ * @return          true if the entity is locked, false if unlocked or invalid
+ **/
+bool CDystopiaMod::GetTriggerFilter(edict_t* pEntity)
+{
+	CBaseEntity* pBaseEntity = pEntity->GetUnknown()->GetBaseEntity();
+	datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pBaseEntity);
+	const int offset = UTIL_FindInDataMap(pDataMap, "m_iFilterName");
+	if (offset == 0)
+	{
+		const char* szclassname = pEntity->GetClassName();
+		logger->Log(LogLevel::ERROR, "Offset 0 for entity \"%s\"", szclassname);
+		return false;
+	}
+	const int value = *reinterpret_cast<int*>(reinterpret_cast<char*>(pBaseEntity) + offset);
+	if (value == 1)
+		return true; // Locked
+	else
+		return false; // Unlocked
+}
+
+/**
+ * Checks if the given entity is locked. (Door, buttons)
+ *
+ * @param pEntity   The entity to check
+ * @return          true if the entity is locked, false if unlocked or invalid
+ **/
+int CDystopiaMod::GetTriggerFilterHandle(edict_t* pEntity)
+{
+	CBaseEntity* pBaseEntity = pEntity->GetUnknown()->GetBaseEntity();
+	datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pBaseEntity);
+	const int offset = UTIL_FindInDataMap(pDataMap, "m_hFilter");
+	if (offset == 0)
+	{
+		const char* szclassname = pEntity->GetClassName();
+		logger->Log(LogLevel::ERROR, "Offset 0 for entity \"%s\"", szclassname);
+		return false;
+	}
+	const int value = *reinterpret_cast<int*>(reinterpret_cast<char*>(pBaseEntity) + offset);
+
+	return value;
+}
