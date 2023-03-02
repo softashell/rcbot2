@@ -562,6 +562,12 @@ void CClassInterface:: init ()
 
 		// Dystopia
 		DEFINE_GETPROP(GETPROP_DYS_PLAYERCLASS, "CDysPlayer", "m_iClass", 0);
+		DEFINE_GETPROP(GETPROP_DYS_CUILINGTURRET_ENABLED, "CNPC_CeilingTurret", "m_bEnabled", 0);
+		DEFINE_GETPROP(GETPROP_DYS_CUILINGTURRET_ACTIVE, "CNPC_CeilingTurret", "m_bActive", 0);
+		DEFINE_GETPROP(GETPROP_DYS_CUILINGTURRET_THERMAL, "CNPC_CeilingTurret", "m_bThermal", 0);
+		DEFINE_GETPROP(GETPROP_DYS_CUILINGTURRET_INVINCIBLE, "CNPC_CeilingTurret", "m_bInvincible", 0);
+		DEFINE_GETPROP(GETPROP_DYS_CUILINGTURRET_TEAM, "CNPC_CeilingTurret", "m_Team", 0);
+		DEFINE_GETPROP(GETPROP_DYS_CUILINGTURRET_HEALTH, "CNPC_CeilingTurret", "m_iHealth", 0);
 
 		// Counter-Strike: Source
 		DEFINE_GETPROP(GETPROP_CSS_MONEY, "CCSPlayer", "m_iAccount", 0);

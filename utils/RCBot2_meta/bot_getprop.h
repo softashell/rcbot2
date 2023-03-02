@@ -169,6 +169,12 @@ typedef enum
 	GETPROP_CSS_HOSTAGE_RESCUED,
 	GETPROP_CSS_HOSTAGE_LEADER,
 	GETPROP_DYS_PLAYERCLASS,
+	GETPROP_DYS_CUILINGTURRET_ENABLED,
+	GETPROP_DYS_CUILINGTURRET_ACTIVE,
+	GETPROP_DYS_CUILINGTURRET_THERMAL,
+	GETPROP_DYS_CUILINGTURRET_INVINCIBLE,
+	GETPROP_DYS_CUILINGTURRET_TEAM,
+	GETPROP_DYS_CUILINGTURRET_HEALTH,
 	GET_PROPDATA_MAX
 }getpropdata_id;
 
@@ -376,6 +382,7 @@ public:
 	static edict_t *FindEntityByNetClassNearest(Vector vstart, const char *classname);
 	static edict_t *FindEntityByClassnameNearest(Vector vstart, const char *classname, float fMinDist = 8192.0f, edict_t *pOwner = nullptr);
 
+
 	// TF2
 	static int getTF2Score (const edict_t* edict);
 	static void setupCTeamRoundTimer ( CTeamRoundTimer *pTimer );
@@ -534,6 +541,12 @@ public:
 		int* p = g_GetProps[GETPROP_DYS_PLAYERCLASS].getIntPointer(edict);
 		if (p != nullptr) *p = _class;
 	}
+
+	static bool getDysCeilingTurretEnabled(edict_t* edict) { return g_GetProps[GETPROP_DYS_CUILINGTURRET_ENABLED].getBool(edict, 0); }
+	static bool getDysCeilingTurretActive(edict_t* edict) { return g_GetProps[GETPROP_DYS_CUILINGTURRET_ACTIVE].getBool(edict, 0); }
+	static int getDysCeilingTurretTeam(edict_t* edict) { return g_GetProps[GETPROP_DYS_CUILINGTURRET_TEAM].getInt(edict, 0); }
+	static bool getDysCeilingTurretInvincible(edict_t* edict) { return g_GetProps[GETPROP_DYS_CUILINGTURRET_INVINCIBLE].getBool(edict, 0); }
+	static int getDysCeilingTurretHealth(edict_t* edict) { return g_GetProps[GETPROP_DYS_CUILINGTURRET_HEALTH].getInt(edict, 0); }
 
 	static float getAnimCycle ( edict_t *edict) 
 	{	

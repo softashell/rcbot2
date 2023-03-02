@@ -69,12 +69,13 @@ void CBotDystopia::spawnInit()
 	if (m_pWeapons) // reset weapons
 		m_pWeapons->clearWeapons();
 
-    m_CurrentUtil = BOT_UTIL_MAX;
+	m_CurrentUtil = BOT_UTIL_MAX;
+	m_pNearbyTrigger = nullptr;
 	m_pNearbyAmmo = nullptr;
+
 	m_pNearbyBattery = nullptr;
 	m_pNearbyCrate = nullptr;
 	m_pNearbyHealthKit = nullptr;
-	m_pNearbyWeapon = nullptr;
 	m_pNearbyMine = nullptr;
 	m_pNearbyGrenade = nullptr;
 	m_pNearbyItemCrate = nullptr;
@@ -268,6 +269,23 @@ bool CBotDystopia::isEnemy(edict_t *pEdict, bool bCheckWeapons)
 	if (m_pEdict == pEdict) // self
 		return false;
 
+	const char* szclassname = pEdict->GetClassName();
+	if (strncmp(szclassname, "npc_", 4) == 0)
+	{
+		if (strcmp(szclassname, "npc_turret_ceiling") == 0)
+		{
+			//char msg[256];
+			//sprintf(msg, "[DYS] Found turret! E: %d A: %d T: %d INV: %d HP: %d", CClassInterface::getDysCeilingTurretEnabled(pEdict), CClassInterface::getDysCeilingTurretActive(pEdict), CClassInterface::getDysCeilingTurretTeam(pEdict), CClassInterface::getDysCeilingTurretInvincible(pEdict), CClassInterface::getDysCeilingTurretHealth(pEdict));
+			//CClients::clientDebugMsg(BOT_DEBUG_THINK, msg, this);
+
+			if (CClassInterface::getDysCeilingTurretEnabled(pEdict) && !CClassInterface::getDysCeilingTurretInvincible(pEdict) && CClassInterface::getDysCeilingTurretTeam(pEdict) != getTeam() && CClassInterface::getDysCeilingTurretActive(pEdict))
+			{
+				CClients::clientDebugMsg(BOT_DEBUG_THINK, "[DYS] Found active enemy turret!", this);
+				return true;
+			}
+		}
+	}
+
 	if (!CBotGlobals::isAlivePlayer(pEdict))
 		return false;
 
@@ -290,7 +308,7 @@ bool CBotDystopia::setVisible ( edict_t *pEntity, bool bVisible )
 {
 	const bool bValid = CBot::setVisible(pEntity, bVisible);
 
-	/* float fDist = distanceFrom(pEntity);
+	float fDist = distanceFrom(pEntity);
 	const Vector entityorigin = CBotGlobals::entityOrigin(pEntity);
 	const char* szclassname = pEntity->GetClassName();
 
@@ -299,29 +317,29 @@ bool CBotDystopia::setVisible ( edict_t *pEntity, bool bVisible )
 	{
 
 	}
+	// Is valid and invisible
+	else if (bValid && bVisible && (CClassInterface::getEffects(pEntity) & EF_NODRAW))
+	{
+		// Save nearby trigger_multiple and trigger_crackable and check their teams
+		// These are often used with outputs on func_door
+		if (strncmp(szclassname, "trigger_", 8) == 0)
+		{
+			if (!m_pNearbyTrigger.get() || fDist < distanceFrom(m_pNearbyTrigger.get()))
+			{
+				CClients::clientDebugMsg(BOT_DEBUG_THINK, "Found filtered trigger", this);
+				m_pNearbyTrigger = pEntity;
+
+				// TODO: Access filter_activator_team or just guess and save value for later
+			}
+		}
+	}
 	else
 	{
 		if(pEntity == m_pNearbyAmmo.get_old())
 			m_pNearbyAmmo = nullptr;
-		else if(pEntity == m_pNearbyCrate.get_old())
-			m_pNearbyCrate = nullptr;
-		else if(pEntity == m_pNearbyHealthKit.get_old())
-			m_pNearbyHealthKit = nullptr;
-		else if(pEntity == m_pNearbyBattery.get_old())
-			m_pNearbyBattery = nullptr;
-		else if(pEntity == m_pNearbyWeapon.get_old())
-			m_pNearbyWeapon = nullptr;
-		else if(pEntity == m_pNearbyMine.get_old())
-			m_pNearbyMine = nullptr;
-		else if(pEntity == m_pNearbyGrenade.get_old())
-			m_pNearbyGrenade = nullptr;
-		else if(pEntity == m_pNearbyItemCrate.get_old())
-			m_pNearbyItemCrate = nullptr;
-		else if(pEntity == m_pNearbyHealthCharger.get_old())
-			m_pNearbyHealthCharger = nullptr;
-		else if(pEntity == m_pNearbyArmorCharger.get_old())
-			m_pNearbyArmorCharger = nullptr;
-	}*/
+		else if (pEntity == m_pNearbyTrigger.get_old())
+			m_pNearbyTrigger = nullptr;
+	}
 
 	return bValid;
 }
@@ -501,20 +519,66 @@ bool CBotDystopia::handleAttack(CBotWeapon *pWeapon, edict_t *pEnemy)
 {
 	if (pWeapon)
 	{
+		static float fDistance;
+
+		fDistance = distanceFrom(pEnemy);
+
 		clearFailedWeaponSelect();
 
 		if (pWeapon->isMelee())
+		{
 			setMoveTo(CBotGlobals::entityOrigin(pEnemy));
+			setLookAtTask(LOOK_ENEMY);
+			m_fAvoidTime = engine->Time() + 1.0f;
+		}
 
-		if (pWeapon->mustHoldAttack())
-			primaryAttack(true);
-		else
-			primaryAttack();
+		if (pWeapon->canUseSecondary() && pWeapon->getAmmo(this, 2) && pWeapon->secondaryInRange(fDistance))
+		{
+			if (randomInt(0, 1))
+			{
+				secondaryAttack();
+				return true;
+			}
+		}
+
+		// can use primary
+		if (pWeapon->canAttack() && pWeapon->primaryInRange(fDistance))
+		{
+			if (pWeapon->mustHoldAttack())
+				primaryAttack(true);
+			else
+				primaryAttack();
+
+			return true;
+		}
 	}
 	else
+	{
 		primaryAttack();
+		return true;
+	}
 
-	return true;
+	return false;
+}
+
+void CBotDystopia::modAim(edict_t* pEntity, Vector& v_origin, Vector* v_desired_offset, Vector& v_size, float fDist, float fDist2D)
+{
+	static CBotWeapon* pWp;
+
+	CBot::modAim(pEntity, v_origin, v_desired_offset, v_size, fDist, fDist2D);
+
+	pWp = getCurrentWeapon();
+
+	/*switch (pWp->getID())
+	{
+	}
+
+	if (pEntity == INDEXENT(m_hNearestBreakable.GetEntryIndex()))
+	{
+		v_desired_offset->x = 0;
+		v_desired_offset->y = 0;
+		v_desired_offset->z = 0;
+	}*/
 }
 
 /**
@@ -525,4 +589,64 @@ bool CBotDystopia::handleAttack(CBotWeapon *pWeapon, edict_t *pEnemy)
 bool CBotDystopia::wantsToChangeCourseOfAction()
 {
 	return false; // TO-DO
+}
+
+void CBotDystopia::touchedWpt(CWaypoint* pWaypoint, int iNextWaypoint, int iPrevWaypoint)
+{
+	if (iNextWaypoint != -1 && pWaypoint->hasFlag(CWaypointTypes::W_FL_DOOR)) // Use waypoint: Check for door
+	{
+		CWaypoint* pNext = CWaypoints::getWaypoint(iNextWaypoint);
+		if (pNext)
+		{
+			/**
+			 * Traces a line between the current waypoint and the next waypoint. If a door is blocking the path, try to open it.
+			 **/
+			CTraceFilterHitAll filter;
+			const trace_t* tr = CBotGlobals::getTraceResult();
+			CBotGlobals::traceLine(pWaypoint->getOrigin() + Vector(0, 0, CWaypoint::WAYPOINT_HEIGHT / 2),
+				pNext->getOrigin() + Vector(0, 0, CWaypoint::WAYPOINT_HEIGHT / 2), MASK_PLAYERSOLID,
+				&filter);
+			if (tr->fraction < 1.0f)
+			{
+				if (tr->m_pEnt)
+				{
+					edict_t* pDoor = servergameents->BaseEntityToEdict(tr->m_pEnt);
+					const char* szclassname = pDoor->GetClassName();
+					if (strncmp(szclassname, "prop_door_rotating", 18) == 0 || strncmp(szclassname, "func_door", 9) == 0 || strncmp(szclassname, "func_door_rotating", 18) == 0)
+					{
+						int team = CClassInterface::getTeam(pDoor);
+
+						char msg[256];
+						sprintf(msg, "[DYS] Found door! DOOR TEAM: %d PLAYER TEAM: %d CLASSNAME: %s", team, getTeam(), szclassname);
+						CClients::clientDebugMsg(BOT_DEBUG_THINK, msg, this);
+
+
+						// TODO: Get nearby trigger_multiple and target filter team
+						
+						//m_pSchedules->addFront(new CSynOpenDoorSched(pDoor));
+					}
+					else
+					{
+
+					}
+				}
+			}
+			
+		}
+	}
+
+	CBot::touchedWpt(pWaypoint, iNextWaypoint, iPrevWaypoint);
+}
+
+bool CBotDystopia::canGotoWaypoint(Vector vPrevWaypoint, CWaypoint* pWaypoint, CWaypoint* pPrev)
+{
+	if (pWaypoint->hasFlag(CWaypointTypes::W_FL_DOOR))
+	{
+		// TODO: Check for doors Open? Team? Can crack?
+		// func_door -> trigger_multiple -> filter_activator_team
+
+		return false;
+	}
+
+	return CBot::canGotoWaypoint(vPrevWaypoint, pWaypoint, pPrev);
 }
