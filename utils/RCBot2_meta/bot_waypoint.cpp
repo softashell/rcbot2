@@ -3161,7 +3161,7 @@ void CWaypointTypes :: setup ()
 	addType(new CWaypointType(W_FL_NOCOUNTERTR, "nocountertr", "CSS counter-terrorist team can't use this waypoint", WptColor(255,0,0), (1<<MOD_CSS)));
 	addType(new CWaypointType(W_FL_RESCUEZONE, "rescue", "CSS bots will take hostages to this waypoint", WptColor(0,255,230), (1<<MOD_CSS)));
 	addType(new CWaypointType(W_FL_GOAL, "goal", "CSS bots will find the map goal here", WptColor(255,255,0), (1<<MOD_CSS)));
-	addType(new CWaypointType(W_FL_DOOR, "door", "CSS bots will check if they need to open a door", WptColor(255,120,0), (1<<MOD_CSS)));
+	addType(new CWaypointType(W_FL_DOOR, "door", "CSS bots will check if they need to open a door", WptColor(255,120,0), (1<<MOD_CSS|(1 << MOD_DYS))));
 	addType(new CWaypointType(W_FL_NO_HOSTAGES, "nohostages", "CSS CT bots escorting hostages can't use this waypoint", WptColor(200,230,20), (1<<MOD_CSS)));
 
 	//addType(new CWaypointType(W_FL_ATTACKPOINT,"squad_attackpoint","Tactical waypoint -- each squad will go to different attack points and signal others to go",WptColor(90,90,90)));
