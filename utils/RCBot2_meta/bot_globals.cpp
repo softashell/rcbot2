@@ -501,33 +501,20 @@ bool CBotGlobals::initModFolder() {
 	return true;
 }
 
-bool CBotGlobals :: gameStart ()
+bool CBotGlobals :: initMod ()
 {
-	char szGameFolder[512];
-	engine->GetGameDir(szGameFolder,512);
-	/*
-	CFileSystemPassThru a;
-	a.InitPassThru(filesystem,true);
-	a.GetCurrentDirectoryA(szSteamFolder,512);
-*/
-	//filesystem->GetCurrentDirectory(szSteamFolder,512);
-
-	const size_t iLength = strlen(CStrings::getString(szGameFolder));
-
-	size_t pos = iLength-1;
-
-	while ( pos > 0 && szGameFolder[pos] != '\\' && szGameFolder[pos] != '/' )
-	{
-		pos--;
-	}
-	pos++;
-	
-	m_szModFolder = CStrings::getString(&szGameFolder[pos]);
+	if (!CBotGlobals::initModFolder())
+		return false;
 
 	CBotMods::readMods();
-	
+
 	m_pCurrentMod = CBotMods::getMod(m_szModFolder);
 
+	return true;
+}
+
+bool CBotGlobals :: gameStart ()
+{
 	if ( m_pCurrentMod != nullptr)
 	{
 		m_iCurrentMod = m_pCurrentMod->getModId();
