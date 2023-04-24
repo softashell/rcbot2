@@ -114,11 +114,15 @@ bool CDystopiaMod::GetTriggerFilter(edict_t* pEntity)
 		logger->Log(LogLevel::ERROR, "Offset 0 for entity \"%s\"", szclassname);
 		return false;
 	}
-	const int value = *reinterpret_cast<int*>(reinterpret_cast<char*>(pBaseEntity) + offset);
-	if (value == 1)
+	string_t* value = reinterpret_cast<string_t*>(reinterpret_cast<char*>(pBaseEntity) + offset);
+	
+	/*if (value == 1)
 		return true; // Locked
 	else
 		return false; // Unlocked
+	*/
+
+		return false;
 }
 
 /**
@@ -129,16 +133,48 @@ bool CDystopiaMod::GetTriggerFilter(edict_t* pEntity)
  **/
 int CDystopiaMod::GetTriggerFilterHandle(edict_t* pEntity)
 {
-	CBaseEntity* pBaseEntity = pEntity->GetUnknown()->GetBaseEntity();
+	/*CBaseEntity* pBaseEntity = pEntity->GetUnknown()->GetBaseEntity();
 	datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pBaseEntity);
-	const int offset = UTIL_FindInDataMap(pDataMap, "m_hFilter");
+
+	const int offset = UTIL_FindInDataMap(pDataMap, "m_iFilterName");
 	if (offset == 0)
 	{
 		const char* szclassname = pEntity->GetClassName();
 		logger->Log(LogLevel::ERROR, "Offset 0 for entity \"%s\"", szclassname);
 		return false;
 	}
-	const int value = *reinterpret_cast<int*>(reinterpret_cast<char*>(pBaseEntity) + offset);
+	string_t m_iFilterName = *reinterpret_cast<string_t*>(reinterpret_cast<char*>(pBaseEntity) + offset);
+	logger->Log(LogLevel::ERROR, "Found filter name \"%s\"", STRING(m_iFilterName));
 
-	return value;
+	const int offset2 = UTIL_FindInDataMap(pDataMap, "m_hFilter");
+	if (offset2 == 0)
+	{
+		const char* szclassname = pEntity->GetClassName();
+		logger->Log(LogLevel::ERROR, "Offset 0 for entity \"%s\"", szclassname);
+		return false;
+	}
+	CBaseHandle value = *reinterpret_cast<CBaseHandle*>(reinterpret_cast<char*>(pBaseEntity) + offset2);
+	if (value.IsValid())
+	{
+		//extern CBaseEntityList* g_pEntityList;
+
+		//auto test = value.Get(); //g_pEntityList->LookupEntity(value);
+		edict_t* index = INDEXENT(value.GetEntryIndex());
+
+		//* pBaseEntity2 = value->Get();
+
+
+		if (index == nullptr)
+		{
+			logger->Log(LogLevel::ERROR, "Null pointer for entity \"%d\"", value.GetEntryIndex());
+		}
+		else
+		{
+			const char* szclassname = index->GetClassName();
+			CBaseEntity* pBaseEntity2 = index->GetUnknown()->GetBaseEntity();
+		}
+
+
+	}*/
+	return 0;
 }

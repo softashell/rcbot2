@@ -41,7 +41,7 @@
 #include "bot_dod_bot.h"
 #include "bot_weapons.h"
 #include "bot_getprop.h"
-#include "bot_dod_bot.h"
+#include "bot_dystopia.h"
 #include "bot_squads.h"
 #include "bot_schedule.h"
 #include "bot_waypoint_locations.h"
@@ -1160,6 +1160,42 @@ void CDODFireWeaponEvent :: execute ( IBotEventInterface *pEvent )
 
 }
 
+void CDysObjectiveEvent::execute(IBotEventInterface* pEvent)
+{
+	const char* sObjective = pEvent->getString("objective");
+
+	// TODO: Update current area
+}
+
+void CDysChangeClassEvent::execute(IBotEventInterface* pEvent)
+{
+	if (m_pActivator)
+	{
+		CBot* pBot = CBots::getBotPointer(m_pActivator);
+
+		if (pBot)
+		{
+			CBotDystopia* pDysBot = static_cast<CBotDystopia*>(pBot);
+
+			pDysBot->selectedClass(pEvent->getInt("class"));
+		}
+	}
+}
+
+void CDysCyberFragEvent::execute(IBotEventInterface* pEvent)
+{
+	const int iAttacker = pEvent->getInt("attacker", -1);
+	if (m_pActivator && iAttacker >= 0)
+	{
+		CBot* pBot = CBots::getBotPointer(m_pActivator);
+
+		if (pBot)
+		{
+			// TODO: Give up on hacking
+		}
+	}
+}
+
 ///////////////////////////////////////////////////////
 
 void CBotEvent :: setType (const char* szType)
@@ -1246,6 +1282,10 @@ eyeball_boss_escaped */
 	addEvent(new CDODRoundOver());
 	addEvent(new CTF2PointStartTouch());
 	addEvent(new CTF2PointEndTouch());
+
+	addEvent(new CDysObjectiveEvent());
+	addEvent(new CDysChangeClassEvent());
+	addEvent(new CDysCyberFragEvent());
 }
 
 void CBotEvents :: addEvent ( CBotEvent *pEvent )
