@@ -697,6 +697,51 @@ public:
 	void execute ( IBotEventInterface *pEvent ) override;
 };
 
+/// <summary>
+/// When an objective is reached
+/// </summary>
+class CDysObjectiveEvent : public CBotEvent
+{
+public:
+	CDysObjectiveEvent()
+	{
+		setType("objective");
+		setMod(MOD_DYS);
+	}
+
+	void execute(IBotEventInterface* pEvent) override;
+};
+
+/// <summary>
+/// When a player selects class
+/// </summary>
+class CDysChangeClassEvent : public CBotEvent
+{
+public:
+	CDysChangeClassEvent()
+	{
+		setType("player_class");
+		setMod(MOD_DYS);
+	}
+
+	void execute(IBotEventInterface* pEvent) override;
+};
+
+/// <summary>
+/// Player is killed while "hacking"
+/// </summary>
+class CDysCyberFragEvent : public CBotEvent
+{
+public:
+	CDysCyberFragEvent()
+	{
+		setType("cyber_frag");
+		setMod(MOD_DYS);
+	}
+
+	void execute(IBotEventInterface* pEvent) override;
+};
+
 typedef enum
 {
 	TYPE_KEYVALUES = 0,

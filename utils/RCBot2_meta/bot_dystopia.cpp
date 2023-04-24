@@ -70,20 +70,16 @@ void CBotDystopia::spawnInit()
 		m_pWeapons->clearWeapons();
 
 	m_CurrentUtil = BOT_UTIL_MAX;
-	m_pNearbyTrigger = nullptr;
-	m_pNearbyAmmo = nullptr;
+	m_pNearbyTrigger = nullptr; // trigger_multiple
+	m_pNearbyCrackable = nullptr; // trigger_crackable
+	m_pNearbyAmmo = nullptr; // Ammo dispensers
 
-	m_pNearbyBattery = nullptr;
-	m_pNearbyCrate = nullptr;
-	m_pNearbyHealthKit = nullptr;
-	m_pNearbyMine = nullptr;
-	m_pNearbyGrenade = nullptr;
-	m_pNearbyItemCrate = nullptr;
 	m_pCurrentWeapon = nullptr;
 	m_flNextSprintTime = engine->Time();
 	m_flSuitPower = 0.0f;
 	m_flUseCrateTime = engine->Time();
 	m_flPickUpTime = engine->Time();
+	m_iSelectedClass = 0;
 }
 
 bool CBotDystopia::startGame()
@@ -102,11 +98,11 @@ bool CBotDystopia::startGame()
 		else
 			selectTeam(DYS_TEAM_CORPS);
 
-		int iSelectedClass = CDystopiaMod::preferredClassOnTeam(getTeam());
-		if (CClassInterface::getDysPlayerClass(m_pEdict) != iSelectedClass)
+		int iClass = CDystopiaMod::preferredClassOnTeam(getTeam());
+		if (CClassInterface::getDysPlayerClass(m_pEdict) != iClass)
 		{
-			CClassInterface::setDysPlayerClass(m_pEdict, iSelectedClass);
-			selectClass(iSelectedClass);
+			CClassInterface::setDysPlayerClass(m_pEdict, iClass);
+			selectClass(iClass);
 		}
 		
 	}
@@ -150,6 +146,11 @@ void CBotDystopia::died(edict_t *pKiller, const char *pszWeapon)
 			m_pNavigator->belief(CBotGlobals::entityOrigin(pKiller), getEyePosition(), bot_beliefmulti.GetFloat(), distanceFrom(pKiller), BELIEF_DANGER);
 		}
 	}
+}
+
+void CBotDystopia::selectedClass(int iClass)
+{
+	m_iSelectedClass = iClass;
 }
 
 /**
@@ -322,12 +323,28 @@ bool CBotDystopia::setVisible ( edict_t *pEntity, bool bVisible )
 	{
 		// Save nearby trigger_multiple and trigger_crackable and check their teams
 		// These are often used with outputs on func_door
-		if (strncmp(szclassname, "trigger_", 8) == 0)
+		if (strncmp(szclassname, "trigger_multiple", 16) == 0)
 		{
 			if (!m_pNearbyTrigger.get() || fDist < distanceFrom(m_pNearbyTrigger.get()))
 			{
-				CClients::clientDebugMsg(BOT_DEBUG_THINK, "Found filtered trigger", this);
+				//CDystopiaMod::GetTriggerFilter(pEntity);
+				//CDystopiaMod::GetTriggerFilterHandle(pEntity);
+
+				CClients::clientDebugMsg(BOT_DEBUG_THINK, "Found trigger_multiple", this);
 				m_pNearbyTrigger = pEntity;
+
+				// TODO: Access filter_activator_team or just guess and save value for later
+			}
+		}
+		else if (strncmp(szclassname, "trigger_crackable", 17) == 0)
+		{
+			if (!m_pNearbyCrackable.get() || fDist < distanceFrom(m_pNearbyCrackable.get()))
+			{
+				//CDystopiaMod::GetTriggerFilter(pEntity);
+				//CDystopiaMod::GetTriggerFilterHandle(pEntity);
+
+				CClients::clientDebugMsg(BOT_DEBUG_THINK, "Found trigger_crackable", this);
+				m_pNearbyCrackable = pEntity;
 
 				// TODO: Access filter_activator_team or just guess and save value for later
 			}
@@ -339,6 +356,8 @@ bool CBotDystopia::setVisible ( edict_t *pEntity, bool bVisible )
 			m_pNearbyAmmo = nullptr;
 		else if (pEntity == m_pNearbyTrigger.get_old())
 			m_pNearbyTrigger = nullptr;
+		else if (pEntity == m_pNearbyCrackable.get_old())
+			m_pNearbyCrackable = nullptr;
 	}
 
 	return bValid;

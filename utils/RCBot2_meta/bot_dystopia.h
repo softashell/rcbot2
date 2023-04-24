@@ -65,6 +65,7 @@ public:
     void spawnInit() override;
     bool startGame() override;
     void died ( edict_t *pKiller, const char *pszWeapon ) override;
+    void selectedClass(int iClass);
     void modThink () override;
     void getTasks (unsigned int iIgnore=0) override;
     virtual bool executeAction(eBotAction iAction);
@@ -91,21 +92,16 @@ public:
     //void selectImplants() const;
 protected:
     MyEHandle m_pNearbyTrigger; // Triggers
-    MyEHandle m_pNearbyHealthKit; // Healthkit
-    MyEHandle m_pNearbyBattery; // Armor battery
-    MyEHandle m_pNearbyAmmo; // ammo pickups
-    MyEHandle m_pNearbyCrate; // ammo crate
-    MyEHandle m_pNearbyGrenade; // grenades
-    MyEHandle m_pNearbyMine; // combine mine
-    MyEHandle m_pNearbyItemCrate; // breakable item crate
-    MyEHandle m_pNearbyHealthCharger; // Health charger
-    MyEHandle m_pNearbyArmorCharger; // Armor/Suit charger
+    MyEHandle m_pNearbyCrackable; // Crackable triggers
+    MyEHandle m_pNearbyAmmo; // Ammo dispensers
     edict_t * m_pCurrentWeapon = nullptr; // The bot current weapon
     float m_flSuitPower = 0.0f; // HEV suit power level, range: 100-0
     float m_flNextSprintTime = 0.0f; // Used to control the bot's sprinting
     float m_flUseCrateTime = 0.0f; // Use ammo crate time delay
     float m_flPickUpTime = 0.0f; // Pick ammo delay
     float m_flInterruptTime = 0.0f; // Time delay for general interruptions
+
+    int m_iSelectedClass;
 };
 
 #endif

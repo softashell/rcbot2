@@ -149,10 +149,12 @@ public:
 	static const int W_FL_NOBLU          = 1 << 6;
 	static const int W_FL_NOAXIS         = 1 << 6;
 	static const int W_FL_NOTERRORIST    = 1 << 6; // Counter-Strike: Source --> Terrorists cannot use this waypoint
+	static const int W_FL_NOPUNK		 = 1 << 6; // Dystopia -> Punks cannot use this waypoint
 	
 	static const int W_FL_NORED          = 1 << 7;
 	static const int W_FL_NOALLIES       = 1 << 7;
 	static const int W_FL_NOCOUNTERTR    = 1 << 7; // Counter-Strike: Source --> Counter-Terrorists cannot use this waypoint
+	static const int W_FL_NOCORP		 = 1 << 7; // Dystopia -> Corps cannot use this waypoint
 	
 	static const int W_FL_HEALTH         = 1 << 8;
 	static const int W_FL_OPENS_LATER    = 1 << 9;
