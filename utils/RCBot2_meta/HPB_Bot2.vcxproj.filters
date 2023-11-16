@@ -212,6 +212,12 @@
     <ClCompile Include="bot_dystopia_mod.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="bot_dystopia.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bot_dystopia_mod.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bot.h">

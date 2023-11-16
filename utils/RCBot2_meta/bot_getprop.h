@@ -383,6 +383,7 @@ public:
 	static edict_t *FindEntityByClassnameNearest(const Vector& vstart, const char *classname, float fMinDist = 8192.0f, edict_t *pOwner = nullptr);
 
 
+
 	// TF2
 	static int getTF2Score (const edict_t* edict);
 	static void setupCTeamRoundTimer ( CTeamRoundTimer *pTimer );
