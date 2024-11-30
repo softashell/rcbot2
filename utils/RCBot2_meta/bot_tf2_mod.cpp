@@ -50,6 +50,7 @@
 #include "bot_tf2_points.h"
 #include "bot_sigscan.h"
 
+#include <algorithm>
 #include <cstring>
 
 #include "rcbot/logging.h"
@@ -941,11 +942,8 @@ int CTeamFortress2Mod ::getHighestScore ()
 		if ( edict && CBotGlobals::entityIsValid(edict) )
 		{
 			const short score = static_cast<short>(CClassInterface::getTF2Score(edict));
-		
-			if ( score > highest )
-			{
-				highest = score;
-			}
+
+			highest = std::max(score, highest);
 		}
 	}
 

@@ -45,6 +45,7 @@
 #include "bot_waypoint_locations.h"
 #include "bot_perceptron.h"
 
+#include <algorithm>
 #include <cstring>
 
 edict_t *CDODMod::m_pResourceEntity = nullptr;
@@ -215,11 +216,8 @@ int CDODMod::getHighestScore ()
 		if ( edict && CBotGlobals::entityIsValid(edict) )
 		{
 			const int score = static_cast<short>(getScore(edict));
-		
-			if ( score > highest )
-			{
-				highest = score;
-			}
+
+			highest = std::max(score, highest);
 		}
 	}
 

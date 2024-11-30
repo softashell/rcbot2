@@ -41,6 +41,7 @@
 
 #include "ndebugoverlay.h"
 
+#include <algorithm>
 #include <cstring>
 
 extern IVDebugOverlay *debugoverlay;
@@ -263,10 +264,8 @@ void CBotVisibles :: updateVisibles ()
 	else
 		iMaxClientTicks =m_pBot->getProfile()->m_iVisionTicksClients; // bot_visrevs_clients.GetInt();
 
-	if ( iMaxTicks <= 2 )
-		iMaxTicks = 2;
-	if ( iMaxClientTicks < 1 )
-		iMaxClientTicks = 1;
+	iMaxTicks = std::max(iMaxTicks, 2);
+	iMaxClientTicks = std::max(iMaxClientTicks, 1);
 
 #ifdef _DEBUG
 	CProfileTimer *timer = CProfileTimers::getTimer(BOT_VISION_TIMER);
@@ -312,8 +311,7 @@ void CBotVisibles :: updateVisibles ()
 			break;
 	}
 
-	if ( iMaxTicks > m_iMaxIndex )
-		iMaxTicks = m_iMaxIndex;
+	iMaxTicks = std::min(iMaxTicks, m_iMaxIndex);
 
 	if ( m_iCurPlayer >= m_iCurrentIndex )
 		return;

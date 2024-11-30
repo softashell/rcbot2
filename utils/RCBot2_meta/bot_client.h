@@ -79,7 +79,7 @@ public:
 
 	Vector GetVector () const
 	{
-		return Vector(static_cast<float>(m_x),static_cast<float>(m_y),static_cast<float>(m_z));
+		return {static_cast<float>(m_x),static_cast<float>(m_y),static_cast<float>(m_z)};
 	}
 
 	bool IsVectorSet () const

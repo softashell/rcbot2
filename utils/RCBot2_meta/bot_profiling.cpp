@@ -182,9 +182,8 @@ void CProfileTimers::updateAndDisplay()
 			double highest = 1.0;
 
 			for ( i = 0; i < PROFILING_TIMERS; i ++ )
-			{		
-				if (m_Timers[i].getOverall() > highest)
-					highest = m_Timers[i].getOverall();
+			{
+				highest = std::max<double>(m_Timers[i].getOverall(), highest);
 			}
 
 			// next update in 1 second

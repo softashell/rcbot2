@@ -37,6 +37,8 @@
 #include "bot_cvars.h"
 #include "bot_schedule.h"
 #include "bot_task.h"
+
+#include <algorithm>
 #include "bot_navigator.h"
 #include "bot_waypoint_locations.h"
 #include "bot_globals.h"
@@ -4597,8 +4599,7 @@ void CBotTF2DemomanPipeEnemy :: execute (CBot *pBot,CBotSchedule *pSchedule)
 
 		m_fHoldAttackTime = pBot->distanceFrom(m_vEnemy)/512.0f - 1.0f;
 
-		if ( m_fHoldAttackTime < 0.0f )
-			m_fHoldAttackTime = 0.0f;
+		m_fHoldAttackTime = std::max(m_fHoldAttackTime, 0.0f);
 
 		/*
 		if ( sv_gravity )

@@ -1,3 +1,5 @@
+#include <algorithm>
+
 /*
  *    This file is part of RCBot.
  *
@@ -61,8 +63,7 @@ CBotCommandInline MaxBotsCommand("max_bots", CMD_ACCESS_CONFIG | CMD_ACCESS_DEDI
 			CBotGlobals::botMessage(pEntity,0,"max_bots must be greater than min_bots (min_bots is currently : %d)",min_bots);
 			err = true;
 		}
-		if ( max > CBotGlobals::maxClients() )				
-			max = CBotGlobals::maxClients();
+		max = std::min(max, CBotGlobals::maxClients());
 
 		if ( !err )
 		{
@@ -93,9 +94,8 @@ CBotCommandInline MinBotsCommand("min_bots", CMD_ACCESS_CONFIG | CMD_ACCESS_DEDI
 
 		bool err = false;
 
-		if ( min > CBotGlobals::maxClients() )
-			min = CBotGlobals::maxClients();	
-		
+		min = std::min(min, CBotGlobals::maxClients());
+
 		if ( min <= -1 ) // skip check for disabling min bots (require <=)
 			min = -1;
 		else if ( (max_bots >= 0) && (min >= CBots::getMaxBots()) )

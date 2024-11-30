@@ -90,14 +90,14 @@ typedef enum : std::int8_t
 {
     CS_BUY_PROFILE_INVALID = -1,
     CS_BUY_PROFILE_SMG = 0,
-    CS_BUY_PROFILE_SHOTGUNNER,
-    CS_BUY_PROFILE_RIFLE,
-    CS_BUY_PROFILE_SCOPEDRIFLE,
-    CS_BUY_PROFILE_SNIPER,
-    CS_BUY_PROFILE_AUTOSNIPER,
-    CS_BUY_PROFILE_MACHINEGUNNER,
-    CS_BUY_PROFILE_MAX
-}eCSSBuyProfile;
+    CS_BUY_PROFILE_SHOTGUNNER = 1,
+    CS_BUY_PROFILE_RIFLE = 2,
+    CS_BUY_PROFILE_SCOPEDRIFLE = 3,
+    CS_BUY_PROFILE_SNIPER = 4,
+    CS_BUY_PROFILE_AUTOSNIPER = 5,
+    CS_BUY_PROFILE_MACHINEGUNNER = 6,
+    CS_BUY_PROFILE_MAX = 7
+} eCSSBuyProfile;
 
 /**
  * List of buy "types" for the bot
@@ -106,11 +106,11 @@ typedef enum : std::int8_t
 {
     CS_BUY_TYPE_INVALID = -1,
     CS_BUY_TYPE_ECO = 0, // Save money
-    CS_BUY_TYPE_FORCE, // Save some money
-    CS_BUY_TYPE_FULL, // Buy everything
-    CS_BUY_TYPE_UPGRADE, // Upgrade current weapon
-    CS_BUY_TYPE_MAX
-}eCSSBuyType;
+    CS_BUY_TYPE_FORCE = 1, // Save some money
+    CS_BUY_TYPE_FULL = 2, // Buy everything
+    CS_BUY_TYPE_UPGRADE = 3, // Upgrade current weapon
+    CS_BUY_TYPE_MAX = 4
+} eCSSBuyType;
 
 /**
  * This class manages the Counter-Strike: Source bot buying logic

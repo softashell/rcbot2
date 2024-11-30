@@ -49,6 +49,7 @@
 #endif
 
 #include <sys/stat.h>
+#include <algorithm>
 #include <cmath>
 #include <cstring>
 #include <memory>
@@ -717,8 +718,7 @@ bool CBotGlobals :: walkableFromTo (edict_t *pPlayer, const Vector& v_src, const
 		return true;
 
 	// minimum
-	if ( fWidth < 2.0f )
-		fWidth = 2.0f;
+	fWidth = std::max(fWidth, 2.0f);
 
 	if ( pClient->autoWaypointOn() )
 		fWidth = 4.0f;

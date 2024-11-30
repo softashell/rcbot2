@@ -48,6 +48,7 @@
 #include "bot_perceptron.h"
 #include "bot_waypoint_visibility.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstring>
 
@@ -650,8 +651,7 @@ void CDODBot :: seeFriendlyKill ( edict_t *pTeamMate, edict_t *pDied, CWeapon *p
 			else
 				m_fCurrentDanger -= 20.0f;
 
-			if ( m_fCurrentDanger < 0 )
-				m_fCurrentDanger = 0;
+			m_fCurrentDanger = std::max<float>(m_fCurrentDanger, 0);
 
 			if ( (pclass == DOD_CLASS_MACHINEGUNNER) && pWeapon->isDeployable() )
 			{

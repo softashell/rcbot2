@@ -458,7 +458,7 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxle
 	//InitCVars( interfaceFactory ); // register any cvars we have defined
 
 	std::srand( static_cast<unsigned>(time(nullptr)) );  // initialize the random seed
-	irand.seed( static_cast<unsigned>(time(nullptr)) );
+	MTRand_int32::seed( static_cast<unsigned>(time(nullptr)) );
 
 	// Find the RCBOT2 Path from metamod VDF
 	extern IFileSystem* filesystem;
@@ -733,7 +733,7 @@ bool RCBotPluginMeta::Hook_ClientConnect(edict_t *pEntity,
 									char *reject,
 									int maxrejectlen)
 {
-	META_LOG(g_PLAPI, "Hook_ClientConnect(%d, \"%s\", \"%s\")", IndexOfEdict(pEntity), pszName, pszAddress);
+	META_LOG(g_PLAPI, R"(Hook_ClientConnect(%d, "%s", "%s"))", IndexOfEdict(pEntity), pszName, pszAddress);
 
 	CClients::init(pEntity);
 

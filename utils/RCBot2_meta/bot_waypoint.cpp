@@ -57,6 +57,7 @@
 
 #include "rcbot/logging.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstring>
 #include <vector>    //bir3yk
@@ -277,8 +278,7 @@ bool CWaypointNavigator :: randomDangerPath (Vector *vec)
 		if ( pNext == pOnRouteTo )
 			fBelief *= pWpt->numPaths();
 
-		if ( fBelief > fMaxDanger )
-			fMaxDanger = fBelief;
+		fMaxDanger = std::max(fBelief, fMaxDanger);
 
 		fTotal += fBelief;
 	}
@@ -601,8 +601,7 @@ void CWaypointNavigator :: beliefOne ( int iWptIndex, BotBelief iBeliefType, flo
 	{
 		if ( m_fBelief[iWptIndex] > 0)
 			m_fBelief[iWptIndex] *= bot_belief_fade.GetFloat();
-		if ( m_fBelief[iWptIndex] < 0 )
-				m_fBelief[iWptIndex] = 0;
+		m_fBelief[iWptIndex] = std::max<float>(m_fBelief[iWptIndex], 0);
 	}
 	else // danger	
 	{
@@ -654,8 +653,7 @@ void CWaypointNavigator :: belief ( Vector vOrigin, Vector vOther, float fBelief
 		{
 			if ( m_fBelief[iWptIndex] > 0)
 				m_fBelief[iWptIndex] *= bot_belief_fade.GetFloat();//(fStrength / (vOrigin-pWpt->getOrigin()).Length())*fBelief;
-			if ( m_fBelief[iWptIndex] < 0 )
-				m_fBelief[iWptIndex] = 0;
+			m_fBelief[iWptIndex] = std::max<float>(m_fBelief[iWptIndex], 0);
 
 			//debugoverlay->AddTextOverlayRGB(pWpt->getOrigin(),0,5.0f,0.0,150,0,200,"Safety");
 		}
@@ -2346,8 +2344,7 @@ int CWaypoints :: addWaypoint ( CClient *pClient, const char *type1, const char 
 
 						if ( fDistance <= 80.0f )
 						{
-							if ( fDistance > fMaxDistance )
-								fMaxDistance = fDistance;
+							fMaxDistance = std::max(fDistance, fMaxDistance);
 
 							pCurrentMod->addWaypointFlags(pClient->getPlayer(),pEdict,&iFlags,&iArea,&fMaxDistance);
 						}

@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #ifndef __BOT_WPT_COLOR_H__
 #define __BOT_WPT_COLOR_H__
 
@@ -38,12 +40,9 @@ public:
 		float fg = (g-other.g)*0.5f;
 		float fb = (b-other.b)*0.5f;
 
-		if ( fr < 0 )
-			fr = 0;
-		if ( fg < 0 )
-			fg = 0;
-		if ( fb < 0 )
-			fb = 0;
+		fr = std::max<float>(fr, 0);
+		fg = std::max<float>(fg, 0);
+		fb = std::max<float>(fb, 0);
 
 		r = static_cast<unsigned char>(static_cast<int>(static_cast<float>(other.r) * 0.5f))+static_cast<unsigned char>(static_cast<int>(fr));
 		g = static_cast<unsigned char>(static_cast<int>(static_cast<float>(other.g) * 0.5f))+static_cast<unsigned char>(static_cast<int>(fg));

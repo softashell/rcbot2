@@ -58,6 +58,7 @@
 #include "bot_squads.h"
 //#include "bot_hooks.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstring>
 
@@ -5477,8 +5478,7 @@ bool CBotTF2 :: executeAction ( CBotUtility *util )//eBotAction id, CWaypoint *p
 						// chance of going to point
 						fprob = (fTime - (engine->Time() - CTeamFortress2Mod::m_ObjectiveResource.getLastCaptureTime(m_iCurrentDefendArea)))/fTime;
 
-						if ( fprob < rcbot_tf2_protect_cap_percent.GetFloat() )
-							fprob = rcbot_tf2_protect_cap_percent.GetFloat();
+						fprob = std::max(fprob, rcbot_tf2_protect_cap_percent.GetFloat());
 					}
 				}
 				
