@@ -102,7 +102,7 @@ bool CRCBotKeyValueList :: getFloat ( const char *key, float *val ) const
 	if ( !pKV )
 		return false;
 	
-	*val = std::atof(pKV->getValue());
+	*val = static_cast<float>(std::atof(pKV->getValue()));
 
 	return true;
 }
@@ -121,7 +121,7 @@ bool CRCBotKeyValueList :: getInt ( const char *key, int *val ) const
 }
 
 
-bool CRCBotKeyValueList :: getString ( const char *key, char **val ) const
+bool CRCBotKeyValueList :: getString (const char* key, const char** val) const
 {
 	CRCBotKeyValue* pKV = getKV(key);
 

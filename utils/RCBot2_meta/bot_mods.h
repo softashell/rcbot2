@@ -59,7 +59,7 @@ enum : std::uint8_t
 	BOT_ADD_METHOD_PUPPET = 1
 };
 
-#define BOT_ADD_PUPPET_COMMAND "bot"
+constexpr const char* BOT_ADD_PUPPET_COMMAND = "bot";
 
 class CBotNeuralNet;
 
@@ -224,9 +224,9 @@ public:
 		m_bBombBeingDefused = nullptr;
 		m_iNumAxisBombsOnMap = 0;
 		m_iNumAlliesBombsOnMap = 0;
-		memset(m_bBombPlanted,0,sizeof(bool)*MAX_DOD_FLAGS);
-		memset(m_pFlags,0,sizeof(edict_t*)*MAX_DOD_FLAGS);
-		memset(m_pBombs,0,sizeof(edict_t*)*MAX_DOD_FLAGS*2);
+		std::memset(m_bBombPlanted,0,sizeof(bool)*MAX_DOD_FLAGS);
+		std::memset(m_pFlags,0,sizeof(edict_t*)*MAX_DOD_FLAGS);
+		std::memset(m_pBombs,0,sizeof(edict_t*)*MAX_DOD_FLAGS*2);
 
 		for (int& i : m_iWaypoint)
 		{
@@ -1187,7 +1187,7 @@ public:
 
 	static void resetDefenders ()
 	{
-		memset(m_iCapDefenders,0,sizeof(int)*MAX_CONTROL_POINTS);
+		std::memset(m_iCapDefenders,0,sizeof(int)*MAX_CONTROL_POINTS);
 	}
 
 	static bool isDefending ( edict_t *pPlayer );//, int iCapIndex = -1 );
@@ -1207,10 +1207,10 @@ public:
 
 	static void resetCappers ()
 	{
-		memset(m_Cappers,0,sizeof(int)*MAX_CONTROL_POINTS);
+		std::memset(m_Cappers,0,sizeof(int)*MAX_CONTROL_POINTS);
 	}
 
-	static int numPlayersOnTeam ( int iTeam, bool bAliveOnly = false ); // TODO: Needs implemented properly [APG]RoboCop[CL]
+	static int numPlayersOnTeam ( int iTeam, bool bAliveOnly = false ); //TODO: Experimental [APG]RoboCop[CL]
 	static int numClassOnTeam ( int iTeam, int iClass );
 
 	static int getFlagCarrierTeam () { return m_iFlagCarrierTeam; }

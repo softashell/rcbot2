@@ -48,7 +48,7 @@ bool RCBotSourceModExt::IsMetamodExtension() {
 /// So we call this function from RCBotPluginMeta::Hook_LevelInit
 void RCBotSourceModExt::LateLoadExtensions() {
 	//SM_FIND_IFACE(BINTOOLS, sm_bintools);
-	SM_FIND_IFACE(SDKTOOLS, sm_sdktools);
+	SM_FIND_IFACE(SDKTOOLS, sm_sdktools)
 	//SM_FIND_IFACE(SDKHOOKS, sm_sdkhooks);
 
 	if (sm_sdktools)

@@ -17,10 +17,12 @@
 #ifndef __RCBOT2_LOGGER_H__
 #define __RCBOT2_LOGGER_H__
 
+#include <cstdint>
+
 /**
  * Log levels in ascending order.
  */
-enum LogLevel {
+enum LogLevel : std::uint8_t {
 	FATAL, ERROR, WARN, INFO, DEBUG, TRACE
 };
 

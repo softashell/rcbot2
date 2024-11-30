@@ -893,11 +893,14 @@ void CTF2PointCaptured :: execute ( IBotEventInterface *pEvent )
 }
 
 /* Flag has been picked up or dropped */
-#define FLAG_PICKUP		1
-#define FLAG_CAPTURED	2
-#define FLAG_DEFEND		3
-#define FLAG_DROPPED	4
-#define FLAG_RETURN		5
+enum : std::uint8_t
+{
+	FLAG_PICKUP = 1,
+	FLAG_CAPTURED = 2,
+	FLAG_DEFEND = 3,
+	FLAG_DROPPED = 4,
+	FLAG_RETURN = 5
+};
 
 void CFlagEvent :: execute ( IBotEventInterface *pEvent )
 {
@@ -1026,7 +1029,7 @@ void CDODPointCaptured :: execute ( IBotEventInterface *pEvent )
 	const char *szCappers = pEvent->getString("cappers", nullptr);
 
 	// get a capper
-	const int userid = szCappers[0]; //consider casting to unsigned char? [APG]RoboCop[CL]
+	const char userid = szCappers[0];
 
 	int team = 0;
 

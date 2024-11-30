@@ -630,7 +630,7 @@ public:
 	void seeFriendlyDie ( edict_t *pDied, edict_t *pKiller, CWeapon *pWeapon ) override { CBot::seeFriendlyDie(pDied,pKiller,pWeapon); }
 	void seeFriendlyKill ( edict_t *pTeamMate, edict_t *pDied, CWeapon *pWeapon ) override { CBot::seeFriendlyKill(pTeamMate,pDied,pWeapon); }
 
-	void voiceCommand ( int cmd ) override {} //conflicts with bot.h `CBotCmd cmd`? [APG]RoboCop[CL]
+	void voiceCommand (byte voiceCmd) override {}
 
 	void seeFriendlyHurtEnemy ( edict_t *pTeammate, edict_t *pEnemy, CWeapon *pWeapon ) override;
 	
@@ -910,7 +910,7 @@ public:
 
 	void updateClass () override;
 
-	bool healPlayer ();
+	bool healPlayer ( edict_t* pPlayer, edict_t* pPrevPlayer ) override;
 	
 	bool upgradeBuilding ( edict_t *pBuilding, bool removesapper = false ) override;
 
@@ -935,7 +935,7 @@ public:
 	void seeFriendlyDie ( edict_t *pDied, edict_t *pKiller, CWeapon *pWeapon ) override;
 	void seeFriendlyKill ( edict_t *pTeamMate, edict_t *pDied, CWeapon *pWeapon ) override;
 
-	void voiceCommand (int cmd) override;
+	void voiceCommand (byte voiceCmd) override;
 
 	void handleWeapons () override;
 

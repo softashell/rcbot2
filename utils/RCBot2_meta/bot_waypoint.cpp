@@ -1333,7 +1333,6 @@ void CWaypointNavigator :: updatePosition ()
 				// fix: bots jumping at wrong positions
 				m_pBot->touchedWpt(pWaypoint,-1);
 
-
 				m_vPreviousPoint = m_pBot->getOrigin();
 				m_iPrevWaypoint = m_iCurrentWaypoint;
 				m_iCurrentWaypoint = -1;
@@ -1841,8 +1840,8 @@ bool CWaypoints :: load (const char *szMapName)
 	CWaypointHeader header;
 	CWaypointAuthorInfo authorinfo;
 
-	std::memset(authorinfo.szAuthor,0,31);
-	std::memset(authorinfo.szModifiedBy,0,31);
+	std::memset(authorinfo.szAuthor,0, sizeof(authorinfo.szAuthor));
+	std::memset(authorinfo.szModifiedBy, 0, sizeof(authorinfo.szModifiedBy));
 
 	// read header
 	// -----------
@@ -2520,7 +2519,7 @@ CWaypoint *CWaypoints :: randomRouteWaypoint (CBot *pBot, const Vector& vOrigin,
 	return nullptr;
 }
 
-#define MAX_DEPTH 10
+constexpr int MAX_DEPTH = 10;
 /*
 void CWaypointNavigator::runAwayFrom ( int iId )
 {
@@ -3124,7 +3123,7 @@ std::size_t CWaypointTypes::getNumTypes()
 void CWaypointTypes :: setup ()
 {	
 	addType(new CWaypointType(W_FL_NOBLU,"noblueteam","TF2 blue team can't use this waypoint",WptColor(255,0,0),(1<<MOD_TF2)));
-	addType(new CWaypointType(W_FL_NOALLIES,"noallies","DOD allies team can't use this waypoint",WptColor(255,0,0),(1<<MOD_DOD)));
+	addType(new CWaypointType(W_FL_NOALLIES,"noallies","DOD:S allies team can't use this waypoint",WptColor(255,0,0),(1<<MOD_DOD)));
 
 	addType(new CWaypointType(W_FL_FLAG,"flag","bot will find a flag here",WptColor(255,255,0),(1<<MOD_TF2)));
 	addType(new CWaypointType(W_FL_HEALTH,"health","bot can sometimes get health here",WptColor(255,255,255),(1<<MOD_TF2)|(1<<MOD_HLDM2)|(1<<MOD_SYNERGY)));
@@ -3142,10 +3141,10 @@ void CWaypointTypes :: setup ()
 	addType(new CWaypointType(W_FL_FLAGONLY,"flagonly","TF2 bot needs the flag to go through here",WptColor(180,50,80),(1<<MOD_TF2)));
 
 	addType(new CWaypointType(W_FL_NORED,"noredteam","TF2 red team can't use this waypoint",WptColor(0,0,128),(1<<MOD_TF2)));
-	addType(new CWaypointType(W_FL_NOAXIS,"noaxis","DOD axis team can't use this waypoint",WptColor(255,0,0),(1<<MOD_DOD)));
+	addType(new CWaypointType(W_FL_NOAXIS,"noaxis","DOD:S axis team can't use this waypoint",WptColor(255,0,0),(1<<MOD_DOD)));
 	addType(new CWaypointType(W_FL_DEFEND,"defend","bot will defend at this position",WptColor(160,50,50)));	
 	addType(new CWaypointType(W_FL_SNIPER,"sniper","a bot can snipe here",WptColor(0,255,0)));
-	addType(new CWaypointType(W_FL_MACHINEGUN,"machinegun","DOD machine gunner will deploy gun here",WptColor(255,0,0),(1<<MOD_DOD)));
+	addType(new CWaypointType(W_FL_MACHINEGUN,"machinegun","DOD:S machine gunner will deploy gun here",WptColor(255,0,0),(1<<MOD_DOD)));
 	addType(new CWaypointType(W_FL_CROUCH,"crouch","bot will duck here",WptColor(200,100,0)));
 	addType(new CWaypointType(W_FL_PRONE,"prone","DOD:S bots prone here",WptColor(0,200,0),(1<<MOD_DOD)));
 	addType(new CWaypointType(W_FL_JUMP,"jump","bot will jump here",WptColor(255,255,255)));
@@ -3153,8 +3152,8 @@ void CWaypointTypes :: setup ()
 	addType(new CWaypointType(W_FL_UNREACHABLE,"unreachable","bot can't go here (used for visibility purposes only)",WptColor(200,200,200)));
 	addType(new CWaypointType(W_FL_LADDER,"ladder","bot will climb a ladder here",WptColor(255,255,0)));
 	addType(new CWaypointType(W_FL_FALL,"fall","Bots might kill themselves if they fall down here with low health",WptColor(128,128,128)));
-	addType(new CWaypointType(W_FL_CAPPOINT,"capture","TF2/DOD bot will find a capture point here",WptColor(255,255,0),(1<<MOD_TF2)|(1<<MOD_DOD)));
-	addType(new CWaypointType(W_FL_BOMBS_HERE,"bombs","DOD bots can pickup bombs here",WptColor(255,100,255),(1<<MOD_DOD)));
+	addType(new CWaypointType(W_FL_CAPPOINT,"capture","TF2/DOD:S bot will find a capture point here",WptColor(255,255,0),(1<<MOD_TF2)|(1<<MOD_DOD)));
+	addType(new CWaypointType(W_FL_BOMBS_HERE,"bombs","DOD:S bots can pickup bombs here",WptColor(255,100,255),(1<<MOD_DOD)));
 	addType(new CWaypointType(W_FL_BOMB_TO_OPEN,"bombtoopen","DOD:S bot needs to blow up this point to move on",WptColor(50,200,30),(1<<MOD_DOD)));
 	addType(new CWaypointType(W_FL_BREAKABLE,"breakable","Bots need to break something with a rocket to get through here",WptColor(100,255,50),(1<<MOD_DOD)));
 	addType(new CWaypointType(W_FL_OPENS_LATER,"openslater","this waypoint is available when a door is open only",WptColor(100,100,200)));
@@ -3371,7 +3370,7 @@ void CWaypointTest :: go ( edict_t *pPlayer )
 							bnointerruptions,j) 
 							== 
 							false 
-							);
+							) {}
 
 						if ( bfail )
 						{

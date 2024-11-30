@@ -298,7 +298,8 @@ void CTFObjectiveResource::setup ()
 {
 	CClassInterface::getTF2ObjectiveResource(this);
 
-	std::memset(m_pControlPoints,0,sizeof(edict_t*)*MAX_CONTROL_POINTS);
+	//std::memset(m_pControlPoints,0,sizeof(edict_t*)*MAX_CONTROL_POINTS);
+	std::memset(m_pControlPoints, 0, sizeof(*m_pControlPoints) * MAX_CONTROL_POINTS);
 	std::memset(m_iControlPointWpt,0xFF,sizeof(int)*MAX_CONTROL_POINTS);
 	std::memset(m_fLastCaptureTime,0,sizeof(float)*MAX_CONTROL_POINTS);
 	// Find control point entities

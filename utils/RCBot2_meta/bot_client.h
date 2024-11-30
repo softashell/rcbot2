@@ -65,7 +65,7 @@ public:
 
 	CTypeVector()
 	{
-		memset(this,0,sizeof(CTypeVector<T>));
+		std::memset(this,0,sizeof(CTypeVector<T>));
 	}
 
 	void SetVector ( Vector vVec ) 
@@ -118,7 +118,7 @@ public:
 		m_iFlags = 0;
 	}
 private:
-	int m_iFlags; //Not initialised? [APG]RoboCop[CL]
+	int m_iFlags = 0;
 };
 
 class CToolTip

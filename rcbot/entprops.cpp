@@ -633,7 +633,7 @@ bool *CBotEntProp::GetEntPropBoolPointer(int entity, PropType proptype, char *pr
 	edict_t *pEdict;
 	CBaseEntity *pEntity;
 	SourceMod::sm_sendprop_info_t info;
-	SendProp *pProp = nullptr; //Unused? [APG]RoboCop[CL]
+	const SendProp *pProp = nullptr; //Unused? [APG]RoboCop[CL]
 	int bit_count;
 	int offset;
 	bool is_unsigned = false; //Unused? [APG]RoboCop[CL]
@@ -746,7 +746,7 @@ bool CBotEntProp::SetEntProp(int entity, PropType proptype, char *prop, int valu
 	edict_t *pEdict;
 	CBaseEntity *pEntity;
 	SourceMod::sm_sendprop_info_t info;
-	SendProp *pProp = nullptr; //Unused? [APG]RoboCop[CL]
+	const SendProp *pProp = nullptr; //Unused? [APG]RoboCop[CL]
 	int bit_count;
 	int offset;
 	bool is_unsigned = false; //Unused? [APG]RoboCop[CL]

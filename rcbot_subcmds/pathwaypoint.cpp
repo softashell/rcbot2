@@ -174,7 +174,7 @@ CBotCommandInline PathWaypointCreateFromToCommand("createfromto", CMD_ACCESS_WAY
 			if ( pWaypoint2 && pWaypoint2->isUsed() )
 			{
 				pWaypoint->addPathTo(std::atoi(args[1]));
-				CBotGlobals::botMessage(pClient!= nullptr ? pClient->getPlayer() : nullptr,
+				CBotGlobals::botMessage(pClient->getPlayer(),
 					0,"Added path from <%d> to <%d>",std::atoi(args[0]),std::atoi(args[1]));
 
 				pWaypoint->draw(pClient->getPlayer(),true,DRAWTYPE_DEBUGENGINE);
@@ -186,15 +186,15 @@ CBotCommandInline PathWaypointCreateFromToCommand("createfromto", CMD_ACCESS_WAY
 
 				return COMMAND_ACCESSED;
 			}
-			CBotGlobals::botMessage(pClient!= nullptr ? pClient->getPlayer() : nullptr,
+			CBotGlobals::botMessage(pClient->getPlayer(),
 			                        0,"Waypoint id <%d> not found",std::atoi(args[1]));
 		}
 		else
-			CBotGlobals::botMessage(pClient!= nullptr ? pClient->getPlayer() : nullptr,
+			CBotGlobals::botMessage(pClient->getPlayer(),
 				0,"Waypoint id <%d> not found",std::atoi(args[0]));
 	}
 	else
-		CBotGlobals::botMessage(pClient!= nullptr ? pClient->getPlayer() : nullptr,
+		CBotGlobals::botMessage(pClient->getPlayer(),
 				0,"missing args <id1> <id2>");
 	
 	return COMMAND_ERROR;
@@ -214,7 +214,7 @@ CBotCommandInline PathWaypointRemoveFromToCommand("removefromto", CMD_ACCESS_WAY
 			if ( pWaypoint2 && pWaypoint2->isUsed() )
 			{
 				pWaypoint->removePathTo(std::atoi(args[1]));
-				CBotGlobals::botMessage(pClient!= nullptr ? pClient->getPlayer() : nullptr,
+				CBotGlobals::botMessage(pClient->getPlayer(),
 					0,"Removed path from <%d> to <%d>",std::atoi(args[0]),std::atoi(args[1]));
 
 				pWaypoint->draw(pClient->getPlayer(),true,DRAWTYPE_DEBUGENGINE);
@@ -226,11 +226,11 @@ CBotCommandInline PathWaypointRemoveFromToCommand("removefromto", CMD_ACCESS_WAY
 
 				return COMMAND_ACCESSED;
 			}
-			CBotGlobals::botMessage(pClient!= nullptr ? pClient->getPlayer() : nullptr,
+			CBotGlobals::botMessage(pClient->getPlayer(),
 			                        0,"Waypoint id <%d> not found",std::atoi(args[1]));
 		}
 		else
-			CBotGlobals::botMessage(pClient!= nullptr ? pClient->getPlayer() : nullptr,
+			CBotGlobals::botMessage(pClient->getPlayer(),
 				0,"Waypoint id <%d> not found",std::atoi(args[0]));
 	}
 	else

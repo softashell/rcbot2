@@ -167,7 +167,7 @@ METAMOD_PLUGIN *_GetPluginPtr(const char *path, int fail_api)
 		return (METAMOD_PLUGIN *)&s_FailPlugin;
 	}
 
-	if (!((fn=METAMOD_FN_ORIG_LOAD(findsym(g_hCore, "CreateInterface")))))
+	if (!((fn=reinterpret_cast<METAMOD_FN_ORIG_LOAD>(findsym(g_hCore, "CreateInterface")))))
 	{
 		goto error;
 	}

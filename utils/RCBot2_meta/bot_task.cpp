@@ -203,7 +203,7 @@ void CBotTF2MedicHeal::execute(CBot *pBot,CBotSchedule *pSchedule)
 			m_bHealerJumped = false;
 		}
 
-		if ( !pBotTF2->healPlayer() )
+		if ( !pBotTF2->healPlayer(nullptr, nullptr) )
 		{
 			pBot->getNavigator()->rollBackPosition();
 			pBotTF2->clearHealingEntity();

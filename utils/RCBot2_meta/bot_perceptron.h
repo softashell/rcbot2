@@ -77,11 +77,11 @@ public:
 
 	ga_nn_value getWeight ( unsigned short int i ) const { return m_weights[i]; }
 
-	ga_nn_value execute ();
+	virtual ga_nn_value execute (); //TODO: not implemented? [APG]RoboCop[CL]
 
-	bool fired (); //TODO: not implemented? [APG]RoboCop[CL]
+	static bool fired (); //TODO: experimental [APG]RoboCop[CL]
 
-	ga_nn_value getOutput () const { return m_output; }
+	virtual ga_nn_value getOutput () const { return m_output; }
 
 protected:
 	
@@ -105,11 +105,11 @@ public:
 
 	void setWeights (const ga_nn_value* weights) const;
 
-	ga_nn_value execute ();
+	ga_nn_value execute () override;
 
 	bool fired () const;
 
-	ga_nn_value getOutput () const;
+	ga_nn_value getOutput () const override;
 
 	void train ( ga_nn_value expectedOutput );
 
@@ -133,7 +133,7 @@ public:
 
 	void train ();/// ITransfer *transferFunction, bool usebias = true );
 
-	ga_nn_value execute ();//, bool usebias = true );
+	ga_nn_value execute () override;//, bool usebias = true );
 
 	void setError ( ga_nn_value err ) { m_error = err; }
 	void addError ( ga_nn_value err ) { m_error += err; }
@@ -205,8 +205,8 @@ public:
 		{
 			batches[i].in = new ga_nn_value[m_numInputs];
 			batches[i].out = new ga_nn_value[m_numOutputs];
-			memset(batches[i].in,0,sizeof(ga_nn_value)*m_numInputs);
-			memset(batches[i].out,0,sizeof(ga_nn_value)*m_numOutputs);
+			std::memset(batches[i].in,0,sizeof(ga_nn_value)*m_numInputs);
+			std::memset(batches[i].out,0,sizeof(ga_nn_value)*m_numOutputs);
 		}
 	}
 

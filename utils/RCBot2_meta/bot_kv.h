@@ -41,7 +41,7 @@ public:
 
 	bool getInt ( const char *key, int *val ) const;
 
-	bool getString ( const char *key, char **val ) const;
+	bool getString ( const char *key, const char **val ) const;
 
 	bool getFloat ( const char *key, float *val ) const;
 

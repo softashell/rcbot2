@@ -886,7 +886,7 @@ void CDODBot :: touchedWpt ( CWaypoint *pWaypoint, int iNextWaypoint, int iPrevW
 {
 	static int wptindex; //Unused? [APG]RoboCop[CL]
 
-	CBot::touchedWpt(pWaypoint);
+	CBot::touchedWpt(pWaypoint, iNextWaypoint, iPrevWaypoint);
 
 	wptindex = CWaypoints::getWaypointIndex(pWaypoint);
 
@@ -1446,7 +1446,7 @@ void CDODBot ::defending()
 	// check to go prone or not
 }
 
-void CDODBot ::voiceCommand (int cmd)
+void CDODBot ::voiceCommand (byte voiceCmd)
 {
 	// find voice command
 	extern eDODVoiceCommand_t g_DODVoiceCommands[DOD_VC_INVALID];
@@ -1454,9 +1454,9 @@ void CDODBot ::voiceCommand (int cmd)
 	char scmd[64];
 	u_VOICECMD vcmd;
 
-	vcmd.voicecmd = cmd; //not used? [APG]RoboCop[CL]
+	vcmd.voicecmd = voiceCmd; //not used? [APG]RoboCop[CL]
 	
-	snprintf(scmd, sizeof(scmd), "voice_%s", g_DODVoiceCommands[cmd].pcmd);
+	snprintf(scmd, sizeof(scmd), "voice_%s", g_DODVoiceCommands[voiceCmd].pcmd);
 
 	helpers->ClientCommand(m_pEdict,scmd);
 }
@@ -1480,9 +1480,9 @@ void CDODBot :: friendlyFire ( edict_t *pEdict )
 
 #define IF_WANT_TO_LISTEN if ( isVisible(pPlayer) || (inSquad() && (m_pSquad->GetLeader()==pPlayer)) )
 
-void CDODBot :: hearVoiceCommand ( edict_t *pPlayer, byte cmd )
+void CDODBot::hearVoiceCommand(edict_t* pPlayer, byte voiceCmd)
 {
-	switch ( cmd )
+	switch ( voiceCmd )
 	{
 	case DOD_VC_CEASEFIRE:
 		IF_WANT_TO_LISTEN
@@ -1603,7 +1603,7 @@ void CDODBot :: hearVoiceCommand ( edict_t *pPlayer, byte cmd )
 				vCapSearchOrigin = vOrigin+(vForward*CWaypointLocations::BUCKET_SPACING*2);
 				int iNearestPoint = CDODMod::m_Flags.findNearestObjective(vCapSearchOrigin);
 
-				if ( cmd == DOD_VC_GO_LEFT )
+				if ( voiceCmd == DOD_VC_GO_LEFT )
 					vOrigin = vOrigin - (vRight*(CWaypointLocations::BUCKET_SPACING+1)) + (vForward*(CWaypointLocations::BUCKET_SPACING+1));
 				else
 					vOrigin = vOrigin + (vRight*(CWaypointLocations::BUCKET_SPACING+1)) + (vForward*(CWaypointLocations::BUCKET_SPACING+1));
@@ -1922,11 +1922,11 @@ void CDODBot :: hearVoiceCommand ( edict_t *pPlayer, byte cmd )
 		break;
 	}
 
-	m_LastHearVoiceCommand = static_cast<eDODVoiceCMD>(cmd);
+	m_LastHearVoiceCommand = static_cast<eDODVoiceCMD>(voiceCmd);
 
 	// don't say the same command for a second or two
-	if ( cmd < MAX_VOICE_CMDS )
-		m_fLastVoiceCommand[cmd] = engine->Time() + randomFloat(1.0f,3.0f);
+	if ( voiceCmd < MAX_VOICE_CMDS )
+		m_fLastVoiceCommand[voiceCmd] = engine->Time() + randomFloat(1.0f,3.0f);
 }
 
 void CDODBot :: sayInPosition ( )
@@ -3017,8 +3017,11 @@ bool CDODBot :: hasSniperRifle () const
 	return m_pWeapons->hasWeapon(DOD_WEAPON_K98_SCOPED) || m_pWeapons->hasWeapon(DOD_WEAPON_SPRING);
 }
 
-#define BOT_DEFEND 0
-#define BOT_ATTACK 1
+enum : std::uint8_t
+{
+	BOT_DEFEND = 0,
+	BOT_ATTACK = 1
+};
 
 void CDODBot :: getTasks (unsigned int iIgnore)
 {

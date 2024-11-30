@@ -58,8 +58,8 @@ public:
 
 	void reset ()
 	{
-		memset(this,0,sizeof(CTFObjectiveResource));
-		memset(m_iControlPointWpt,0xFF,sizeof(int)*MAX_CONTROL_POINTS);
+		std::memset(this,0,sizeof(CTFObjectiveResource));
+		std::memset(m_iControlPointWpt,0xFF,sizeof(int)*MAX_CONTROL_POINTS);
 		m_iMonitorPoint[0] = -1;
 		m_iMonitorPoint[1] = -1;
 	}
@@ -273,7 +273,7 @@ public:
 
 	void resetValidWaypointAreas() 
 	{ 
-		memset(m_ValidAreas,0,sizeof(bool)*MAX_CONTROL_POINTS); 
+		std::memset(m_ValidAreas,0,sizeof(bool)*MAX_CONTROL_POINTS); 
 	}
 	void updateValidWaypointAreas ()
 	{
@@ -299,7 +299,7 @@ class CTeamRoundTimer
 public:
 	CTeamRoundTimer()
 	{
-		memset(this,0,sizeof(CTeamRoundTimer));
+		std::memset(this,0,sizeof(CTeamRoundTimer));
 	}
 
 	float getSetupTime ()
@@ -339,7 +339,7 @@ class COutputEvent
 {
 	variant_t m_Value;
 	CEventAction *m_ActionList;
-	DECLARE_SIMPLE_DATADESC();
+	DECLARE_SIMPLE_DATADESC()
 };
 
 class CTeamControlPointMaster

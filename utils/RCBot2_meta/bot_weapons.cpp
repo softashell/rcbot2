@@ -35,10 +35,11 @@
 #include "bot_weapons.h"
 #include "bot_getprop.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstring>
 
-const char* g_szDODWeapons[] =
+const static char* g_szDODWeapons[] =
 {
 	"weapon_amerknife",
 	"weapon_spade",
@@ -67,7 +68,7 @@ const char* g_szDODWeapons[] =
 	"weapon_basebomb"
 };
 
-const char* g_szHL2DMWeapons[] =
+const static char* g_szHL2DMWeapons[] =
 {
 	"weapon_pistol",
 	"weapon_crowbar",
@@ -83,7 +84,7 @@ const char* g_szHL2DMWeapons[] =
 	"weapon_physcannon"
 };
 
-const char* g_szSYNWeapons[] =
+const static char* g_szSYNWeapons[] =
 {
 	"weapon_pistol", // 0
 	"weapon_crowbar",
@@ -104,7 +105,7 @@ const char* g_szSYNWeapons[] =
 	"weapon_bugbait"
 };
 
-const char* g_szCSWeapons[] =
+const static char* g_szCSWeapons[] =
 {
 	"weapon_knife", // 0
 	"weapon_usp",
@@ -364,20 +365,11 @@ bool CBotWeapons::hasExplosives() const
 
 bool CBotWeapons::hasWeapon(int id) const
 {
-	for (const CBotWeapon& m_theWeapon : m_theWeapons)
-	{
-		if (m_theWeapon.getWeaponInfo() == nullptr)
-			continue;
-		if (m_theWeapon.hasWeapon() == false)
-			continue;
-		if (m_theWeapon.getID() == id)
-			// find weapon info from weapon id
-		{
-			return true;
-		}
-	}
-	return false;
+	return std::any_of(std::begin(m_theWeapons), std::end(m_theWeapons), [id](const CBotWeapon& weapon) {
+		return weapon.getWeaponInfo() != nullptr && weapon.hasWeapon() && weapon.getID() == id;
+		});
 }
+
 // Bot Weapons
 CBotWeapons::CBotWeapons(CBot* pBot)
 {
@@ -759,7 +751,7 @@ CBotWeapon* CBotWeapons::getCurrentWeaponInSlot(int iSlot)
 	return nullptr;
 }
 
-const char* szWeaponFlags[] = {
+const static char* szWeaponFlags[] = {
 	 "primary_attack" ,
 	 "secondary_attack" ,
 	 "explosive" ,

@@ -38,9 +38,9 @@
 
 #include <cstring>
 
-void CHL1DMSrcBot :: init ()
+void CHL1DMSrcBot :: init (bool bVarInit)
 {
-	CBot::init();
+	CBot::init(bVarInit);
 }
 
 void CHL1DMSrcBot :: setup ()
@@ -59,7 +59,7 @@ void CHL1DMSrcBot :: killed ( edict_t *pVictim )
 	return;
 }
 
-void CHL1DMSrcBot :: died ( edict_t *pKiller )
+void CHL1DMSrcBot :: died (edict_t* pKiller, const char* pszWeapon)
 {
 	spawnInit();
 

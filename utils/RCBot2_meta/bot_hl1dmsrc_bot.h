@@ -39,17 +39,17 @@ public:
 
 	void modThink () override;
 
-	void init ();
+	void init (bool bVarInit = false) override;
 	void setup () override;
 
 	bool startGame () override;
 
-	void died ( edict_t *pKiller );
+	void died (edict_t* pKiller, const char* pszWeapon) override;
 	static void killed ( edict_t *pVictim );
 
 	void spawnInit () override;
 
-	bool isEnemy ( edict_t *pEdict,bool bCheckWeapons = true ) override;
+	bool isEnemy ( edict_t *pEdict, bool bCheckWeapons = true ) override;
 private:
 	// blah blah
 };

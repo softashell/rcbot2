@@ -195,7 +195,7 @@ public:
 
 	bool handleAttack ( CBotWeapon *pWeapon, edict_t *pEnemy ) override;
 
-	void hearVoiceCommand ( edict_t *pPlayer, byte cmd ) override;
+	void hearVoiceCommand ( edict_t *pPlayer, byte voiceCmd ) override;
 
 	void handleWeapons () override;
 
@@ -210,7 +210,7 @@ public:
 	CBotWeapon *getSniperRifle () const;
 	bool hasSniperRifle () const;
 
-	void voiceCommand (int cmd) override;
+	void voiceCommand (byte voiceCmd) override;
 
 	unsigned int maxEntityIndex ( ) override { return gpGlobals->maxEntities; }
 

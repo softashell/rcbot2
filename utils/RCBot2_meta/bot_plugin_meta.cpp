@@ -505,8 +505,9 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxle
 	int bot_count = 0;
 	int human_count = 0;
 
-	for (int i = 0; i < RCBOT_MAXPLAYERS; ++i) {
-		m_iTargetBots[i] = 0;
+	for (int& m_iTargetBot : m_iTargetBots)
+	{
+		m_iTargetBot = 0;
 	}
 
 	CBotGlobals::buildFileName(filename, "bot_quota", BOT_CONFIG_FOLDER, "ini");
@@ -519,12 +520,13 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxle
 			if (bq_line[0] == '#')
 				continue;
 
-			for (int i = 0; i < sizeof(bq_line); ++i) {
-				if (bq_line[i] == '\0')
+			for (char& i : bq_line)
+			{
+				if (i == '\0')
 					break;
 
-				if (!isdigit(bq_line[i]))
-					bq_line[i] = ' ';
+				if (!isdigit(i))
+					i = ' ';
 			}
 
 			if (std::sscanf(bq_line, "%d %d", &human_count, &bot_count) == 2) {
@@ -842,9 +844,6 @@ void RCBotPluginMeta::BotQuotaCheck() {
 	if (m_fBotQuotaTimer < engine->Time() - rcbot_bot_quota_interval.GetInt()) {
 		m_fBotQuotaTimer = engine->Time();
 
-		// Target Bot Count
-		int bot_target; 
-
 		// Change Notification
 		bool notify = false;
 
@@ -879,7 +878,7 @@ void RCBotPluginMeta::BotQuotaCheck() {
 		}
 
 		// Get Bot Quota
-		bot_target = m_iTargetBots[human_count];
+		const int bot_target = m_iTargetBots[human_count];
 
 		// Change Bot Quota
 		if (bot_count > bot_target) {

@@ -1014,14 +1014,14 @@ void CBot :: think ()
 	// deal with it here
 	if ( m_fNextVoiceCommand < engine->Time() && !m_nextVoicecmd.empty() )
 	{
-		const byte cmd = static_cast<byte>(m_nextVoicecmd.front()); //conflicts with bot.h `CBotCmd cmd`? [APG]RoboCop[CL]
+		const byte voiceCmd = static_cast<byte>(m_nextVoicecmd.front());
 
 		m_fNextVoiceCommand = engine->Time() + randomFloat(0.4f,1.2f);
 		
-		if ( m_fLastVoiceCommand[cmd] < engine->Time() )
+		if ( m_fLastVoiceCommand[voiceCmd] < engine->Time() )
 		{
-			voiceCommand(cmd);
-			m_fLastVoiceCommand[cmd] = engine->Time() + randomFloat(8.0f,16.0f);
+			voiceCommand(voiceCmd);
+			m_fLastVoiceCommand[voiceCmd] = engine->Time() + randomFloat(8.0f,16.0f);
 		}
 
 		m_nextVoicecmd.pop();
@@ -1032,11 +1032,11 @@ void CBot :: think ()
 	m_bInitAlive = false;
 }
 
-void CBot :: addVoiceCommand ( int cmd ) //conflicts with bot.h `CBotCmd cmd`? [APG]RoboCop[CL]
+void CBot :: addVoiceCommand ( byte voiceCmd )
 {
-	if ( bot_use_vc_commands.GetBool() && m_fLastVoiceCommand[cmd] < engine->Time() )
+	if ( bot_use_vc_commands.GetBool() && m_fLastVoiceCommand[voiceCmd] < engine->Time() )
 	{
-		m_nextVoicecmd.push(cmd); 
+		m_nextVoicecmd.push(voiceCmd);
 		m_fNextVoiceCommand = engine->Time() + randomFloat(0.2f,1.0f);
 	}
 }
@@ -1759,7 +1759,11 @@ void CBot ::debugBot(char *msg)
 	if ( hastask )
 		m_pSchedules->getCurrentTask()->debugString(task_string);
 
-	std::sprintf(msg,"Debugging bot: %s\n \
+	const bool hasNextPoint = m_pNavigator->hasNextPoint();
+	const int currentWaypointID = hasNextPoint ? m_pNavigator->getCurrentWaypointID() : -1;
+	const int currentGoalID = hasNextPoint ? m_pNavigator->getCurrentGoalID() : -1;
+
+	std::sprintf(msg, "Debugging bot: %s\n \
 		Current Util: %s \n \
 		Current Schedule: %s\n \
 		Current Task: {%s}\n \
@@ -1768,19 +1772,19 @@ void CBot ::debugBot(char *msg)
 		Current Goal: %d\n \
 		Danger: %0.2f pc\n \
 		Enemy: %s (name = '%s')\n \
-		---CONDITIONS---\n%s", 
-		m_szBotName, 
-		m_CurrentUtil>=0?g_szUtils[m_CurrentUtil]:"none",
+		---CONDITIONS---\n%s",
+		m_szBotName,
+		m_CurrentUtil >= 0 ? g_szUtils[m_CurrentUtil] : "none",
 		m_pSchedules->isEmpty() ? "none" : m_pSchedules->getCurrentSchedule()->getIDString(),
 		hastask ? task_string : "none",
-		g_szLookTaskToString[m_iLookTask], 
-		m_pNavigator->hasNextPoint() ? m_pNavigator->getCurrentWaypointID() : -1, 
-		m_pNavigator->hasNextPoint() ? m_pNavigator->getCurrentGoalID() : -1,
-		m_fCurrentDanger/MAX_BELIEF*100,
-		pEnemy!= nullptr ?pEnemy->GetClassName():"none",
-		p!= nullptr ?p->GetName():"none",
+		g_szLookTaskToString[m_iLookTask],
+		currentWaypointID,
+		currentGoalID,
+		m_fCurrentDanger / MAX_BELIEF * 100,
+		pEnemy != nullptr ? pEnemy->GetClassName() : "none",
+		p != nullptr ? p->GetName() : "none",
 		szConditions
-		);
+	);
 }
 
 int CBot :: nearbyFriendlies (float fDistance)
@@ -2483,7 +2487,7 @@ void CBot :: grenadeThrown ()
 
 }
 
-void CBot::voiceCommand(int cmd) //conflicts with bot.h `CBotCmd cmd`? [APG]RoboCop[CL]
+void CBot::voiceCommand(byte voiceCmd)
 {
 	
 }
@@ -3260,6 +3264,12 @@ void CBots :: runPlayerMoveAll ()
 			pBot->runPlayerMove();
 		}
 	}
+}
+
+//TODO: Experimental [APG]RoboCop[CL]
+int CBots::levelInit()
+{
+	return 0;
 }
 
 #define CHECK_STRING(str) (((str)==NULL)?"NULL":(str))

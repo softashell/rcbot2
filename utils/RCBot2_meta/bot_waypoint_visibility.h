@@ -74,7 +74,7 @@ public:
 		m_VisTable = new unsigned char[iSize];
 
 		m_iPrevPercent = 0;
-		memset(m_VisTable,0,iSize);
+		std::memset(m_VisTable,0,iSize);
 	}
 
 	bool SaveToFile () const;
@@ -104,7 +104,7 @@ public:
 	void ClearVisibilityTable ()
 	{
 		if ( m_VisTable )
-			memset(m_VisTable,0,g_iMaxVisibilityByte);
+			std::memset(m_VisTable,0,g_iMaxVisibilityByte);
 
 		/////////////////////////////
 		// for "concurrent" reading of 

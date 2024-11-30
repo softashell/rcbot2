@@ -181,7 +181,7 @@ public:
 
 	void activate ( CClient *pClient ) override;
 
-	Color getColor ( CClient *pClient ); // gets the colour of the caption - TODO: not implemented yet [APG]RoboCop[CL]
+	static Color getColor ( CClient *pClient ); // gets the colour of the caption - TODO: not implemented yet? [APG]RoboCop[CL]
 
 	virtual void addMenuItem ( CBotMenuItem *item )
 	{
@@ -471,7 +471,7 @@ class CBotMenuList
 public:
 	CBotMenuList ()
 	{
-		memset(m_MenuList,0,sizeof(CBotMenu*)*BOT_MENU_MAX);
+		std::memset(m_MenuList,0,sizeof(CBotMenu*)*BOT_MENU_MAX);
 	}
 
 	static void setupMenus ();

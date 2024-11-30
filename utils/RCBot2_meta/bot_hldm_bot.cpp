@@ -51,9 +51,9 @@
 #include <cstring>
 
 // initialise , i.e. set everything to a default value
-void CHLDMBot :: init ()
+void CHLDMBot :: init (bool bVarInit)
 {
-	CBot::init();
+	CBot::init(bVarInit);
 }
 
 // initialize structures and classes used be the bot
@@ -97,17 +97,15 @@ void CHLDMBot :: died ( edict_t *pKiller, const char *pszWeapon )
 	}
 }
 
-void CHLDMBot :: touchedWpt ( CWaypoint *pWaypoint )
+void CHLDMBot :: touchedWpt (CWaypoint* pWaypoint, int iNextWaypoint, int iPrevWaypoint)
 {
-	CBot::touchedWpt(pWaypoint);
+	CBot::touchedWpt(pWaypoint, iNextWaypoint, iPrevWaypoint);
 
 	if ( pWaypoint->hasFlag(CWaypointTypes::W_FL_LIFT) )
 	{
 		if ( m_fUseButtonTime < engine->Time() )
 		{
-			edict_t *pButton = CHalfLifeDeathmatchMod::getButtonAtWaypoint(pWaypoint);
-
-			if ( pButton )
+			if ( edict_t *pButton = CHalfLifeDeathmatchMod::getButtonAtWaypoint(pWaypoint) )
 			{
 				m_fUseButtonTime = engine->Time() + randomFloat(5.0f,10.0f);
 
@@ -447,12 +445,12 @@ void CHLDMBot :: getTasks (unsigned int iIgnore)
 	{
 		edict_t *pent = INDEXENT(gravgun->getWeaponIndex());
 
-		if ( CBotGlobals::entityIsValid(pent) )
+		if (CBotGlobals::entityIsValid(pent))
 		{
 			ADD_UTILITY(BOT_UTIL_HL2DM_GRAVIGUN_PICKUP,
-			            (!m_pEnemy||m_pCurrentWeapon&&std::strcmp("weapon_physcannon",m_pCurrentWeapon->GetClassName())) &&
-			            gravgun && gravgun->hasWeapon() && (m_NearestPhysObj.get()!=NULL) && gravgun->getWeaponIndex() >
-			            0 && (CClassInterface::gravityGunObject(INDEXENT(gravgun->getWeaponIndex()))==NULL), 0.9f)
+				(!m_pEnemy || (m_pCurrentWeapon && std::strcmp("weapon_physcannon", m_pCurrentWeapon->GetClassName()) == 0)) &&
+				gravgun && gravgun->hasWeapon() && (m_NearestPhysObj.get() != NULL) && gravgun->getWeaponIndex() > 0 &&
+				(CClassInterface::gravityGunObject(INDEXENT(gravgun->getWeaponIndex())) == NULL), 0.9f)
 		}
 	}
 

@@ -62,7 +62,7 @@ extern IServerGameEnts *servergameents; // for accessing the server game entitie
 
 void CCSSBot::init(bool bVarInit)
 {
-	CBot::init();// require this
+	CBot::init(bVarInit);// require this
 
 	// initialize stuff for counter-strike source bot
 	m_pBuyManager = nullptr;

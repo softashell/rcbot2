@@ -754,9 +754,9 @@ public:
 
 	virtual void grenadeThrown ();
 
-	virtual void voiceCommand (int cmd);
+	virtual void voiceCommand (byte voiceCmd);
 
-	void addVoiceCommand (int cmd);
+	void addVoiceCommand (byte voiceCmd);
 
 	void letGoOfButton ( int button ) const;
 
@@ -1095,7 +1095,7 @@ public:
 
 	static CBot* get(size_t iIndex) { return m_Bots[iIndex]; }
 	static CBot *get ( edict_t *pPlayer ) { return m_Bots[slotOfEdict(pPlayer)]; }
-	int levelInit(); //TODO: Not implemented [APG]RoboCop[CL]
+	static int levelInit(); //TODO: Not implemented? [APG]RoboCop[CL]
 
 private:
 	static CBot **m_Bots;

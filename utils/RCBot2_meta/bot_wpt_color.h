@@ -13,7 +13,7 @@ class WptColor
 public:
 	WptColor ()
 	{
-		memset(this,0,sizeof(WptColor));
+		std::memset(this,0,sizeof(WptColor));
 	}
 
 	WptColor ( int _r, int _g, int _b, int _a )

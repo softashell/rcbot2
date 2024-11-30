@@ -134,7 +134,7 @@ public:
 
 	virtual int numPaths ( ) { return 0; }
 
-	virtual Vector getPath ( int pathid ) { return Vector(0,0,0); }
+	virtual Vector getPath ( int pathid ) { return {0,0,0}; }
 
 	virtual bool randomDangerPath (Vector *vec) { return false; }
 
@@ -169,7 +169,7 @@ enum : std::uint8_t
 class AStarNode
 {
 public:
-	AStarNode() { memset(this,0,sizeof(AStarNode)); }
+	AStarNode() { std::memset(this,0,sizeof(AStarNode)); }
 	///////////////////////////////////////////////////////
 	void close () { setFlag(FL_ASTAR_CLOSED); }
 	void unClose () { removeFlag(FL_ASTAR_CLOSED); }
@@ -389,7 +389,7 @@ public:
 		m_iBeliefTeam = -1;
 		m_bLoadBelief = true;
 		m_bBeliefChanged = false;
-		memset(&m_lastFailedPath,0,sizeof(failedpath_t));
+		std::memset(&m_lastFailedPath,0,sizeof(failedpath_t));
 	}
 
 	void init () override;

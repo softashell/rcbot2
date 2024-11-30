@@ -380,11 +380,11 @@ bool CBotSynergy::setVisible(edict_t* pEntity, bool bVisible)
 		}
 		else if (std::strncmp(szclassname, "item_ammo", 9) == 0 && (!m_pNearbyAmmo.get() || fDist < distanceFrom(m_pNearbyAmmo.get())))
 		{
-			if (std::strncmp(szclassname, "item_ammo_crate", 15))
+			if (std::strncmp(szclassname, "item_ammo_crate", 15) == 0)
 			{
 				m_pNearbyAmmo = nullptr; // Invalidate if this entity is an ammo crate
 			}
-			else if (std::strncmp(szclassname, "item_ammo_pack", 14)) // Ignore these
+			else if (std::strncmp(szclassname, "item_ammo_pack", 14) == 0) // Ignore these
 			{
 				m_pNearbyAmmo = nullptr;
 			}

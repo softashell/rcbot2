@@ -74,6 +74,16 @@ void CNeuron :: input ( ga_nn_value *inputs )
 	std::memcpy(m_inputs,inputs,sizeof(ga_nn_value)*m_iInputs);
 }
 
+ga_nn_value CNeuron::execute()
+{
+	return ga_nn_value();
+}
+
+bool CNeuron::fired() //TODO: experimental [APG]RoboCop[CL]
+{
+	return false;
+}
+
 ga_nn_value CPerceptron :: execute ()
 {
 	static unsigned short int i;
@@ -157,7 +167,7 @@ ga_nn_value CLogisticalNeuron :: execute (  )//, bool usebias )
 	static ga_nn_value *w;
 	static ga_nn_value *x;
 
-	m_netinput = 0;
+	//m_netinput = 0;
 	w = m_weights;
 	x = m_inputs;
 
@@ -231,7 +241,7 @@ CBotNeuralNet :: CBotNeuralNet ( unsigned short int numinputs, unsigned short in
 	m_numHiddenLayers = numhiddenlayers;
 }
 
-#define RCPP_VERB_EPOCHS 1000
+constexpr int RCPP_VERB_EPOCHS = 1000;
 
 void CBotNeuralNet :: batch_train ( CTrainingSet *tset, unsigned short int epochs ) const
 {

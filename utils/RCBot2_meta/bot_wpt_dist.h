@@ -36,7 +36,7 @@ public:
 
 	static void reset ()
 	{
-		memset(m_Distances,0xFF,sizeof(int)*CWaypoints::MAX_WAYPOINTS*CWaypoints::MAX_WAYPOINTS);
+		std::memset(m_Distances,0xFF,sizeof(int)*CWaypoints::MAX_WAYPOINTS*CWaypoints::MAX_WAYPOINTS);
 	}
 private:
 	static int m_Distances [CWaypoints::MAX_WAYPOINTS][CWaypoints::MAX_WAYPOINTS];

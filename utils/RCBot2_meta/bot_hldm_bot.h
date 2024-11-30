@@ -45,7 +45,7 @@ public:
 
 	void modThink() override;
 
-	void init(); //TODO: Needs checked [APG]RoboCop[CL]
+	void init(bool bVarInit = false) override;
 	void setup() override;
 
 	bool startGame() override;
@@ -82,7 +82,7 @@ public:
 
 	edict_t* getFailedObject() const { return m_FailedPhysObj; }
 
-	virtual void touchedWpt(CWaypoint* pWaypoint);
+	void touchedWpt(CWaypoint* pWaypoint, int iNextWaypoint = -1, int iPrevWaypoint = -1) override;
 
 private:
 	// blah blah

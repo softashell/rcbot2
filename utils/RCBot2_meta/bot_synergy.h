@@ -35,7 +35,7 @@ class CBotSynergy : public CBot
 {
 public:
 	bool isSYN () override { return true; }
-	void init (bool bVarInit=false) override;
+	void init (bool bVarInit = false) override;
 	void spawnInit () override;
 	void died ( edict_t *pKiller, const char *pszWeapon ) override;
 	void modThink () override;

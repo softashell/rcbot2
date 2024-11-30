@@ -599,12 +599,17 @@ CBotCommandInline FindProp("findprop", CMD_ACCESS_DEBUG, [](CClient *pClient, co
 	return COMMAND_ERROR;
 }, "Usage: findprop <propname>");
 
-#define MEMSEARCH_BYTE 1
-#define MEMSEARCH_INT 2
-#define MEMSEARCH_FLOAT 3
-#define MEMSEARCH_STRING 4
+enum : std::uint8_t
+{	MEMSEARCH_BYTE = 1,
+	MEMSEARCH_INT = 2,
+	MEMSEARCH_FLOAT = 3,
+	MEMSEARCH_STRING = 4
+};
 
-#define MAX_MEM_SEARCH 8192
+enum : std::uint16_t
+{
+	MAX_MEM_SEARCH = 8192
+};
 
 typedef union
 {
@@ -647,7 +652,7 @@ CBotCommandInline DebugMemoryScanCommand("memoryscan", CMD_ACCESS_DEBUG, [](CCli
 
 	if ( (m_prev_size != m_size) || ((m_size==0) || !args[3] || !*args[3]) || ( std::atoi(args[3]) == 0 ) )
 	{
-		memset(stored_offsets,0,sizeof(u_MEMSEARCH)*MAX_MEM_SEARCH);
+		std::memset(stored_offsets,0,sizeof(u_MEMSEARCH)*MAX_MEM_SEARCH);
 	}
 
 

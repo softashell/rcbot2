@@ -98,10 +98,10 @@ void CBotProfiles :: setupProfiles ()
 		-1, // iTeam
 		CBotVisibles::DEFAULT_MAX_TICKS, // vis ticks
 		IBotNavigator::MAX_PATH_TICKS, // path ticks
-		2, // visrevs clients
-		8.0f, // sensitivity
-		0.5f, // braveness
-		0.5f, // aim skill
+		10, // visrevs clients
+		8, // sensitivity
+		0.7f, // braveness
+		0.85f, // aim skill
 		-1 // class
 		);	
 
@@ -116,9 +116,7 @@ void CBotProfiles :: setupProfiles ()
 		snprintf(szId, sizeof(szId), "%d", iId);
 		CBotGlobals::buildFileName(filename,szId,BOT_PROFILE_FOLDER,BOT_CONFIG_EXTENSION);
 
-		std::fstream fp = CBotGlobals::openFile(filename, std::fstream::in);
-
-		if ( fp )
+		if ( std::fstream fp = CBotGlobals::openFile(filename, std::fstream::in) )
 		{
 			// copy defaults
 			CBotProfile read = *m_pDefaultProfile;

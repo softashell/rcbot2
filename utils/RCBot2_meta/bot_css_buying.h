@@ -43,7 +43,7 @@
  * Machine Guns: m249
  **/
 
-typedef enum
+typedef enum : std::uint8_t
 {
     CS_BUY_AMMO_PRIMARY = 0,
     CS_BUY_AMMO_SECONDARY,
@@ -86,7 +86,7 @@ typedef enum
  * Determines what kind of weapons the bot likes
  * Currently it's selected randomly
  **/
-typedef enum
+typedef enum : std::int8_t
 {
     CS_BUY_PROFILE_INVALID = -1,
     CS_BUY_PROFILE_SMG = 0,
@@ -102,7 +102,7 @@ typedef enum
 /**
  * List of buy "types" for the bot
  **/
-typedef enum
+typedef enum : std::int8_t
 {
     CS_BUY_TYPE_INVALID = -1,
     CS_BUY_TYPE_ECO = 0, // Save money
