@@ -41,6 +41,8 @@
 #include "bot_tf2_points.h"
 #include "bot_cvars.h"
 
+#include <cstring>
+
 enum : std::uint8_t
 {
 	MAX_CAP_POINTS = 32

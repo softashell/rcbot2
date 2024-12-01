@@ -1,6 +1,7 @@
 #ifndef __RCBOT_TF2_POINTS_H__
 #define __RCBOT_TF2_POINTS_H__
 
+#include <cstring>
 #include "utlmap.h"
 
 class CTeamControlPoint;

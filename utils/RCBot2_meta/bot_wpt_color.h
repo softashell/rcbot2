@@ -1,4 +1,6 @@
+#pragma once
 #include <algorithm>
+#include <cstring>
 
 #ifndef __BOT_WPT_COLOR_H__
 #define __BOT_WPT_COLOR_H__

@@ -1,6 +1,7 @@
 #ifndef __RCBOT_PROFILE_H__
 #define __RCBOT_PROFILE_H__
 
+#include <cstring>
 #include <vector>
 
 class CBotProfile

@@ -31,6 +31,7 @@
 #ifndef __RCBOT_CLIENT_H__
 #define __RCBOT_CLIENT_H__
 
+#include <cstring>
 #include <vector>
 
 #include "bot_const.h"
