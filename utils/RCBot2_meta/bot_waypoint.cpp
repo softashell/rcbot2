@@ -64,7 +64,7 @@
 #include <algorithm>
 
 int CWaypoints::m_iNumWaypoints = 0;
-CWaypoint CWaypoints::m_theWaypoints[CWaypoints::MAX_WAYPOINTS];
+CWaypoint CWaypoints::m_theWaypoints[MAX_WAYPOINTS];
 float CWaypoints::m_fNextDrawWaypoints = 0.0f;
 int CWaypoints::m_iWaypointTexture = 0;
 CWaypointVisibilityTable * CWaypoints::m_pVisibilityTable = nullptr;
@@ -3262,12 +3262,12 @@ void CWaypointType :: removeTypeFromWaypoint ( CWaypoint *pWaypoint )
 
 }*/
 
-CWaypointType::CWaypointType(int iBit, const char* szName, const char* szDescription, WptColor vColour, int iModBits,
-                             int iImportance) : m_vColour(vColour)
+CWaypointType :: CWaypointType (int iBit, const char *szName, const char *szDescription, WptColor vColour, int iModBits, int iImportance )
 {
 	m_iBit = iBit;
 	m_szName = CStrings::getString(szName);
 	m_szDescription = CStrings::getString(szDescription);
+	m_vColour = vColour;
 	m_iMods = iModBits;
 	m_iImportance = iImportance;
 }

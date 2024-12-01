@@ -39,7 +39,7 @@
 #include <cmath>
 #include <cstring>
 
-const static char* g_szDODWeapons[] =
+static const char* g_szDODWeapons[] =
 {
 	"weapon_amerknife",
 	"weapon_spade",
@@ -68,7 +68,7 @@ const static char* g_szDODWeapons[] =
 	"weapon_basebomb"
 };
 
-const static char* g_szHL2DMWeapons[] =
+static const char* g_szHL2DMWeapons[] =
 {
 	"weapon_pistol",
 	"weapon_crowbar",
@@ -84,7 +84,7 @@ const static char* g_szHL2DMWeapons[] =
 	"weapon_physcannon"
 };
 
-const static char* g_szSYNWeapons[] =
+static const char* g_szSYNWeapons[] =
 {
 	"weapon_pistol", // 0
 	"weapon_crowbar",
@@ -105,7 +105,7 @@ const static char* g_szSYNWeapons[] =
 	"weapon_bugbait"
 };
 
-const static char* g_szCSWeapons[] =
+static const char* g_szCSWeapons[] =
 {
 	"weapon_knife", // 0
 	"weapon_usp",
@@ -751,7 +751,7 @@ CBotWeapon* CBotWeapons::getCurrentWeaponInSlot(int iSlot)
 	return nullptr;
 }
 
-const static char* szWeaponFlags[] = {
+static const char* szWeaponFlags[] = {
 	 "primary_attack" ,
 	 "secondary_attack" ,
 	 "explosive" ,
