@@ -156,7 +156,8 @@ const char* g_szUtils[BOT_UTIL_MAX + 1] =
 "BOT_UTIL_MAX"
 };
 
-CBotUtility::CBotUtility(CBot* pBot, eBotAction id, bool bCanDo, float fUtil, CBotWeapon* pWeapon, int iData, const Vector& vec)
+CBotUtility::CBotUtility(CBot* pBot, eBotAction id, bool bCanDo, float fUtil, CBotWeapon* pWeapon, int iData,
+                         const Vector& vec) : m_vVector(vec)
 {
 	m_iData = iData;
 	m_fUtility = fUtil;
@@ -164,7 +165,6 @@ CBotUtility::CBotUtility(CBot* pBot, eBotAction id, bool bCanDo, float fUtil, CB
 	m_bCanDo = bCanDo;
 	m_pBot = pBot;
 	m_pWeapon = pWeapon;
-	m_vVector = vec;
 
 	if (m_pBot && m_pBot->isTF2())
 	{
@@ -244,7 +244,7 @@ void CBotUtilities::freeMemory()
 	// FREE LIST
 	while ((temp = m_pBest.head) != nullptr)
 	{
-		temp = m_pBest.head;
+		//temp = m_pBest.head;
 		m_pBest.head = m_pBest.head->next;
 		std::free(temp);
 	}

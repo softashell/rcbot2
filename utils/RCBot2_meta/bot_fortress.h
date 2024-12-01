@@ -323,10 +323,9 @@ typedef enum : std::uint8_t
 class CBotTF2FunctionEnemyAtIntel : public IBotFunction
 {
 public:
-	CBotTF2FunctionEnemyAtIntel(int iTeam, const Vector& vPos, int type, edict_t* pPlayer = nullptr, int capindex = -1)
+	CBotTF2FunctionEnemyAtIntel(int iTeam, const Vector& vPos, int type, edict_t* pPlayer = nullptr, int capindex = -1) : m_vPos(vPos)
 	{
 		m_iTeam = iTeam;
-		m_vPos = vPos;
 		m_iType = type;
 		m_pPlayer = pPlayer;
 		m_iCapIndex = capindex;

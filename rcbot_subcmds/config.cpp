@@ -1,5 +1,3 @@
-#include <algorithm>
-
 /*
  *    This file is part of RCBot.
  *
@@ -30,6 +28,8 @@
  *    version.
  *
  */
+
+#include <algorithm>
 
 CBotCommandInline GameEventVersion("event_version", CMD_ACCESS_CONFIG, [](CClient *pClient, const BotCommandArgs& args)
 {

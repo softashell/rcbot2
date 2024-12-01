@@ -243,7 +243,8 @@ int CTFObjectiveResource::getRandomValidPointForTeam ( int team, ePointAttackDef
 
 void CTeamRoundTimer::reset()
 {
-	CTeamRoundTimer();
+	// Manually reset the object's state
+	std::memset(this, 0, sizeof(CTeamRoundTimer));
 
 	m_Resource = CClassInterface::FindEntityByNetClass(gpGlobals->maxClients + 1, "CTeamRoundTimer");
 
@@ -257,9 +258,7 @@ bool CTeamControlPointRound :: isPointInRound ( edict_t *point_pent )
 {
 	for ( int i = 0; i < m_ControlPoints.Count(); i ++ )
 	{
-		const CBaseHandle* hndl = &m_ControlPoints[i]; 
-
-		if ( hndl )
+		if ( const CBaseHandle* hndl = &m_ControlPoints[i] )
 		{ 
 			edict_t* pPoint = INDEXENT(hndl->GetEntryIndex());
 			const CBaseEntity *pent = pPoint->GetUnknown()->GetBaseEntity();

@@ -3262,12 +3262,12 @@ void CWaypointType :: removeTypeFromWaypoint ( CWaypoint *pWaypoint )
 
 }*/
 
-CWaypointType :: CWaypointType (int iBit, const char *szName, const char *szDescription, WptColor vColour, int iModBits, int iImportance )
+CWaypointType::CWaypointType(int iBit, const char* szName, const char* szDescription, WptColor vColour, int iModBits,
+                             int iImportance) : m_vColour(vColour)
 {
 	m_iBit = iBit;
 	m_szName = CStrings::getString(szName);
 	m_szDescription = CStrings::getString(szDescription);
-	m_vColour = vColour;
 	m_iMods = iModBits;
 	m_iImportance = iImportance;
 }

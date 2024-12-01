@@ -425,13 +425,12 @@ CBotSpySapBuildingSched :: CBotSpySapBuildingSched ( edict_t *pBuilding, eEngiBu
 	findpath->setDangerPoint(CWaypointLocations::NearestWaypoint(CBotGlobals::entityOrigin(pBuilding),200.0f,-1));
 }
 //////////////////////////////////////
-CBotTauntSchedule :: CBotTauntSchedule ( edict_t *pPlayer, float fYaw )
+CBotTauntSchedule :: CBotTauntSchedule ( edict_t *pPlayer, float fYaw ) : m_pPlayer(pPlayer)
 {
 	const QAngle angles = QAngle(0,fYaw,0);
 	Vector forward;
 	constexpr float fTauntDist = 40.0f;
 
-	m_pPlayer = pPlayer;
 	m_fYaw = 180 - fYaw;
 
 	AngleVectors(angles,&forward);

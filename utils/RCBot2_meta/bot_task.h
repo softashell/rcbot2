@@ -166,11 +166,10 @@ public:
 		m_bGetPassedIntAsWaypointId = false;
 	}
 
-	CFindPathTask (const Vector& vOrigin, eLookTask looktask = LOOK_WAYPOINT)
+	CFindPathTask(const Vector& vOrigin, eLookTask looktask = LOOK_WAYPOINT)
+		: m_vVector(vOrigin), m_LookTask(looktask)
 	{
-		m_vVector = vOrigin;
-		m_pEdict = nullptr; // no edict
-		m_LookTask = looktask;
+		m_pEdict = nullptr;
 		m_iWaypointId = -1;
 		m_flags.m_data = 0;
 		m_fRange = 0.0f;
@@ -415,10 +414,9 @@ private:
 class CBotGravGunPickup : public CBotTask
 {
 public:
-	CBotGravGunPickup ( edict_t *pWeapon, edict_t *pProp )
+	CBotGravGunPickup(edict_t* pWeapon, edict_t* pProp)
+		: m_Weapon(pWeapon), m_Prop(pProp)
 	{
-		m_Weapon = pWeapon;
-		m_Prop = pProp;
 		m_fTime = 0.0f;
 		m_fSecAttTime = 0.0f;
 	}
@@ -446,9 +444,8 @@ enum : std::uint8_t
 class CBotHL2DMUseCharger : public CBotTask
 {
 public:
-	CBotHL2DMUseCharger ( edict_t *pCharger, int type )
+	CBotHL2DMUseCharger ( edict_t *pCharger, int type ) : m_pCharger(pCharger)
 	{
-		m_pCharger = pCharger;
 		m_fTime = 0;
 		m_iType = type;
 	}
@@ -469,16 +466,14 @@ private:
 class CBotHL2DMUseButton : public CBotTask
 {
 public:
-	CBotHL2DMUseButton ( edict_t *pButton )
+	CBotHL2DMUseButton ( edict_t *pButton ) : m_pButton(pButton)
 	{
-		m_pButton = pButton;
 		m_fTime = 0.0f;
 		m_bOverrideLook = false;
 	}
 
-	CBotHL2DMUseButton ( edict_t *pButton, bool bOverrideLook )
+	CBotHL2DMUseButton ( edict_t *pButton, bool bOverrideLook ) : m_pButton(pButton)
 	{
-		m_pButton = pButton;
 		m_fTime = 0.0f;
 		m_bOverrideLook = bOverrideLook;
 	}
@@ -644,14 +639,14 @@ private:
 class CBotDefendTask : public CBotTask
 {
 public:
-	CBotDefendTask (const Vector& vOrigin, float fMaxTime = 0.0f, int iInterrupt = CONDITION_SEE_CUR_ENEMY, bool bDefendOrigin = false, const Vector& vDefendOrigin = Vector(0,0,0), eLookTask looktask = LOOK_SNIPE, int iWaypointType = 0) 
+	CBotDefendTask(const Vector& vOrigin, float fMaxTime = 0.0f, int iInterrupt = CONDITION_SEE_CUR_ENEMY,
+	               bool bDefendOrigin = false, const Vector& vDefendOrigin = Vector(0, 0, 0),
+	               eLookTask looktask = LOOK_SNIPE, int iWaypointType = 0) : m_vOrigin(vOrigin), m_vDefendOrigin(vDefendOrigin)
 	{ 
 		m_fMaxTime = fMaxTime; 
-		m_vOrigin = vOrigin; 
 		m_fTime = 0.0f; 
 		setCompleteInterrupt(iInterrupt); 
 		m_bDefendOrigin = bDefendOrigin;
-		m_vDefendOrigin = vDefendOrigin;
 		m_LookTask = looktask;
 		m_iWaypointType = iWaypointType;
 	}
@@ -675,16 +670,15 @@ private:
 class CBotInvestigateTask : public CBotTask
 {
 public:
-	CBotInvestigateTask (const Vector& vOrigin, float fRadius, const Vector& vPOV, bool bHasPOV, float fMaxTime = 0, int iInterrupt = CONDITION_SEE_CUR_ENEMY) 
+	CBotInvestigateTask(const Vector& vOrigin, float fRadius, const Vector& vPOV, bool bHasPOV, float fMaxTime = 0,
+	                    int iInterrupt = CONDITION_SEE_CUR_ENEMY) : m_vOrigin(vOrigin), m_vPOV(vPOV)
 	{ 
 		m_fMaxTime = fMaxTime; 
-		m_vOrigin = vOrigin; 
 		m_fRadius = fRadius;
 		m_fTime = 0.0f; 
 		setCompleteInterrupt(iInterrupt); 
 		m_iCurPath = 0;
 		m_iState = 0;
-		m_vPOV = vPOV;
 		m_bHasPOV = bHasPOV;
 	}
 	
@@ -869,10 +863,9 @@ private:
 class CDODDropAmmoTask : public CBotTask
 {
 public:
-	CDODDropAmmoTask ( edict_t *pPlayer )
+	CDODDropAmmoTask ( edict_t *pPlayer ) : m_pPlayer(pPlayer)
 	{
 		m_fTime = 0.0f;
-		m_pPlayer = pPlayer;
 	}
 
 	void debugString ( char *string ) override;
@@ -886,9 +879,8 @@ private:
 class CDODWaitForGrenadeTask : public CBotTask
 {
 public:
-	CDODWaitForGrenadeTask ( edict_t *pGrenade )
+	CDODWaitForGrenadeTask ( edict_t *pGrenade ) : m_pGrenade(pGrenade)
 	{
-		m_pGrenade = pGrenade;
 		m_fTime = 0.0f;
 	}
 
@@ -903,9 +895,8 @@ private:
 class CDODWaitForBombTask : public CBotTask
 {
 public:
-	CDODWaitForBombTask ( edict_t *pBombTarget, CWaypoint *pBlocking )
+	CDODWaitForBombTask ( edict_t *pBombTarget, CWaypoint *pBlocking ) : m_pBombTarget(pBombTarget)
 	{
-		m_pBombTarget = pBombTarget;
 		m_fTime = 0.0f;
 		m_pRunTo = nullptr;
 		m_pBlocking = pBlocking;
@@ -973,7 +964,7 @@ private:
 class CBotTF2ShootLastEnemyPosition : public CBotTask
 {
 public:
-	CBotTF2ShootLastEnemyPosition (const Vector& vPosition, edict_t *pEnemy, const Vector& velocity );
+	CBotTF2ShootLastEnemyPosition (const Vector& vPosition, edict_t *pEnemy, const Vector& m_vVelocity );
 	void execute (CBot *pBot,CBotSchedule *pSchedule) override;
 
 	void debugString ( char *string ) override;
@@ -1266,9 +1257,8 @@ private:
 class CCSSDefuseTheBombTask : public CBotTask
 {
 public:
-	CCSSDefuseTheBombTask(const Vector& vBomb)
+	CCSSDefuseTheBombTask(const Vector& vBomb) : m_vBomb(vBomb)
 	{
-		m_vBomb = vBomb;
 	}
 	void init() override
 	{
@@ -1286,14 +1276,13 @@ private:
 class CCSSGuardTask : public CBotTask
 {
 public:
-	CCSSGuardTask(CBotWeapon *pWeaponToUse, const Vector& vOrigin, float fYaw, bool bUseZ, float z, int iWaypointType)
+	CCSSGuardTask(CBotWeapon *pWeaponToUse, const Vector& vOrigin, float fYaw, bool bUseZ, float z, int iWaypointType) : m_vOrigin(vOrigin)
 	{
 		m_fEnemyTime = 0.0f;
 		m_fTime = 0.0f;
 		const QAngle angle = QAngle(0, fYaw, 0);
 		AngleVectors(angle,&m_vAim);
 		m_vAim = vOrigin + m_vAim*1024;
-		m_vOrigin = vOrigin;
 		m_pWeaponToUse = pWeaponToUse;
 		m_fScopeTime = 0.0f;
 		m_bUseZ = bUseZ;
@@ -1321,10 +1310,8 @@ private:
 class CTF2_TauntTask : public CBotTask
 {
 public:
-	CTF2_TauntTask (const Vector& vPlayer, const Vector& vOrigin, float fDist)
+	CTF2_TauntTask (const Vector& vPlayer, const Vector& vOrigin, float fDist) : m_vPlayer(vPlayer), m_vOrigin(vOrigin)
 	{
-		m_vPlayer = vPlayer;
-		m_vOrigin = vOrigin;
 		m_fDist = fDist;
 		m_fTime = 0.0f;
 	}
@@ -1344,9 +1331,8 @@ private:
 class CMoveToTask : public CBotTask
 {
 public:
-	CMoveToTask (const Vector& vOrigin)
+	CMoveToTask (const Vector& vOrigin) : m_vVector(vOrigin)
 	{
-		m_vVector = vOrigin;
 		m_pEdict = nullptr;
 		fPrevDist = 0.0f;
 
@@ -1525,10 +1511,9 @@ public:
 		m_ftime = engine->Time() + waittime;
 		m_bAimSet = false;
 	}
-	CBotWaitTask(float waittime, const Vector& vAim)
+	CBotWaitTask(float waittime, const Vector& vAim) : m_vAim(vAim)
 	{
 		m_ftime = engine->Time() + waittime;
-		m_vAim = vAim;
 		m_bAimSet = true;
 	}
 	void execute ( CBot *pBot, CBotSchedule *pSchedule ) override;
@@ -1542,11 +1527,10 @@ private:
 class CBotSynDisarmMineTask : public CBotTask
 {
 public:
-	CBotSynDisarmMineTask(edict_t *pMine)
+	CBotSynDisarmMineTask(edict_t *pMine) : m_pMine(pMine)
 	{
 		m_fDist = 0.0f;
 		m_ftime = 0.0f;
-		m_pMine = pMine;
 		m_bTimeSet = false;
 	}
 	void execute ( CBot *pBot, CBotSchedule *pSchedule ) override;
@@ -1562,9 +1546,8 @@ private:
 class CBotSynBreakICrateTask : public CBotTask
 {
 public:
-	CBotSynBreakICrateTask(edict_t *pCrate, CBotWeapon *pWeapon)
+	CBotSynBreakICrateTask(edict_t *pCrate, CBotWeapon *pWeapon) : m_pCrate(pCrate)
 	{
-		m_pCrate = pCrate;
 		m_pWeapon = pWeapon;
 		m_vPos = Vector(0,0,0);
 	}
@@ -1582,9 +1565,8 @@ private:
 class CBotSynUseCharger: public CBotTask
 {
 public:
-	CBotSynUseCharger(edict_t *pCharger, int type)
+	CBotSynUseCharger(edict_t *pCharger, int type) : m_pCharger(pCharger)
 	{
-		m_pCharger = pCharger;
 		m_vPos = Vector(0,0,0);
 		m_iType = type;
 		m_flTime = engine->Time() + randomFloat(8.0f, 10.0f);
