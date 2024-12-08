@@ -86,8 +86,8 @@
 #include <random>
 #include <vector>
 
-#define DEG_TO_RAD(x) ((x)*0.0174533)
-#define RAD_TO_DEG(x) ((x)*57.29578)
+constexpr float DEG_TO_RAD(float x) { return x * 0.0174533f; }
+constexpr float RAD_TO_DEG(float x) { return x * 57.29578f; }
 
 //extern void HookPlayerRunCommand ( edict_t *edict );
 

@@ -55,23 +55,23 @@ void CNavMeshNavigator::CalculateRoute(Vector startNodeID, Vector goalNodeID)
 
 	// Since we can't determine success, we assume the route was successfully calculated
 	//*bFail = false;
-	
+
 	// Calculate the route
 	//m_theNavMesh->CalculateRoute(startNodeID, goalNodeID);
 }
 
 bool CNavMeshNavigator::workRoute(Vector vFrom, Vector vTo, bool* bFail, bool bRestart, bool bNoInterruptions, int iGoalId, int iConditions, int iDangerId)
 {
-	// Try to find a route using the primary waypoint system
+    // Try to find a route using the primary waypoint system
 	/*bool routeFound = false; // logic to find a route using the primary waypoint system
 	
-	// If a route was not found using the primary waypoint system
-	if (!routeFound)
-	{
-		// Use the NavMesh as a backup
-		CalculateRoute(vFrom, vTo);
+    // If a route was not found using the primary waypoint system
+    if (!routeFound)
+    {
+        // Use the NavMesh as a backup
+        CalculateRoute(vFrom, vTo);
 		routeFound = true; // Assume the route was successfully calculated
-		
+
 		// Now, you can check if the NavMesh has a valid route
 		//if (routeFound && m_theNavMesh->routeFound())
 		//{
@@ -83,8 +83,8 @@ bool CNavMeshNavigator::workRoute(Vector vFrom, Vector vTo, bool* bFail, bool bR
 		//		// ...
 		//	}
 		//}
-	}
-	
+    }
+
 	// Continue with the rest of your navigation logic
 	return routeFound;*/
 	return false;
@@ -99,7 +99,7 @@ Vector CNavMeshNavigator::getNextPoint()
 
 void CNavMeshNavigator::updatePosition()
 {
-	// Update the bot's position during navigation using Nav Mesh
+    // Update the bot's position during navigation using Nav Mesh
 	//m_theNavMesh->botPosition(currentPosition); // Use the botPosition function to update the bot's position
 	
 	// Update the bot's position
@@ -108,13 +108,13 @@ void CNavMeshNavigator::updatePosition()
 
 void CNavMeshNavigator::freeMapMemory()
 {
-	// Free the memory used by the NavMesh
+    // Free the memory used by the NavMesh
 	//m_theNavMesh->freeMemory();
 }
 
 void CNavMeshNavigator::freeAllMemory()
 {
-	// Free the memory used by the NavMesh
+    // Free the memory used by the NavMesh
 	//m_theNavMesh->freeMemory();
 }
 
