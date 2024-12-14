@@ -209,7 +209,7 @@ void CTeamFortress2Mod ::modFrame ()
 
 void CTeamFortress2Mod :: initMod ()
 {
-//	unsigned int i;
+//	unsigned i;
 	// Setup Weapons
 
 	CWeapons::loadWeapons(m_szWeaponListName == nullptr ? "TF2" : m_szWeaponListName, TF2Weaps);
@@ -298,7 +298,7 @@ void CTeamFortress2Mod :: mapInit ()
 	m_iFlagCarrierTeam = 0;
 	m_bDontClearPoints = false;
 
-	for ( unsigned int i = 0; i < RCBOT_MAXPLAYERS; i ++ )
+	for ( unsigned i = 0; i < RCBOT_MAXPLAYERS; i ++ )
 	{
 		m_Teleporters[i].m_iWaypoint = -1;
 		m_Teleporters[i].m_fLastTeleported = 0.0f;

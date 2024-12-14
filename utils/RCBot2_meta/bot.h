@@ -253,7 +253,7 @@ public:
 
 	void freeMapMemory()
 	{
-		unsigned int i;
+		unsigned i;
 
 		for ( i = 0; i < m_theSquads.size(); i ++ )
 			m_theSquads[i].freeMapMemory();
@@ -285,7 +285,7 @@ public:
 			m_Leader = NULL;
 
 			// find a new leader
-			unsigned int i;
+			unsigned i;
 
 			for ( i = 0; i < m_Members.size(); i ++ )
 			{
@@ -323,7 +323,7 @@ public:
 
 	void debugMsg ( int iLev, const char *szMsg );
 
-	virtual unsigned int maxEntityIndex ( ) { return RCBOT_MAXPLAYERS; }
+	virtual unsigned maxEntityIndex ( ) { return RCBOT_MAXPLAYERS; }
 
 // linux fix 1
 	virtual void onInventoryApplication (){}
@@ -848,7 +848,7 @@ protected:
 	void changeAngles (float fSpeed, const float* fIdeal, float* fCurrent, float* fUpdate);
 
 	// look for new tasks
-	virtual void getTasks (unsigned int iIgnore=0);
+	virtual void getTasks (unsigned iIgnore=0);
 
 	// really only need 249 bits (32 bytes) + WEAPON_SUBTYPE_BITS (whatever that is)
 	static constexpr int CMD_BUFFER_SIZE = 64; 
@@ -998,7 +998,7 @@ protected:
 	MyEHandle m_PlayerListeningTo;
 	float m_fWantToListenTime;
 	bool m_bOpenFire;
-	unsigned int m_iPrevWeaponSelectFailed;
+	unsigned m_iPrevWeaponSelectFailed;
 
 	bool m_bWantToListen;
 	float m_fListenFactor; // the current weight of bots listening vector (higher = better)

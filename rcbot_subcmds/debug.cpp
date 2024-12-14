@@ -382,7 +382,7 @@ CBotCommandInline PrintProps("printprops", CMD_ACCESS_DEBUG, [](CClient *pClient
 		if ( args[0] && *args[0] )
 		{
 			extern bool g_PrintProps;
-			unsigned int m_offset;
+			unsigned m_offset;
 			g_PrintProps = true;
 			
 			ServerClass *sc = UTIL_FindServerClass(args[0]);
@@ -422,7 +422,7 @@ CBotCommandInline SetProp("setprop", CMD_ACCESS_DEBUG, [](CClient *pClient, cons
 			if ( pNearest )
 			{
 				extern bool g_PrintProps;
-				unsigned int m_offset;
+				unsigned m_offset;
 
 				ServerClass *sc = UTIL_FindServerClass(args[0]);
 
@@ -495,7 +495,7 @@ CBotCommandInline GetProp("getprop", CMD_ACCESS_DEBUG, [](CClient *pClient, cons
 			if ( pNearest )
 			{
 				extern bool g_PrintProps;
-				unsigned int m_offset = 0;
+				unsigned m_offset = 0;
 
 				ServerClass *sc = UTIL_FindServerClass(args[0]);
 
@@ -624,7 +624,7 @@ typedef union
 }u_MEMSEARCH;
 
 static u_MEMSEARCH stored_offsets[MAX_MEM_SEARCH];
-static unsigned int m_size;
+static unsigned m_size;
 
 CBotCommandInline DebugMemoryScanCommand("memoryscan", CMD_ACCESS_DEBUG, [](CClient *pClient, const BotCommandArgs& args)
 {
@@ -637,7 +637,7 @@ CBotCommandInline DebugMemoryScanCommand("memoryscan", CMD_ACCESS_DEBUG, [](CCli
 	NEED_ARG(args[1])
 	NEED_ARG(args[2])
 
-	const unsigned int m_prev_size = m_size;
+	const unsigned m_prev_size = m_size;
 
 	if ( ( strcmp(args[2],"bool") == 0 ) || ( strcmp(args[2],"byte") == 0 ))
 		m_size = MEMSEARCH_BYTE;
@@ -750,7 +750,7 @@ CBotCommandInline DebugMemoryCheckCommand("memorycheck", CMD_ACCESS_DEBUG, [](CC
 
 	CBaseEntity *pent = pEdict->GetUnknown()->GetBaseEntity();
 
-	const unsigned int offset = std::atoi(args[1]);
+	const unsigned offset = std::atoi(args[1]);
 
 	if ((strcmp(args[2], "bool") == 0) || (strcmp(args[2], "byte") == 0))
 	{
@@ -766,7 +766,7 @@ CBotCommandInline DebugMemoryCheckCommand("memorycheck", CMD_ACCESS_DEBUG, [](CC
 			CTeamControlPointMaster *p;
 			CTeamControlPointMaster check;
 
-			unsigned int knownoffset = (unsigned int)&check.m_iCurrentRoundIndex - (unsigned int)&check;
+			unsigned knownoffset = (unsigned)&check.m_iCurrentRoundIndex - (unsigned)&check;
 
 			p = (CTeamControlPointMaster*)((((unsigned long)pent) + offset) - knownoffset); //MAP_CLASS(CTeamControlPoint,(((unsigned long)pent) + offset),knownoffset);
 		}

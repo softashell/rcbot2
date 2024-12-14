@@ -175,7 +175,7 @@ public:
 
 	float getArmorPercent () const { return 0.01f * static_cast<float>(m_pPlayerInfo->GetArmorValue()); }
 
-	void getTasks (unsigned int iIgnore) override;
+	void getTasks (unsigned iIgnore) override;
 
 	bool executeAction ( CBotUtility *util );
 
@@ -212,7 +212,7 @@ public:
 
 	void voiceCommand (byte voiceCmd) override;
 
-	unsigned int maxEntityIndex ( ) override { return gpGlobals->maxEntities; }
+	unsigned maxEntityIndex ( ) override { return gpGlobals->maxEntities; }
 
 	void seeFriendlyDie ( edict_t *pDied, edict_t *pKiller, CWeapon *pWeapon ) override;
 	void seeFriendlyKill ( edict_t *pTeamMate, edict_t *pDied, CWeapon *pWeapon ) override;

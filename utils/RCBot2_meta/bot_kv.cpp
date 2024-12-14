@@ -38,7 +38,7 @@ void CRCBotKeyValueList::parseFile(std::fstream& fp)
 		size_t iKi = 0;
 		size_t iVi = 0;
 
-		for ( unsigned int iCi = 0; iCi < iLen; iCi ++ )
+		for ( unsigned iCi = 0; iCi < iLen; iCi ++ )
 		{
 			// ignore spacing
 			if ( buffer[iCi] == ' ' )

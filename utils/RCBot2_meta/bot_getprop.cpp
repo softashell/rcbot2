@@ -165,13 +165,13 @@ SendProp *UTIL_FindSendProp(SendTable *pTable, const char *name)
 struct sm_sendprop_info_t
 {
 	SendProp *prop;					/**< Property instance. */
-	unsigned int actual_offset;		/**< Actual computed offset. */
+	unsigned actual_offset;		/**< Actual computed offset. */
 };
 
 bool UTIL_FindInSendTable(SendTable *pTable, 
 						  const char *name,
 						  sm_sendprop_info_t *info,
-						  unsigned int offset)
+						  unsigned offset)
 {
 	const int props = pTable->GetNumProps();
 
@@ -207,7 +207,7 @@ bool UTIL_FindInSendTable(SendTable *pTable,
 	return false;
 }
 
-bool UTIL_FindSendPropInfo(ServerClass *pInfo, const char *szType, unsigned int *offset)
+bool UTIL_FindSendPropInfo(ServerClass *pInfo, const char *szType, unsigned *offset)
 {
 	if ( !pInfo )
 	{
@@ -263,7 +263,7 @@ void CClassInterfaceValue :: init (const char* key, const char* value, unsigned 
 
 void UTIL_FindPropPrint(const char *prop_name)
 {
-	unsigned int offset;
+	unsigned offset;
 
 	try
 	{
@@ -324,7 +324,7 @@ void CClassInterfaceValue :: findOffset ( )
  * @param name		Name of the property to find.
  * @return		Offset of a data map property, or 0 if not found.
  */
-unsigned int UTIL_FindInDataMap(datamap_t* pMap, const char* name)
+unsigned UTIL_FindInDataMap(datamap_t* pMap, const char* name)
 {
 	while (pMap)
 	{
@@ -340,7 +340,7 @@ unsigned int UTIL_FindInDataMap(datamap_t* pMap, const char* name)
 			}
 			if (pMap->dataDesc[i].td)
 			{
-				unsigned int offset;
+				unsigned offset;
 				if ((offset = UTIL_FindInDataMap(pMap->dataDesc[i].td, name)) != 0)
 				{
 					return offset;

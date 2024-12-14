@@ -66,7 +66,7 @@ size_t CSignatureFunction::decodeHexString(unsigned char* buffer, size_t maxleng
 				continue;
 			// Get the hex part. 
 			char s_byte[3];
-			unsigned int r_byte; // Use unsigned int here
+			unsigned r_byte; // Use unsigned here
 			s_byte[0] = hexstr[i + 2];
 			s_byte[1] = hexstr[i + 3];
 			s_byte[2] = '\0';

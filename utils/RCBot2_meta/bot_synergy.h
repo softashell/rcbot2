@@ -39,10 +39,10 @@ public:
 	void spawnInit () override;
 	void died ( edict_t *pKiller, const char *pszWeapon ) override;
 	void modThink () override;
-	void getTasks (unsigned int iIgnore=0) override;
+	void getTasks (unsigned iIgnore=0) override;
 	virtual bool executeAction(eBotAction iAction); //TODO: not implemented yet? [APG]RoboCop[CL]
 	virtual float getArmorPercent() { return 0.01f * m_pPlayerInfo->GetArmorValue(); }
-	unsigned int maxEntityIndex() override { return gpGlobals->maxEntities; }
+	unsigned maxEntityIndex() override { return gpGlobals->maxEntities; }
 	bool isEnemy ( edict_t *pEdict, bool bCheckWeapons = true ) override;
 	bool setVisible ( edict_t *pEntity, bool bVisible ) override;
 	void touchedWpt ( CWaypoint *pWaypoint, int iNextWaypoint = -1, int iPrevWaypoint = -1 ) override;

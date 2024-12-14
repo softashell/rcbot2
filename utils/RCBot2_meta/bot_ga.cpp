@@ -71,7 +71,7 @@ ga_nn_value CPopulation::totalFitness() const
 {
 	float fTotalFitness = 0.0f;
 
-	for (unsigned int i = 0; i < size(); i++)
+	for (unsigned i = 0; i < size(); i++)
 	{
 		fTotalFitness += m_theIndividuals[i]->getFitness();
 	}
@@ -84,7 +84,7 @@ ga_nn_value CPopulation::bestFitness() const
 	bool gotBestFitness = false;
 	float fBestFitness = 0.0f;
 
-	for (unsigned int i = 0; i < size(); i++)
+	for (unsigned i = 0; i < size(); i++)
 	{
 		const float fFitness = m_theIndividuals[i]->getFitness();
 
@@ -205,7 +205,7 @@ IIndividual* CRouletteSelection::select(CPopulation* population)
 	const ga_nn_value fFitnessSlice = randomFloat(0, population->totalFitness());
 	ga_nn_value fFitnessSoFar = 0.0f;
 
-	for (unsigned int i = 0; i < population->size(); i++)
+	for (unsigned i = 0; i < population->size(); i++)
 	{
 		IIndividual* individual = population->get(i);
 

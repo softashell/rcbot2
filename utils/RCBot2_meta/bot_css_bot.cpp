@@ -660,7 +660,7 @@ void CCSSBot::modThinkSlow()
 	}
 }
 
-void CCSSBot::getTasks(unsigned int iIgnore)
+void CCSSBot::getTasks(unsigned iIgnore)
 {
 	static CBotUtilities utils;
 	static CBotUtility* next;

@@ -503,7 +503,7 @@ bool CBotSynergy::setVisible(edict_t* pEntity, bool bVisible)
 	return bValid;
 }
 
-void CBotSynergy::getTasks(unsigned int iIgnore)
+void CBotSynergy::getTasks(unsigned iIgnore)
 {
 	static CBotUtilities utils;
 	static CBotUtility* next;

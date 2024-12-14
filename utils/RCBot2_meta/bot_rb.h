@@ -53,7 +53,7 @@ private:
 class CBotFact : public CBotOperator
 {
 public:
-	CBotFact ( unsigned int iFactId ) : m_fid(iFactId)
+	CBotFact ( unsigned iFactId ) : m_fid(iFactId)
 	{
 	}
 
@@ -67,7 +67,7 @@ public:
 		return m_bVal;
 	}
 private:
-	unsigned int m_fid;
+	unsigned m_fid;
 	bool m_bVal;
 };
 

@@ -1273,7 +1273,7 @@ void CBotEvents :: freeMemory ()
 	m_theEvents.clear();
 }
 
-void CBotEvents::executeEvent(void* pEvent, eBotEventType iType)
+void CBotEvents::executeEvent(void* pEvent, const eBotEventType iType)
 {
 	int iEventId = -1;
 

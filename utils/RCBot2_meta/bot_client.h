@@ -253,7 +253,7 @@ public:
 
 	edict_t *getPlayer () const { return m_pPlayer; }
 
-	bool isPlayer ( edict_t *pPlayer ) const { return m_pPlayer == pPlayer; }
+	bool isPlayer (const edict_t *pPlayer) const { return m_pPlayer == pPlayer; }
 
 	bool isWaypointOn () const { return m_bWaypointOn; }
 	void setWaypointOn ( bool bOn ) { m_bWaypointOn = bOn; }
@@ -346,7 +346,7 @@ private:
 	bool m_bPathWaypointOn;
 	unsigned short int m_iWaypointDrawType;
 
-	unsigned int m_iDebugLevels;
+	unsigned m_iDebugLevels;
 
 	IPlayerInfo *m_pPlayerInfo;
 
@@ -430,9 +430,9 @@ public:
 	static int slotOfEdict (const edict_t* pPlayer);
 	static void init ( edict_t *pPlayer );
 	static CClient *get ( int iIndex ) { return &m_Clients[iIndex]; }
-	static CClient *get ( edict_t *pPlayer ) { return &m_Clients[slotOfEdict(pPlayer)]; }
+	static CClient *get (const edict_t *pPlayer) { return &m_Clients[slotOfEdict(pPlayer)]; }
 	static void setListenServerClient ( CClient *pClient ) { m_pListenServerClient = pClient; }
-	static bool isListenServerClient ( CClient *pClient ) { return m_pListenServerClient == pClient; }
+	static bool isListenServerClient (const CClient *pClient) { return m_pListenServerClient == pClient; }
 	static bool noListenServerClient () { return m_pListenServerClient == nullptr; }
 	static void clientThink ();
 	static bool clientsDebugging ( int iLev = 0 );

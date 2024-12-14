@@ -416,7 +416,7 @@ bool CBotGlobals :: isVisible (const Vector& vSrc, const Vector& vDest)
 	return traceVisible(nullptr);
 }
 
-void CBotGlobals :: traceLine (const Vector& vSrc, const Vector& vDest, unsigned int mask, ITraceFilter *pFilter)
+void CBotGlobals :: traceLine (const Vector& vSrc, const Vector& vDest, unsigned mask, ITraceFilter *pFilter)
 {
 	Ray_t ray;
 	std::memset(&m_TraceResult,0,sizeof(trace_t));
@@ -894,12 +894,12 @@ void CBotGlobals :: botMessage ( edict_t *pEntity, int iErr, const char *fmt, ..
 	const size_t len = std::strlen(string);
 	const size_t taglen = std::strlen(BOT_TAG);
 	// add tag -- push tag into string
-	for ( unsigned int i = len + taglen; i >= taglen; i -- )
+	for ( unsigned i = len + taglen; i >= taglen; i -- )
 		string[i] = string[i-taglen];
 
 	string[len+taglen+1] = 0;
 
-	for ( unsigned int i = 0; i < taglen; i ++ )
+	for ( unsigned i = 0; i < taglen; i ++ )
 		string[i] = bot_tag[i];
 
 	std::strcat(string,"\n");
@@ -929,7 +929,7 @@ bool CBotGlobals :: makeFolders (const char* szFile)
 #endif
 
 	char szFolderName[1024];
-	unsigned int folderNameSize = 0;
+	unsigned folderNameSize = 0;
 	szFolderName[0] = 0;
 
 	const size_t iLen = std::strlen(szFile);

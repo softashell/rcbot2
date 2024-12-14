@@ -146,7 +146,7 @@ void CAccessClients :: load ()
 			while (( i < len ) && ((buffer[i] == '\"') || (buffer[i] == ' ')))
 				i++;
 
-			unsigned int n = 0;
+			unsigned n = 0;
 
 			// parse Steam ID
 			while ( (n<31) && (i < len) && (buffer[i] != '\"') )			

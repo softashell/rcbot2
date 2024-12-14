@@ -38,7 +38,7 @@
 #include "rcbot/logging.h"
 
 std::vector <char *> CBotConfigFile::m_Commands;
-unsigned int CBotConfigFile::m_iCmd = 0; // current command (time delayed)
+unsigned CBotConfigFile::m_iCmd = 0; // current command (time delayed)
 float CBotConfigFile::m_fNextCommandTime = 0.0f;
 
 // 
@@ -130,7 +130,7 @@ void CRCBotTF2UtilFile :: init()
 
 void CRCBotTF2UtilFile :: addUtilPerturbation (eBotAction iAction, eTF2UtilType iUtil, float fUtility[9][2])
 {
-	for ( short unsigned int i = 0; i < 9; i ++ )
+	for ( short unsigned i = 0; i < 9; i ++ )
 	{
 		m_fUtils[iUtil][iAction][i].min = fUtility[i][0];
 		m_fUtils[iUtil][iAction][i].max = fUtility[i][1];

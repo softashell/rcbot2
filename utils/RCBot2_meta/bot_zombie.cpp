@@ -29,7 +29,7 @@ void CBotZombie :: modThink ()
 	//
 }
 
-void CBotZombie :: getTasks ( unsigned int iIgnore )
+void CBotZombie :: getTasks ( unsigned iIgnore )
 {
 	if ( m_pEnemy )
 	{

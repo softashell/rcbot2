@@ -423,7 +423,7 @@ bool CHLDMBot :: handleAttack ( CBotWeapon *pWeapon, edict_t *pEnemy )
 	return false;
 }
 // time to think about something new to do
-void CHLDMBot :: getTasks (unsigned int iIgnore)
+void CHLDMBot :: getTasks (unsigned iIgnore)
 {
 	static CBotUtilities utils;
 	static CBotUtility *next;

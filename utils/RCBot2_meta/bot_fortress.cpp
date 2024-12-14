@@ -1842,7 +1842,7 @@ void CBotTF2 :: setClass ( TF_Class _class )
 	m_iClass = _class;
 }
 
-void CBotTF2 :: highFivePlayer ( edict_t *pPlayer, float fYaw ) const
+void CBotTF2 :: highFivePlayer ( edict_t *pPlayer, const float fYaw ) const
 {
 	if ( !m_pSchedules->isCurrentSchedule(SCHED_TAUNT) )
 		m_pSchedules->addFront(new CBotTauntSchedule(pPlayer,fYaw));
@@ -2253,7 +2253,7 @@ void CBotTF2 :: pointCaptured()
 	taunt();
 }
 
-void CBotTF2 :: spyDisguise ( int iTeam, unsigned int iClass )
+void CBotTF2 :: spyDisguise ( int iTeam, unsigned iClass )
 {
 	//char cmd[256];
 
@@ -4347,7 +4347,7 @@ void CBotTF2:: teleportedPlayer ()
 	m_iTeleportedPlayers++;
 }
 
-void CBotTF2 :: getTasks ( unsigned int iIgnore )
+void CBotTF2 :: getTasks ( unsigned iIgnore )
 {
 	static bool bIsUbered;
 	static TF_Class iClass;

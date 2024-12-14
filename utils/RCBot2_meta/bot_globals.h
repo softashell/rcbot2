@@ -166,7 +166,7 @@ public:
 	static bool isVisible ( edict_t *pPlayer, const Vector& vSrc, edict_t *pDest);
 	static bool isShotVisible ( edict_t *pPlayer, const Vector& vSrc, const Vector& vDest, edict_t *pDest );
 	static bool isVisible (const Vector& vSrc, const Vector& vDest);
-	static void traceLine (const Vector& vSrc, const Vector& vDest, unsigned int mask, ITraceFilter *pFilter);
+	static void traceLine (const Vector& vSrc, const Vector& vDest, unsigned mask, ITraceFilter *pFilter);
 	static float quickTraceline ( edict_t *pIgnore, const Vector& vSrc, const Vector& vDest ); // return fFraction
 	static bool traceVisible (edict_t *pEnt);
 	////////

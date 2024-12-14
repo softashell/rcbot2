@@ -115,14 +115,14 @@ CWaypointFlagMenu::CWaypointFlagMenu(CBotMenu* pPrev)
 	// 8. More...
 	// 9. Go Back
 
-	const unsigned int iNumTypes = CWaypointTypes::getNumTypes();
+	const unsigned iNumTypes = CWaypointTypes::getNumTypes();
 
 	int iNumAdded = 0;
 
 	CBotMenu* pCurrent = this;
 	CBotMenu* pParent = pPrev;
 
-	for (unsigned int i = 0; i < iNumTypes; i++)
+	for (unsigned i = 0; i < iNumTypes; i++)
 	{
 		if (!CWaypointTypes::getTypeByIndex(i)->forMod(iMod))
 			continue;
@@ -370,7 +370,7 @@ void CBotMenu::render(CClient* pClient)
 		debugoverlay->ScreenPosition(0.5f, 0.5f, screen);
 		debugoverlay->ScreenPosition(point,screen);*/
 
-	for (unsigned int i = 0; i < m_MenuItems.size(); i++)
+	for (unsigned i = 0; i < m_MenuItems.size(); i++)
 	{
 		CBotMenuItem* item = m_MenuItems[i];
 
@@ -398,7 +398,7 @@ void CBotMenuList::render(CClient* pClient) // render
 	//m_MenuList[iMenu]->render(pClient);
 }
 
-void CBotMenuList::selectedMenu(CClient* pClient, unsigned int iMenu)
+void CBotMenuList::selectedMenu(CClient* pClient, unsigned iMenu)
 {
 	const CBotMenu* pMenu = pClient->getCurrentMenu();
 
@@ -416,7 +416,7 @@ Color CBotMenu::getColor(CClient* pClient)
 	return Color();
 }
 
-void CBotMenu::selectedMenu(CClient* pClient, unsigned int iMenu) const
+void CBotMenu::selectedMenu(CClient* pClient, unsigned iMenu) const
 {
 	if (iMenu < m_MenuItems.size())
 		m_MenuItems[iMenu]->activate(pClient);
@@ -437,12 +437,12 @@ CWaypointFlagShowMenu::CWaypointFlagShowMenu(CBotMenu* pParent)
 	// 8. More...
 	// 9. Go Back
 
-	const unsigned int iNumTypes = CWaypointTypes::getNumTypes();
+	const unsigned iNumTypes = CWaypointTypes::getNumTypes();
 	int iNumAdded = 0;
 
 	CBotMenu* pCurrent = this;
 
-	for (unsigned int i = 0; i < iNumTypes; i++)
+	for (unsigned i = 0; i < iNumTypes; i++)
 	{
 		if (!CWaypointTypes::getTypeByIndex(i)->forMod(iMod))
 			continue;

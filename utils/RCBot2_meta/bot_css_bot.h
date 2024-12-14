@@ -75,8 +75,8 @@ public:
 	bool canGotoWaypoint(Vector vPrevWaypoint, CWaypoint *pWaypoint, CWaypoint *pPrev = nullptr) override;
 	bool setVisible(edict_t *pEntity, bool bVisible) override;
 	virtual void modThinkSlow();
-	unsigned int maxEntityIndex() override { return gpGlobals->maxEntities; }
-	void getTasks (unsigned int iIgnore=0) override;
+	unsigned maxEntityIndex() override { return gpGlobals->maxEntities; }
+	void getTasks (unsigned iIgnore=0) override;
 	virtual bool executeAction(eBotAction iAction);
 	virtual void runBuy();
 	virtual void say(const char *message);

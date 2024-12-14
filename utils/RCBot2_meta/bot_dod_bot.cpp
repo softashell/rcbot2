@@ -3023,7 +3023,7 @@ enum : std::uint8_t
 	BOT_ATTACK = 1
 };
 
-void CDODBot :: getTasks (unsigned int iIgnore)
+void CDODBot :: getTasks (unsigned iIgnore)
 {
 	static CBotUtilities utils;
 	static CBotUtility *next;

@@ -642,7 +642,7 @@ class dataUnconstArray
 			//SAFE REMOVE - SLOW
 			std::vector<T> newVec;
 
-			for ( unsigned int i = 0; i < array.size(); i ++ )
+			for ( unsigned i = 0; i < array.size(); i ++ )
 			{
 				if ( array[i] != obj )
 					newVec.emplace_back(array[i]);
@@ -666,7 +666,7 @@ class dataUnconstArray
 			//SAFE REMOVE - SLOW
 			std::vector<T> newVec;
 
-			for ( unsigned int i = 0; i < array.size(); i ++ )
+			for ( unsigned i = 0; i < array.size(); i ++ )
 			{
 				if ( array[i] != obj )
 					newVec.emplace_back(array[i]);
@@ -736,7 +736,7 @@ class dataUnconstArray
 
 		bool IsMember ( T Obj )
 		{
-			for ( unsigned int i = 0; i < array.size(); i ++ )
+			for ( unsigned i = 0; i < array.size(); i ++ )
 			{
 				if ( array[i] == Obj )
 					return true;
@@ -745,7 +745,7 @@ class dataUnconstArray
 			return false;
 		}
 
-		T operator [] ( unsigned int iIndex )
+		T operator [] ( unsigned iIndex )
 		{
 			return array[iIndex];
 		}

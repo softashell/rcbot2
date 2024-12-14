@@ -107,7 +107,7 @@ void CWaypointVisibilityTable::workVisibility()
 	}
 }
 
-void CWaypointVisibilityTable::workVisibilityForWaypoint(int i, int iNumWaypoints, bool bTwoway) const
+void CWaypointVisibilityTable::workVisibilityForWaypoint(const int i, const int iNumWaypoints, const bool bTwoway) const
 {
 	static CWaypoint* Waypoint1;
 	static CWaypoint* Waypoint2;
@@ -178,7 +178,7 @@ bool CWaypointVisibilityTable::SaveToFile() const
 	return true;
 }
 
-bool CWaypointVisibilityTable::ReadFromFile(int numwaypoints) const
+bool CWaypointVisibilityTable::ReadFromFile(const int numwaypoints) const
 {
 	char filename[1024];
 

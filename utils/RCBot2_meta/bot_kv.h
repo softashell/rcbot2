@@ -35,9 +35,9 @@ public:
 
 	void parseFile(std::fstream& fp);
 
-	//unsigned int size ();
+	//unsigned size ();
 
-	//CRCBotKeyValue *getKV ( unsigned int iIndex );
+	//CRCBotKeyValue *getKV ( unsigned iIndex );
 
 	bool getInt ( const char *key, int *val ) const;
 

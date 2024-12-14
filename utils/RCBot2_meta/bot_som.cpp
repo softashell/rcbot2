@@ -138,7 +138,7 @@ void CSom :: display () const
 
 void CSomNeuron :: update (const std::vector<float>* inputs, float inf)
 {
-	for ( unsigned int i = 0; i < inputs->size(); i ++ )
+	for ( unsigned i = 0; i < inputs->size(); i ++ )
 	{
 		const float change = (*inputs)[i] - fWeights[i];
 
@@ -173,7 +173,7 @@ float CSomNeuron :: distance (const std::vector<float>* inputs) const
 {
 	float dist = 0;
 
-	for ( unsigned int i = 0; i < inputs->size(); i ++ )
+	for ( unsigned i = 0; i < inputs->size(); i ++ )
 	{
 		const float comp = fWeights[i] - (*inputs)[i];
 		

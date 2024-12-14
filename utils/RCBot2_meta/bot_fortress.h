@@ -456,13 +456,13 @@ public:
 
 	void clearHealingEntity () { m_pHeal = nullptr; }
 
-	unsigned int maxEntityIndex ( ) override { return gpGlobals->maxEntities; }
+	unsigned maxEntityIndex ( ) override { return gpGlobals->maxEntities; }
 
 	void init (bool bVarInit=false) override;
 
 	virtual void foundSpy (edict_t *pEdict, TF_Class iDisguise );
 
-	void getTasks ( unsigned int iIgnore = 0 ) override { CBot :: getTasks(iIgnore); }
+	void getTasks ( unsigned iIgnore = 0 ) override { CBot :: getTasks(iIgnore); }
 
 	void died ( edict_t *pKiller, const char *pszWeapon ) override;
 
@@ -485,7 +485,7 @@ public:
 
 	virtual void engineerBuild ( eEngiBuild iBuilding, eEngiCmd iEngiCmd ) {}
 
-	virtual void spyDisguise (int iTeam, unsigned int iClass) {}
+	virtual void spyDisguise (int iTeam, unsigned iClass) {}
 
 	virtual bool lookAfterBuildings (float *fTime) { return false; }
 
@@ -743,7 +743,7 @@ protected:
 	float m_fDisguiseTime;
 	unsigned short m_iDisguiseClass;
 	float m_fSentryPlaceTime;
-	unsigned int m_iSentryKills;
+	unsigned m_iSentryKills;
 	float m_fTeleporterEntPlacedTime;
 	float m_fTeleporterExtPlacedTime;
 	unsigned m_iTeleportedPlayers;
@@ -881,11 +881,11 @@ public:
 
 	void engineerBuild ( eEngiBuild iBuilding, eEngiCmd iEngiCmd ) override;
 
-	void spyDisguise (int iTeam, unsigned int iClass) override;
+	void spyDisguise (int iTeam, unsigned iClass) override;
 
 	bool hasEngineerBuilt ( eEngiBuild iBuilding ) override;
 
-	void getTasks ( unsigned int iIgnore = 0 ) override;
+	void getTasks ( unsigned iIgnore = 0 ) override;
 
 	void died ( edict_t *pKiller, const char *pszWeapon ) override;
 

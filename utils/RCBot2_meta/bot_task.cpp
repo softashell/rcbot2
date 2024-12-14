@@ -5212,8 +5212,8 @@ void CBotFollowSquadLeader :: execute (CBot *pBot,CBotSchedule *pSchedule)
 }
 ////////////////////////////////////////////////////
 
-CBotDODSnipe::CBotDODSnipe(CBotWeapon* pWeaponToUse, const Vector& vOrigin, float fYaw, bool bUseZ, float z,
-                           int iWaypointType) : m_vOrigin(vOrigin)
+CBotDODSnipe::CBotDODSnipe(CBotWeapon* pWeaponToUse, const Vector& vOrigin, const float fYaw, const bool bUseZ, const float z,
+                           const int iWaypointType) : m_vOrigin(vOrigin)
 {
 	m_fEnemyTime = 0.0f;
 	m_fTime = 0.0f;
@@ -5405,8 +5405,8 @@ void CBotDODSnipe :: execute (CBot *pBot,CBotSchedule *pSchedule)
 
 //////////////////////////
 
-CBotHL2DMSnipe::CBotHL2DMSnipe(CBotWeapon* pWeaponToUse, const Vector& vOrigin, float fYaw, bool bUseZ, float z,
-                               int iWaypointType) : m_vOrigin(vOrigin)
+CBotHL2DMSnipe::CBotHL2DMSnipe(CBotWeapon* pWeaponToUse, const Vector& vOrigin, const float fYaw, const bool bUseZ, const float z,
+                               const int iWaypointType) : m_vOrigin(vOrigin)
 {
 	m_fEnemyTime = 0.0f;
 	m_fTime = 0.0f;

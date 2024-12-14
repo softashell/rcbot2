@@ -2985,7 +2985,7 @@ bool CBot::wantToFollowEnemy ()
 	return getHealthPercent() > 1.0f - m_pProfile->m_fBraveness;
 }
 ////////////////////////////
-void CBot :: getTasks (unsigned int iIgnore)
+void CBot :: getTasks (unsigned iIgnore)
 {
 	if ( !m_bLookedForEnemyLast && m_pLastEnemy && CBotGlobals::entityIsAlive(m_pLastEnemy) )
 	{
@@ -3154,7 +3154,7 @@ int CBots::createDefaultBot(const char* name) {
 
 void CBots :: botFunction ( IBotFunction *function )
 {
-	for ( unsigned int i = 0; i < RCBOT_MAXPLAYERS; i ++ )
+	for ( unsigned i = 0; i < RCBOT_MAXPLAYERS; i ++ )
 	{
 		if ( m_Bots[i]->inUse() && m_Bots[i]->getEdict() )
 			function->execute (m_Bots[i]);
@@ -3171,7 +3171,7 @@ void CBots :: init ()
 	m_Bots = new CBot*[RCBOT_MAXPLAYERS];
 	//m_Bots = (CBot**)malloc(sizeof(CBot*) * RCBOT_MAXPLAYERS);
 
-	for ( unsigned int i = 0; i < RCBOT_MAXPLAYERS; i ++ )
+	for ( unsigned i = 0; i < RCBOT_MAXPLAYERS; i ++ )
 	{
 		switch ( CBotGlobals::getCurrentMod()->getBotType() )
 		{

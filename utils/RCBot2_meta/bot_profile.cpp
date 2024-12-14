@@ -106,7 +106,7 @@ void CBotProfiles :: setupProfiles ()
 		);	
 
 	// read profiles
-	unsigned int iId = 1;
+	unsigned iId = 1;
 	bool bDone = false;
 
 	while ( iId < 999 && !bDone )

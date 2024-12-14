@@ -1004,7 +1004,7 @@ private:
 	Vector m_vOrigin;
 	Vector m_vMoveTo;
 	std::vector<Vector> m_CheckPoints;
-	unsigned int m_iCurrentCheckPoint;
+	unsigned m_iCurrentCheckPoint;
 	float m_fInvestigateTime;
 	float m_fTime;
 	int m_iState;

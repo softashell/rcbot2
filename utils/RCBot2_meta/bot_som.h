@@ -96,7 +96,7 @@ public:
 
 	void display () const;
 
-	unsigned int epochs () const
+	unsigned epochs () const
 	{
 		return m_iEpochs;
 	}
@@ -106,6 +106,6 @@ private:
 	int m_iH;
 	int m_iW;
 	float m_fNSize;
-	unsigned int m_iEpochs;
+	unsigned m_iEpochs;
 };
 #endif

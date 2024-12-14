@@ -63,12 +63,12 @@ void CBotGAValues::clear()
 // crossover with other individual
 void CBotGAValues::crossOver(IIndividual* other)
 {
-	const unsigned int iPoint = randomInt(0, static_cast<int>(m_theValues.size()));
+	const unsigned iPoint = randomInt(0, static_cast<int>(m_theValues.size()));
 	float fTemp;
 
 	CBotGAValues* vother = static_cast<CBotGAValues*>(other);
 
-	unsigned int i;
+	unsigned i;
 
 	for (i = 0; i < iPoint; i++)
 	{
@@ -88,7 +88,7 @@ void CBotGAValues::crossOver(IIndividual* other)
 // mutate some values
 void CBotGAValues::mutate()
 {
-	for (unsigned int i = 0; i < m_theValues.size(); i++)
+	for (unsigned i = 0; i < m_theValues.size(); i++)
 	{
 		if (randomFloat(0, 1) < CGA::g_fMutateRate)
 		{

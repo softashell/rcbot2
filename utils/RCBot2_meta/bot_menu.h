@@ -190,7 +190,7 @@ public:
 
 	void render ( CClient *pClient );
 
-	void selectedMenu ( CClient *pClient, unsigned int iMenu ) const;
+	void selectedMenu ( CClient *pClient, unsigned iMenu ) const;
 
 private:
 	std::vector<CBotMenuItem*> m_MenuItems;
@@ -480,7 +480,7 @@ public:
 	
 	static void render ( CClient *pClient ); // render
 
-	static void selectedMenu ( CClient *pClient, unsigned int iMenu );
+	static void selectedMenu ( CClient *pClient, unsigned iMenu );
 
 	static CBotMenu *getMenu ( int id ) { return m_MenuList[id]; }
 

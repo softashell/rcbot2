@@ -66,7 +66,7 @@ public:
 
 	void setGA ( CGA *ga ) { m_ga = ga; }
 	// size of population
-	unsigned int size () const { return m_theIndividuals.size(); }
+	unsigned size () const { return m_theIndividuals.size(); }
 
 	// get from population index
 	IIndividual *get ( int iIndex ) const;
@@ -144,7 +144,7 @@ public:
 
 	IIndividual *pick ();
 
-	unsigned int m_iMaxPopSize;
+	unsigned m_iMaxPopSize;
 	static const int g_iDefaultMaxPopSize;
 	static const float g_fCrossOverRate;
 	static const float g_fMutateRate;
@@ -155,7 +155,7 @@ private:
 	CPopulation m_thePopulation;
 	CPopulation m_theNewPopulation;
 
-	unsigned int m_iNumGenerations;
+	unsigned m_iNumGenerations;
 	float m_fPrevAvgFitness;
 
 	ISelection *m_theSelectFunction;

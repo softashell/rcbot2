@@ -153,7 +153,7 @@ protected:
 	Vector m_vPreviousPoint;
 	Vector m_vDangerPoint;
 	bool m_bDangerPoint = false;
-	short int m_iBeliefTeam = 0;
+	int m_iBeliefTeam = 0;
 	bool m_bBeliefChanged = false;
 	bool m_bLoadBelief = false;
 };
@@ -193,7 +193,7 @@ public:
 		return -1;
 	}
 
-	void setParent ( short int iParent ) 
+	void setParent (const int iParent) 
 	{ 
 		m_iParent = iParent; 
 
@@ -207,7 +207,7 @@ public:
 	void setCost(float fCost) { m_fCost = fCost; }
 	////////////////////////////////////////////////////////
 	// for comparison
-	bool precedes ( AStarNode *other ) const
+	bool precedes (const AStarNode *other) const
 	{
 		return m_fCost+m_fHeuristic < other->getCost() + other->getHeuristic();
 	}
@@ -217,7 +217,7 @@ private:
 	float m_fCost;
 	float m_fHeuristic;
 	unsigned char m_iFlags;
-	short int m_iParent;
+	int m_iParent;
 	int m_iWaypoint;
 };
 // Insertion sorted list
@@ -371,8 +371,8 @@ enum : std::uint8_t
 
 typedef struct
 {
-	short int iFrom;
-	short int iTo;
+	int iFrom;
+	int iTo;
 	bool bValid;
 	bool bSkipped;
 }failedpath_t;

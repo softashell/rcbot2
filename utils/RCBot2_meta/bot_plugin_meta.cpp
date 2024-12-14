@@ -493,7 +493,7 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxle
 
 	//CRCBotPlugin::ShowLicense();	
 
-	//RandomSeed((unsigned int)time(NULL));
+	//RandomSeed((unsigned)time(NULL));
 
 	CClassInterface::init();
 

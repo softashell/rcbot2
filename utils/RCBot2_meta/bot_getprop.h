@@ -171,12 +171,12 @@ typedef enum : std::int16_t
 	GET_PROPDATA_MAX = 155
 } getpropdata_id;
 
-bool UTIL_FindSendPropInfo(ServerClass *pInfo, const char *szType, unsigned int *offset);
+bool UTIL_FindSendPropInfo(ServerClass *pInfo, const char *szType, unsigned *offset);
 ServerClass *UTIL_FindServerClass(const char *name);
 void UTIL_FindServerClassPrint(const char*name_cmd);
 void UTIL_FindServerClassnamePrint(const char *name_cmd);
 void UTIL_FindPropPrint(const char *prop_name);
-unsigned int UTIL_FindInDataMap(datamap_t* pMap, const char* name);
+unsigned UTIL_FindInDataMap(datamap_t* pMap, const char* name);
 datamap_t* CBaseEntity_GetDataDescMap(CBaseEntity* pEntity);
 datamap_t* VGetDataDescMap(CBaseEntity* pThisPtr, int offset);
 
@@ -192,7 +192,7 @@ public:
 		m_preoffset = 0;
 	}
 
-	CClassInterfaceValue (const char *key, const char *value, unsigned int preoffset )
+	CClassInterfaceValue (const char *key, const char *value, unsigned preoffset )
 	{
 		init(key,value,preoffset);
 	}
@@ -350,8 +350,8 @@ public:
 		return m_offset;
 	}
 private:
-	unsigned int m_offset;
-	unsigned int m_preoffset;
+	unsigned m_offset;
+	unsigned m_preoffset;
 	void *m_data;
 	char *m_class;
 	char *m_value;
@@ -385,7 +385,7 @@ public:
 	static float getPlayerHealth ( edict_t *edict ) { return g_GetProps[GETPROP_PLAYERHEALTH].getFloatFromInt(edict,0); }
 	static int getEffects ( edict_t *edict ) { return g_GetProps[GETPROP_EFFECTS].getInt(edict,0); }
 	static int *getAmmoList ( edict_t *edict ) { return g_GetProps[GETPROP_AMMO].getIntPointer(edict); }
-	//static unsigned int findOffset(const char *szType,const char *szClass);
+	//static unsigned findOffset(const char *szType,const char *szClass);
 	static int getTF2NumHealers ( edict_t *edict ) { return g_GetProps[GETPROP_TF2_NUMHEALERS].getInt(edict,0); }
 	static int getTF2Conditions ( edict_t *edict ) { return g_GetProps[GETPROP_TF2_CONDITIONS].getInt(edict,0); }
 	static bool getVelocity ( edict_t *edict, Vector *v ) {return g_GetProps[GETPROP_VELOCITY].getVector(edict,v); }
