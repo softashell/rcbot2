@@ -15,7 +15,7 @@ proj_c_flags = [
   '-Wno-implicit-const-int-float-conversion'
 ]
 proj_c_flags_opt = [
-  '-O2',
+  '-O3',
   '-pipe',
 ]
 proj_c_flags_dbg = [
@@ -218,7 +218,7 @@ class MMSConfig(object):
         cxx.cflags += [
           '-fvisibility=hidden',
           '-fvisibility-inlines-hidden',
-          '-std=c++14',
+          '-std=c++17',
           '-D__linux__',
         ]
       # apple clang <-> llvm clang version correspondence is just a guess as there is no way to figure it out for real
@@ -257,7 +257,8 @@ class MMSConfig(object):
         '/EHsc',
         '/GR-',
         '/TP',
-        '/std:c++14',
+        '/Qspectre',
+        '/std:c++17',
         '/arch:SSE2',
       ]
       cxx.linkflags += [
@@ -268,8 +269,8 @@ class MMSConfig(object):
     if builder.options.opt == '1':
       if cxx.behavior == 'gcc':
         cxx.cflags += proj_c_flags_opt
-      elif cxx.behavior == 'msvc':
-        cxx.cflags += ['/Ox', '/Zo']
+      elif cxx.behavior == 'msvc': # /Ob3 needs to be after /Ox, enables aggressive function inling -caxanga334
+        cxx.cflags += ['/Ox', '/Zo', '/Ob3', '/GF']
         cxx.linkflags += ['/OPT:ICF', '/OPT:REF']
 
     # Debugging

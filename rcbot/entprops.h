@@ -96,7 +96,7 @@ private:
 	bool initialized = false;
 };
 
-inline int CBotEntProp::MatchTypeDescAsInteger(_fieldtypes type, int flags)
+inline int CBotEntProp::MatchTypeDescAsInteger(const _fieldtypes type, const int flags)
 {
 	switch (type)
 	{
@@ -145,7 +145,7 @@ inline edict_t *CBotEntProp::BaseEntityToEdict(CBaseEntity *pEntity)
 /// @brief Gets a CBaseEntity from an entity index
 /// @param entity Entity/Edict index
 /// @return CBaseEntity pointer
-inline CBaseEntity *CBotEntProp::GetEntity(int entity)
+inline CBaseEntity *CBotEntProp::GetEntity(const int entity)
 {
 	CBaseEntity *pEntity;
 	if (!IndexToAThings(entity, &pEntity, nullptr))
