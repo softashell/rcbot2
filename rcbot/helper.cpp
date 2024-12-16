@@ -29,6 +29,11 @@
  *
  */
 
+#pragma push_macro("clamp") //Fix for C++17 [APG]RoboCop[CL]
+#undef clamp
+#include <algorithm>
+#pragma pop_macro("clamp")
+
 #include "helper.h"
 #include "IEngineTrace.h"
 #include "toolframework/itoolentity.h"
@@ -45,7 +50,7 @@ extern IServerTools *servertools;
 /* Given an entity reference or index, fill out a CBaseEntity and/or edict.
    If lookup is successful, returns true and writes back the two parameters.
    If lookup fails, returns false and doesn't touch the params.  */
-bool CBotHelper::IndexToAThings(int num, CBaseEntity **pEntData, edict_t **pEdictData)
+bool CBotHelper::IndexToAThings(const int num, CBaseEntity **pEntData, edict_t **pEdictData)
 {
 	CBaseEntity *pEntity = sm_gamehelpers->ReferenceToEntity(num);
 
@@ -167,7 +172,7 @@ int CBotHelper::FindEntityInSphere(int start, const Vector& center, float radius
 
 /// @brief Searches for entities by their networkable class
 /// @return Entity index or INVALID_EHANDLE_INDEX if none is found
-int CBotHelper::FindEntityByNetClass(int start, const char *classname)
+int CBotHelper::FindEntityByNetClass(const int start, const char *classname)
 {
 	for (int i = ((start != -1) ? start : 0); i < gpGlobals->maxEntities; i++)
 	{
@@ -223,7 +228,7 @@ bool CBotHelper::PointWithinViewAngle(Vector const &vecSrcPosition, Vector const
 /// This manually calculates the value of CBaseCombatCharacter's `m_flFieldOfView` data property.
 /// @param angle The FOV value in degree
 /// @return Width of the forward view cone as a dot product result
-float CBotHelper::GetForwardViewCone(float angle)
+float CBotHelper::GetForwardViewCone(const float angle)
 {
 	return cosf(DEG2RAD(angle) / 2.0f);
 }

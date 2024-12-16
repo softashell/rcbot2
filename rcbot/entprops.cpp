@@ -27,6 +27,11 @@
  *
  */
 
+#pragma push_macro("clamp") //Fix for C++17 [APG]RoboCop[CL]
+#undef clamp
+#include <algorithm>
+#pragma pop_macro("clamp")
+
 #include "entprops.h"
 #include "bot_sm_ext.h"
 #include "logging.h"

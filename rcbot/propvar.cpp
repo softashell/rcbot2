@@ -29,6 +29,11 @@
  *
  */
 
+#pragma push_macro("clamp") //Fix for C++17 [APG]RoboCop[CL]
+#undef clamp
+#include <algorithm>
+#pragma pop_macro("clamp")
+
 #include "propvar.h"
 #include "helper.h"
 #include "logging.h"
@@ -47,7 +52,7 @@ CPropertyVarBase::~CPropertyVarBase()
 	m_initialized = false;
 }
 
-void CPropertyVarBase::Init(const char *propname, PropType type, int entity)
+void CPropertyVarBase::Init(const char *propname, const PropType type, const int entity)
 {
 	CBaseEntity* baseentity = bot_helper->GetEntity(entity);
 

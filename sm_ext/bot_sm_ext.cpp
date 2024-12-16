@@ -10,7 +10,7 @@ using namespace SourceMod;
 RCBotSourceModExt g_RCBotSourceMod;
 
 bool RCBotSourceModExt::OnExtensionLoad(IExtension *me, IShareSys *sys,  char *error,
-		size_t maxlength, bool late) {
+		const size_t maxlength, bool late) {
 	sharesys = sys;
 	myself = me;
 

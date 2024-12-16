@@ -28,6 +28,11 @@
  * Version: $Id$
  */
 
+#pragma push_macro("clamp") //Fix for C++17 [APG]RoboCop[CL]
+#undef clamp
+#include <algorithm>
+#pragma pop_macro("clamp")
+
 #include "rcbot/tf2/conditions.h"
 #include "rcbot/entprops.h"
 #include "rcbot/logging.h"
@@ -39,7 +44,7 @@ CTF2Conditions *tf2_conditions = &s_tf2_conditions;
 /// @param client Client/Player entity index to check
 /// @param cond Condition number to check
 /// @return TRUE if the given condition is active on the player
-bool CTF2Conditions::TF2_IsPlayerInCondition(int client, TFCond cond)
+bool CTF2Conditions::TF2_IsPlayerInCondition(const int client, const TFCond cond)
 {
 	const int iCond = cond;
 

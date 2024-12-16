@@ -179,7 +179,7 @@
       <HeaderFileName />
     </Midl>
     <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Full</Optimization>
       <AdditionalIncludeDirectories>..\..\alliedmodders\hl2sdk-tf2\public\mathlib;..\..\alliedmodders\hl2sdk-tf2\public;..\..\alliedmodders\hl2sdk-tf2\public\engine;..\..\alliedmodders\hl2sdk-tf2\public\tier0;..\..\alliedmodders\hl2sdk-tf2\public\tier1;..\..\alliedmodders\hl2sdk-tf2\game\shared;..\..\alliedmodders\hl2sdk-tf2\game\server;..\..\alliedmodders\hl2sdk-tf2\public\game\server;..\..\alliedmodders\metamod-source\core\;..\..\alliedmodders\metamod-source\core\sourcehook\;..\..\alliedmodders\metamod-source\public\;..\..\alliedmodders\sourcemod\sourcepawn\include;..\..\alliedmodders\sourcemod\public\amtl;..\..\alliedmodders\sourcemod\public\amtl\amtl;..\..\alliedmodders\sourcemod\public\extensions;..\..\alliedmodders\sourcemod\public;..\..\sm_ext\;..\..\rcbot\;..\..\rcbot\tf2;..\..\rcbot_subcmds;..\..\utils\RCBot2_meta;..\..\versioning;..\..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SOURCE_ENGINE=11;SE_TF2=11;WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;RCBOT_MAXPLAYERS=101;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
@@ -194,11 +194,13 @@
       <OmitDefaultLibName>false</OmitDefaultLibName>
       <AdditionalOptions>/D SE_EPISODEONE=1 /D SE_DARKMESSIAH=2 /D SE_ORANGEBOX=3 /D SE_ORANGEBOXVALVE=4 /D SE_LEFT4DEAD=5 /D SE_LEFT4DEAD2=6 /D SE_ALIENSWARM=7 /FS %(AdditionalOptions)</AdditionalOptions>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <DisableSpecificWarnings>4005;4028;4058;4061;4062;4242;4265;4365;4464;4471;4625;4710;4820;4996;5045;5204;5219;5220;5264;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <LanguageStandard_C>Default</LanguageStandard_C>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <WarningLevel>Level4</WarningLevel>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>

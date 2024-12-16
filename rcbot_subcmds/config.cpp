@@ -29,7 +29,10 @@
  *
  */
 
+#pragma push_macro("clamp") //Fix for C++17 [APG]RoboCop[CL]
+#undef clamp
 #include <algorithm>
+#pragma pop_macro("clamp")
 
 CBotCommandInline GameEventVersion("event_version", CMD_ACCESS_CONFIG, [](CClient *pClient, const BotCommandArgs& args)
 {
