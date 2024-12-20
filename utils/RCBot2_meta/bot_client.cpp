@@ -626,7 +626,7 @@ void CClient :: think ()
 				}				
 			}
 
-			bool bCheckDistance = iMoveType != MOVETYPE_FLY && m_fCanPlaceLadder == 0; // always check distance unless ladder climbing
+			bool bCheckDistance = iMoveType != MOVETYPE_FLY && m_fCanPlaceLadder == 0.0f; // always check distance unless ladder climbing
 
 			// ****************************************************
 			// Ladder waypoint

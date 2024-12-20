@@ -323,7 +323,7 @@ typedef enum : std::uint8_t
 class CBotTF2FunctionEnemyAtIntel : public IBotFunction
 {
 public:
-	CBotTF2FunctionEnemyAtIntel(int iTeam, const Vector& vPos, int type, edict_t* pPlayer = nullptr, int capindex = -1) : m_vPos(vPos)
+	CBotTF2FunctionEnemyAtIntel(const int iTeam, const Vector& vPos, const int type, edict_t* pPlayer = nullptr, const int capindex = -1) : m_vPos(vPos)
 	{
 		m_iTeam = iTeam;
 		m_iType = type;
@@ -360,7 +360,7 @@ public:
 class CBroadcastFlagReturned : public IBotFunction
 {
 public:
-	CBroadcastFlagReturned (int iTeam) { m_iTeam = iTeam; }
+	CBroadcastFlagReturned (const int iTeam) { m_iTeam = iTeam; }
 	void execute ( CBot *pBot ) override;
 
 private:
@@ -370,7 +370,7 @@ private:
 class CBroadcastFlagDropped : public IBotFunction
 {
 public:
-	CBroadcastFlagDropped(int iTeam, const Vector& origin)
+	CBroadcastFlagDropped(const int iTeam, const Vector& origin)
 		: m_vOrigin(origin), m_iTeam(iTeam)
 	{
 	}
@@ -385,7 +385,7 @@ private:
 class CBroadcastFlagCaptured : public IBotFunction
 {
 public:
-	CBroadcastFlagCaptured(int iTeam) { m_iTeam = iTeam; }
+	CBroadcastFlagCaptured(const int iTeam) { m_iTeam = iTeam; }
 
 	void execute ( CBot *pBot ) override;
 private:
@@ -441,7 +441,7 @@ public:
 
 	void checkDependantEntities() override;
 
-	int getMetal ();
+	int getMetal () const;
 
 	//virtual Vector getAimVector ( edict_t *pEntity ) { return CBot::getAimVector(pEntity); }
 

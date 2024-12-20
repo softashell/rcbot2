@@ -22,7 +22,7 @@ public:
 	{		
 	}
 
-	virtual bool operate(bool bVal, CBotOperator* pNext)
+	virtual bool operate(const bool bVal, CBotOperator* pNext)
 	{
 		switch (m_op)
 		{
@@ -53,7 +53,7 @@ private:
 class CBotFact : public CBotOperator
 {
 public:
-	CBotFact ( unsigned iFactId ) : m_fid(iFactId)
+	CBotFact (const unsigned iFactId) : m_fid(iFactId)
 	{
 	}
 

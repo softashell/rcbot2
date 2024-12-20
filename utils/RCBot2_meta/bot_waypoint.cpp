@@ -57,10 +57,14 @@
 
 #include "rcbot/logging.h"
 
-#include <algorithm>
 #include <cmath>
 #include <cstring>
 #include <vector>    //bir3yk
+
+#pragma push_macro("clamp")
+#undef clamp
+#include <algorithm>
+#pragma pop_macro("clamp")
 
 int CWaypoints::m_iNumWaypoints = 0;
 CWaypoint CWaypoints::m_theWaypoints[MAX_WAYPOINTS];
@@ -143,7 +147,7 @@ bool CWaypointNavigator :: beliefLoad ()
 
    std::memset(filebelief,0,sizeof(unsigned short int)*CWaypoints::MAX_WAYPOINTS);
 
-   bfp.read(reinterpret_cast<char*>(filebelief), sizeof(unsigned short int) * CWaypoints::numWaypoints());
+   bfp.read(reinterpret_cast<char*>(filebelief), static_cast<std::streamsize>(sizeof(unsigned short)) * CWaypoints::numWaypoints());
 
    // convert from short int to float
 
@@ -190,7 +194,7 @@ bool CWaypointNavigator :: beliefSave ( bool bOverride )
 		   bfp.seekg(0, std::fstream::beg); // seek at start
 
 		   if ( bfp )
-				bfp.read(reinterpret_cast<char*>(filebelief), sizeof(unsigned short) * CWaypoints::numWaypoints());
+			   bfp.read(reinterpret_cast<char*>(filebelief), static_cast<std::streamsize>(sizeof(unsigned short)) * CWaypoints::numWaypoints());
 	   }
    }
 
@@ -216,7 +220,7 @@ bool CWaypointNavigator :: beliefSave ( bool bOverride )
 
    bfp.seekg(0, std::fstream::beg); // seek at start
 
-   bfp.write(reinterpret_cast<char*>(filebelief), sizeof(unsigned short) * num);
+   bfp.write(reinterpret_cast<char*>(filebelief), static_cast<std::streamsize>(sizeof(unsigned short)) * num);
 
    // new team -- load belief 
 	m_iBeliefTeam = m_pBot->getTeam();
@@ -1376,10 +1380,10 @@ void CWaypointNavigator :: updatePosition ()
 	m_pBot->walkingTowardsWaypoint(pWaypoint,&m_bOffsetApplied,m_vOffset);
 
 	// fix for bots not finding goals
-	if ( m_fNextClearFailedGoals && m_fNextClearFailedGoals < engine->Time() )
+	if (m_fNextClearFailedGoals > 0.0f && m_fNextClearFailedGoals < engine->Time())
 	{
 		m_iFailedGoals.clear();
-		m_fNextClearFailedGoals = 0;
+		m_fNextClearFailedGoals = 0.0f;
 	}
 
 	m_pBot->setMoveTo(vWptOrigin+m_vOffset);
@@ -1551,7 +1555,7 @@ void CWaypoint :: draw ( edict_t *pEdict, const bool bDrawPaths, const unsigned 
 	unsigned char b = colour.b;
 	unsigned char a = colour.a;
 
-	const QAngle qAim = QAngle(0, m_fAimYaw, 0);
+	const QAngle qAim = QAngle(0, static_cast<vec_t>(m_iAimYaw), 0);
 
 	AngleVectors(qAim,&vAim);
 
@@ -1635,7 +1639,7 @@ void CWaypoint :: draw ( edict_t *pEdict, const bool bDrawPaths, const unsigned 
 		debugoverlay->AddLineOverlay (m_vOrigin + Vector(0,0,fHeight/2), m_vOrigin + Vector(0,0,fHeight/2) + vAim*48, r,g,b, false, 1);
 
 		// draw radius
-		if ( m_fRadius )
+		if (m_fRadius > 0.0f)
 		{
 			debugoverlay->AddBoxOverlay(m_vOrigin,Vector(-m_fRadius,-m_fRadius,-fHeight),Vector(m_fRadius,m_fRadius,fHeight),QAngle(0,0,0),r,g,b,40,1);
 		}
@@ -1947,7 +1951,7 @@ void CWaypoint :: save (std::fstream &bfp )
 {
 	bfp.write(reinterpret_cast<char*>(&m_vOrigin), sizeof(Vector));
 	// aim of vector (used with certain waypoint types)
-	bfp.write(reinterpret_cast<char*>(&m_fAimYaw), sizeof(int));
+	bfp.write(reinterpret_cast<char*>(&m_iAimYaw), sizeof(int));
 	bfp.write(reinterpret_cast<char*>(&m_iFlags), sizeof(int));
 	// not deleted
 	bfp.write(reinterpret_cast<char*>(&m_bUsed), sizeof(bool));
@@ -1978,7 +1982,7 @@ void CWaypoint :: load (std::fstream &bfp, const int iVersion )
 
 	bfp.read(reinterpret_cast<char*>(&m_vOrigin), sizeof(Vector));
 	// aim of vector (used with certain waypoint types)
-	bfp.read(reinterpret_cast<char*>(&m_fAimYaw), sizeof(int));
+	bfp.read(reinterpret_cast<char*>(&m_iAimYaw), sizeof(int));
 	bfp.read(reinterpret_cast<char*>(&m_iFlags), sizeof(int));
 	// not deleted
 	bfp.read(reinterpret_cast<char*>(&m_bUsed), sizeof(bool));
@@ -2364,7 +2368,7 @@ int CWaypoints :: addWaypoint ( CClient *pClient, const char *type1, const char 
 	return iIndex;
 }
 
-int CWaypoints :: addWaypoint (edict_t *pPlayer, const Vector& vOrigin, const int iFlags, const bool bAutoPath, const float fYaw, const int iArea, float fRadius)
+int CWaypoints :: addWaypoint (edict_t *pPlayer, const Vector& vOrigin, const int iFlags, const bool bAutoPath, const int iYaw, const int iArea, float fRadius)
 {
 	const int iIndex = freeWaypointIndex();
 
@@ -2379,7 +2383,7 @@ int CWaypoints :: addWaypoint (edict_t *pPlayer, const Vector& vOrigin, const in
 
 	///////////////////////////////////////////////////
 	m_theWaypoints[iIndex] = CWaypoint(vOrigin,iFlags);	
-	m_theWaypoints[iIndex].setAim(fYaw);
+	m_theWaypoints[iIndex].setAim(iYaw);
 	m_theWaypoints[iIndex].setArea(iArea);
 	m_theWaypoints[iIndex].setRadius(fRadius);
 	// increase max waypoints used
@@ -3146,7 +3150,7 @@ void CWaypointTypes :: setup ()
 	addType(new CWaypointType(W_FL_CAPPOINT,"capture","TF2/DOD:S bot will find a capture point here",WptColor(255,255,0),(1<<MOD_TF2)|(1<<MOD_DOD)));
 	addType(new CWaypointType(W_FL_BOMBS_HERE,"bombs","DOD:S bots can pickup bombs here",WptColor(255,100,255),(1<<MOD_DOD)));
 	addType(new CWaypointType(W_FL_BOMB_TO_OPEN,"bombtoopen","DOD:S bot needs to blow up this point to move on",WptColor(50,200,30),(1<<MOD_DOD)));
-	addType(new CWaypointType(W_FL_BREAKABLE,"breakable","Bots need to break something with a rocket to get through here",WptColor(100,255,50),(1<<MOD_DOD)));
+	addType(new CWaypointType(W_FL_BREAKABLE,"breakable","Bots need to break something with a rocket to get through here",WptColor(100,255,50)));
 	addType(new CWaypointType(W_FL_OPENS_LATER,"openslater","this waypoint is available when a door is open only",WptColor(100,100,200)));
 	addType(new CWaypointType(W_FL_WAIT_GROUND,"waitground","bot will wait until there is ground below",WptColor(150,150,100)));
 	addType(new CWaypointType(W_FL_LIFT,"lift","bot needs to wait on a lift here",WptColor(50,80,180)));

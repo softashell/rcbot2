@@ -7,6 +7,11 @@
 #include "bot_waypoint_locations.h"
 #include "bot_schedule.h"
 
+#pragma push_macro("clamp") //Fix for C++17 [APG]RoboCop[CL]
+#undef clamp
+#include <algorithm>
+#pragma pop_macro("clamp")
+
 bool CBotZombie :: isEnemy ( edict_t *pEdict,bool bCheckWeapons )
 {
 	if ( pEdict == m_pEdict )

@@ -241,7 +241,7 @@ public:
 	{
 		int count = 0;
 
-		for ( short int i = 0; i < m_iNumControlPoints; i ++ )
+		for ( int i = 0; i < m_iNumControlPoints; i ++ )
 		{
 			if ( m_iOwner[i] == iTeam )
 				count++;
@@ -270,7 +270,7 @@ public:
 	{
 		int count = 0;
 
-		for ( short int i = 0; i < m_iNumControlPoints; i ++ )
+		for ( int i = 0; i < m_iNumControlPoints; i ++ )
 		{
 			if ( canDefendBomb(iTeam,i) )
 				count++;
@@ -283,7 +283,7 @@ public:
 	{
 		int count = 0;
 
-		for ( short int i = 0; i < m_iNumControlPoints; i ++ )
+		for ( int i = 0; i < m_iNumControlPoints; i ++ )
 		{
 			if ( canDefuseBomb(iTeam,i) )
 				count++;
@@ -296,7 +296,7 @@ public:
 	{
 		int count = 0;
 
-		for ( short int i = 0; i < m_iNumControlPoints; i ++ )
+		for ( int i = 0; i < m_iNumControlPoints; i ++ )
 		{
 			if ( canPlantBomb(iTeam,i) )
 				count += getNumBombsRequired(i);
@@ -324,7 +324,7 @@ public:
 	{
 		int count = 0;
 
-		for ( short int i = 0; i < m_iNumControlPoints; i ++ )
+		for ( int i = 0; i < m_iNumControlPoints; i ++ )
 		{
 			if ( canPlantBomb(iTeam,i) )
 				count += getNumBombsRemaining(i);
@@ -347,7 +347,7 @@ public:
 	{
 		int count = 0;
 
-		for ( short int i = 0; i < m_iNumControlPoints; i ++ )
+		for ( int i = 0; i < m_iNumControlPoints; i ++ )
 		{
 			if ( m_iOwner[i] == iTeam )
 				count++;
@@ -469,7 +469,7 @@ public:
 
 	int getFlagID ( edict_t *pent ) const
 	{
-		for ( short int i = 0; i < m_iNumControlPoints; i ++ )
+		for ( int i = 0; i < m_iNumControlPoints; i ++ )
 		{
 			if ( m_pFlags[i] == pent )
 				return i;
@@ -483,7 +483,7 @@ public:
 		if ( pent == nullptr)
 			return -1;
 
-		for ( short int i = 0; i < m_iNumControlPoints; i ++ )
+		for ( int i = 0; i < m_iNumControlPoints; i ++ )
 		{
 			if ( m_pBombs[i][0] == pent || m_pBombs[i][1] == pent )
 				return i;

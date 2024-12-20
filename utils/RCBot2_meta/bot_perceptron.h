@@ -8,25 +8,25 @@ typedef float ga_nn_value;
 //#define scale (x,min,max) (((x)-(min))/((max)-(min)))
 //#define descale (x,min,max) ((min)+((x)*((max)-(min))))
 
-inline unsigned short int _MAX ( unsigned short int a, unsigned short int b )
+inline unsigned short int _MAX (const unsigned short int a, const unsigned short int b)
 {
 	if ( a > b )
 		return a;
 	return b;
 }
 
-inline ga_nn_value zeroscale ( ga_nn_value x, ga_nn_value fMin, ga_nn_value fMax )
+inline ga_nn_value zeroscale (const ga_nn_value x, const ga_nn_value fMin, const ga_nn_value fMax)
 {
 	return (x-fMin)/(fMax-fMin);
 }
 
 // scales into -1 and +1 (medium at zero)
-inline ga_nn_value gscale ( ga_nn_value x, ga_nn_value fMin, ga_nn_value fMax ) 
+inline ga_nn_value gscale (const ga_nn_value x, const ga_nn_value fMin, const ga_nn_value fMax) 
 { 
 	return zeroscale(x,fMin,fMax)*2-1.0f;
 }
 // descales between 0 and 1 to min and max range
-inline ga_nn_value gdescale ( ga_nn_value x, ga_nn_value fMin, ga_nn_value fMax )
+inline ga_nn_value gdescale (const ga_nn_value x, const ga_nn_value fMin, const ga_nn_value fMax)
 {
 	return fMin+x*(fMax-fMin);
 }
@@ -75,7 +75,7 @@ public:
 
 	virtual void input ( ga_nn_value *inputs );
 
-	ga_nn_value getWeight ( unsigned short int i ) const { return m_weights[i]; }
+	ga_nn_value getWeight (const unsigned short int i) const { return m_weights[i]; }
 
 	virtual ga_nn_value execute (); //TODO: not implemented? [APG]RoboCop[CL]
 
@@ -135,11 +135,11 @@ public:
 
 	ga_nn_value execute () override;//, bool usebias = true );
 
-	void setError ( ga_nn_value err ) { m_error = err; }
-	void addError ( ga_nn_value err ) { m_error += err; }
-	void divError ( ga_nn_value samples ) { m_error /= samples; }
+	void setError (const ga_nn_value err) { m_error = err; }
+	void addError (const ga_nn_value err) { m_error += err; }
+	void divError (const ga_nn_value samples) { m_error /= samples; }
 
-	ga_nn_value getError ( unsigned short int w ) const { return m_error * m_weights[w]; }
+	ga_nn_value getError (const unsigned short int w) const { return m_error * m_weights[w]; }
 	ga_nn_value getMSE () const { return m_error; }
 private:
 	ga_nn_value m_error;
@@ -157,7 +157,7 @@ typedef struct
 class CTrainingSet
 {
 public:
-	CTrainingSet( unsigned short int numInputs, unsigned short int numOutputs, unsigned short int numBatches )
+	CTrainingSet(const unsigned short int numInputs, const unsigned short int numOutputs, const unsigned short int numBatches)
 	{
 		m_numInputs = numInputs;
 		m_numOutputs = numOutputs;
@@ -210,14 +210,14 @@ public:
 		}
 	}
 
-	void setScale ( ga_nn_value min, ga_nn_value max )
+	void setScale (const ga_nn_value min, const ga_nn_value max)
 	{
 		m_fMin = min;
 		m_fMax = max;
 	}
 
 // input and scale between -1 and 1
-	void in ( ga_nn_value input )
+	void in (const ga_nn_value input)
 	{
 		//assert(m_batchNum>=0);
 		if ( m_batchNum >= 0 && m_batchNum < m_numBatches && m_inputNum < m_numInputs ) 
@@ -225,7 +225,7 @@ public:
 	}
 
 	// output and scale between 0 and 1
-	void out ( ga_nn_value output )
+	void out (const ga_nn_value output)
 	{
 		//assert(m_batchNum>=0);
 		if ( m_batchNum >= 0 && m_batchNum < m_numBatches && m_outputNum < m_numOutputs ) 
@@ -247,12 +247,12 @@ public:
 		return m_numBatches;
 	}
 
-	ga_nn_value scale ( ga_nn_value x ) const
+	ga_nn_value scale (const ga_nn_value x) const
 	{ 
 		return gscale(x,m_fMin,m_fMax);
 	}
 
-	ga_nn_value descale ( ga_nn_value x ) const
+	ga_nn_value descale (const ga_nn_value x) const
 	{
 		return gdescale(x,m_fMin,m_fMax);
 	}
@@ -297,7 +297,7 @@ public:
 
 	void execute (const ga_nn_value* inputs, ga_nn_value* outputs, ga_nn_value fMin, ga_nn_value fMax) const;
 
-	void batch_train ( CTrainingSet *tset, unsigned short int epochs ) const;
+	void batch_train (const CTrainingSet *tset, unsigned short int epochs) const;
 
 	~CBotNeuralNet ()
 	{

@@ -285,7 +285,7 @@ extern WeaponsData_t CSSWeaps[];
 class CWeapon
 {
 public:
-	CWeapon ( WeaponsData_t *data )
+	CWeapon (const WeaponsData_t *data)
 	{
 		m_iSlot = data->iSlot;
 		setID(data->iId);
@@ -340,12 +340,12 @@ public:
 
 	bool isShortWeaponName(const char* szWeaponName) const
 	{
-		const size_t start = strlen(m_szWeaponName) - strlen(szWeaponName);
-
-		if (start < 0)
+		if (std::strlen(szWeaponName) > std::strlen(m_szWeaponName))
 			return false;
 
-		return !strcmp(&m_szWeaponName[start], szWeaponName);
+		const size_t start = std::strlen(m_szWeaponName) - std::strlen(szWeaponName);
+
+		return std::strcmp(&m_szWeaponName[start], szWeaponName) == 0;
 	}
 
 	bool canDestroyPipeBombs() const
@@ -575,7 +575,7 @@ public:
 
 	static edict_t *findWeapon ( edict_t *pPlayer, const char *szWeaponName );
 
-	static void loadWeapons(const char *szWeaponListName, WeaponsData_t *pDefault);
+	static void loadWeapons(const char *szWeaponListName, const WeaponsData_t *pDefault);
 
 private:
 	// available weapons in game
@@ -725,9 +725,9 @@ public:
 		return m_pWeaponInfo->getPreference();
 	}
 
-	bool outOfAmmo (CBot *pBot) const;
+	bool outOfAmmo (const CBot *pBot) const;
 
-	bool needToReload (CBot *pBot) const;
+	bool needToReload (const CBot *pBot) const;
 
 	void setHasWeapon ( bool bHas )
 	{
@@ -744,7 +744,7 @@ public:
 		return m_pWeaponInfo->canAttack();
 	}
 
-	int getAmmo ( CBot *pBot, int type = AMMO_PRIM ) const;
+	int getAmmo (const CBot *pBot, int type = AMMO_PRIM ) const;
 
 	int getClip1 ( CBot *pBot ) const
 	{ 
@@ -799,7 +799,7 @@ public:
 
 	CBotWeapon *addWeapon(CWeapon *pWeaponInfo, int iId, edict_t *pent, bool bOverrideAll = true);
 
-	CBotWeapon *getWeapon(CWeapon *pWeapon);
+	CBotWeapon *getWeapon(const CWeapon *pWeapon);
 
 	CBotWeapon *getActiveWeapon(const char *szWeaponName, edict_t *pWeaponUpdate = nullptr, bool bOverrideAmmoTypes = true);
 

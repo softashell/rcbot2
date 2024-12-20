@@ -38,7 +38,7 @@
 
 #include <cstring>
 
-void CHL1DMSrcBot :: init (bool bVarInit)
+void CHL1DMSrcBot :: init (const bool bVarInit)
 {
 	CBot::init(bVarInit);
 }

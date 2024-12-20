@@ -37,8 +37,12 @@
 #include "bot_waypoint_locations.h"
 #include "bot_globals.h"
 
-#include <vector>    //bir3yk
+#pragma push_macro("clamp") //Fix for C++17 [APG]RoboCop[CL]
+#undef clamp
 #include <algorithm>
+#pragma pop_macro("clamp")
+
+#include <vector>    //bir3yk
 #include <cmath>
 
 unsigned char CWaypointLocations :: g_iFailedWaypoints[CWaypoints::MAX_WAYPOINTS];
@@ -72,7 +76,7 @@ unsigned char *CWaypointLocations :: resetFailedWaypoints (WaypointList *iIgnore
 #define CLAMP_TO_ZERO(x) x=((x)<0)?0:x
 #define CLAMP_TO(x,clamp) x=((x)>(clamp))?(clamp):x
 
-void CWaypointLocations :: getMinMaxs ( int iLoc, int jLoc, int kLoc, 
+void CWaypointLocations :: getMinMaxs (const int iLoc, const int jLoc, const int kLoc, 
 										int *iMinLoci, int *iMinLocj, int *iMinLock,
 										int *iMaxLoci, int *iMaxLocj, int *iMaxLock )
 {

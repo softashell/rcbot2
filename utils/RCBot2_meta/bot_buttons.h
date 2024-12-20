@@ -36,7 +36,7 @@
 class CBotButton
 {
 public:
-	CBotButton ( int iId )
+	CBotButton (const int iId)
 	{
 		memset(this,0,sizeof(CBotButton));
 		m_iButtonId = iId;
@@ -45,12 +45,12 @@ public:
 
 	void tap () { m_bTapped = true; }
 
-	bool held ( float fTime ) const
+	bool held (const float fTime) const
 	{
 		return m_bTapped || (fTime >= m_fTimeStart && fTime <= m_fTimeEnd);// && (!m_fLetGoTime||(fTime > m_fLetGoTime));
 	}
 
-	bool canPress (float fTime) const
+	bool canPress (const float fTime) const
 	{
 		return !m_bTapped || m_fLetGoTime < fTime;
 	}
@@ -70,7 +70,7 @@ public:
 
 	void unTap () { m_bTapped = false; }
 
-	void hold ( float fFrom = 0.0f, float fFor = 1.0f, float m_fLetGoTime = 0.0f );
+	void hold ( float fFrom = 0.0f, float fFor = 1.0f, float fLetGoTime = 0.0f );
 private:
 	int m_iButtonId;
 	float m_fTimeStart;
@@ -96,7 +96,7 @@ public:
 	}
 
 	void letGo (int iButtonId) const;
-	void holdButton ( int iButtonId, float fFrom = 0.0f, float fFor = 1.0f, float m_fLetGoTime = 0.0f ) const;
+	void holdButton ( int iButtonId, float fFrom = 0.0f, float fFor = 1.0f, float fLetGoTime = 0.0f ) const;
 
 	inline void add ( CBotButton *theButton );
 

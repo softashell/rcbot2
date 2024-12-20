@@ -86,8 +86,8 @@
 #include <random>
 #include <vector>
 
-constexpr float DEG_TO_RAD(float x) { return x * 0.0174533f; }
-constexpr float RAD_TO_DEG(float x) { return x * 57.29578f; }
+constexpr float DEG_TO_RAD(const float x) { return x * 0.0174533f; }
+constexpr float RAD_TO_DEG(const float x) { return x * 57.29578f; }
 
 //extern void HookPlayerRunCommand ( edict_t *edict );
 
@@ -1792,7 +1792,7 @@ int CBot :: nearbyFriendlies (float fDistance)
 	int num = 0;
 	const int maxclients = CBotGlobals::maxClients();
 
-	for ( short int i = 0; i <= maxclients; i ++ )
+	for ( int i = 0; i <= maxclients; i ++ )
 	{
 		edict_t* pEdict = INDEXENT(i);
 

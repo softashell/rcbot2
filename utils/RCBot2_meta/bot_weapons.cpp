@@ -35,9 +35,13 @@
 #include "bot_weapons.h"
 #include "bot_getprop.h"
 
-#include <algorithm>
 #include <cmath>
 #include <cstring>
+
+#pragma push_macro("clamp") //Fix for C++17 [APG]RoboCop[CL]
+#undef clamp
+#include <algorithm>
+#pragma pop_macro("clamp")
 
 static const char* g_szDODWeapons[] =
 {
@@ -83,6 +87,26 @@ static const char* g_szHL2DMWeapons[] =
 	"weapon_shotgun",
 	"weapon_physcannon"
 };
+
+//TODO: Add Black Mesa weapons support [APG]RoboCop[CL]
+/*static const char* g_szBMSWeapons[] =
+{
+	"weapon_357",
+	"weapon_assassin_glock",
+	"weapon_crossbow",
+	"weapon_crowbar",
+	"weapon_frag",
+	"weapon_glock",
+	"weapon_gluon",
+	"weapon_hivehand",
+	"weapon_mp5",
+	"weapon_rpg",
+	"weapon_satchel",
+	"weapon_shotgun",
+	"weapon_snark",
+	"weapon_tau",
+	"weapon_tripmine",
+};*/
 
 static const char* g_szSYNWeapons[] =
 {
@@ -323,7 +347,7 @@ WeaponsData_t CSSWeaps[] =
 		{ 0, 0, "\0", 0, 0, 0, 0, 0, 0 }//signal last weapon
 };
 
-bool CBotWeapon::needToReload(CBot* pBot) const
+bool CBotWeapon::needToReload(const CBot* pBot) const
 {
 	if (m_iClip1)
 	{
@@ -336,7 +360,7 @@ bool CBotWeapon::needToReload(CBot* pBot) const
 // static init (all weapons in game)
 std::vector<CWeapon*> CWeapons::m_theWeapons;
 
-int CBotWeapon::getAmmo(CBot* pBot, int type) const
+int CBotWeapon::getAmmo(const CBot* pBot, const int type) const
 {
 	if (type == AMMO_PRIM)
 		return pBot->getAmmo(m_pWeaponInfo->getAmmoIndex1());
@@ -406,7 +430,7 @@ edict_t* CWeapons::findWeapon(edict_t* pPlayer, const char* pszWeaponName)
 	return nullptr;
 }
 
-bool CBotWeapons::update(bool bOverrideAllFromEngine)
+bool CBotWeapons::update(const bool bOverrideAllFromEngine)
 {
 	uintptr_t iWeaponsSignature = 0x0; // check sum of weapons
 	edict_t* pWeapon;
@@ -729,7 +753,7 @@ return;
 }
 }*/
 
-CBotWeapon* CBotWeapons::getWeapon(CWeapon* pWeapon)
+CBotWeapon* CBotWeapons::getWeapon(const CWeapon* pWeapon)
 {
 	for (CBotWeapon& m_theWeapon : m_theWeapons)
 	{
@@ -740,7 +764,7 @@ CBotWeapon* CBotWeapons::getWeapon(CWeapon* pWeapon)
 	return nullptr;
 }
 
-CBotWeapon* CBotWeapons::getCurrentWeaponInSlot(int iSlot)
+CBotWeapon* CBotWeapons::getCurrentWeaponInSlot(const int iSlot)
 {
 	for (CBotWeapon& m_theWeapon : m_theWeapons)
 	{
@@ -775,7 +799,7 @@ static const char* szWeaponFlags[] = {
 	 "\0"
 };
 
-void CWeapons::loadWeapons(const char* szWeaponListName, WeaponsData_t* pDefault)
+void CWeapons::loadWeapons(const char* szWeaponListName, const WeaponsData_t* pDefault)
 {
 	if (szWeaponListName != nullptr && szWeaponListName[0] != 0)
 	{
@@ -933,7 +957,7 @@ bool CBotWeaponGravGun ::outOfAmmo (CBot *pBot)
 	return true;
 }
 */
-bool CBotWeapon::outOfAmmo(CBot* pBot) const
+bool CBotWeapon::outOfAmmo(const CBot* pBot) const
 {
 	if (m_pWeaponInfo && m_pWeaponInfo->isGravGun() && m_pEnt)
 		return CClassInterface::gravityGunObject(m_pEnt) == nullptr;

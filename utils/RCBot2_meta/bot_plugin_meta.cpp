@@ -12,6 +12,11 @@
  * This sample plugin is public domain.
  */
 
+#pragma push_macro("clamp") //Fix for C++17 [APG]RoboCop[CL]
+#undef clamp
+#include <algorithm>
+#pragma pop_macro("clamp")
+
 #include <cstdio>
 
 #include "bot_plugin_meta.h"

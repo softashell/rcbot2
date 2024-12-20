@@ -50,7 +50,7 @@ CNeuron :: CNeuron ()
 	m_inputs = nullptr;
 }
 
-CPerceptron :: CPerceptron (unsigned short int iInputs)
+CPerceptron :: CPerceptron (const unsigned short iInputs)
 {
 	m_inputs = new ga_nn_value [iInputs];//.clear();
 	m_weights = new ga_nn_value[iInputs];
@@ -205,9 +205,9 @@ void CLogisticalNeuron::init(unsigned short int iInputs, ga_nn_value learnrate)
 		m_LearnRate = learnrate;
 }
 
-CBotNeuralNet :: CBotNeuralNet ( unsigned short int numinputs, unsigned short int numhiddenlayers, 
-							  unsigned short int neuronsperhiddenlayer, unsigned short int numoutputs, 
-								ga_nn_value learnrate)
+CBotNeuralNet :: CBotNeuralNet (const unsigned short int numinputs, const unsigned short int numhiddenlayers,
+							  const unsigned short int neuronsperhiddenlayer, const unsigned short int numoutputs,
+								const ga_nn_value learnrate)
 {
 	unsigned short int i;
 
@@ -243,7 +243,7 @@ CBotNeuralNet :: CBotNeuralNet ( unsigned short int numinputs, unsigned short in
 
 constexpr int RCPP_VERB_EPOCHS = 1000;
 
-void CBotNeuralNet :: batch_train ( CTrainingSet *tset, unsigned short int epochs ) const
+void CBotNeuralNet :: batch_train (const CTrainingSet *tset, const unsigned short int epochs) const
 {
 	unsigned short int i; // ith node
 	unsigned short int j; //jth output

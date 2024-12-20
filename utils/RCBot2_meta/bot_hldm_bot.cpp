@@ -51,7 +51,7 @@
 #include <cstring>
 
 // initialise , i.e. set everything to a default value
-void CHLDMBot :: init (bool bVarInit)
+void CHLDMBot :: init (const bool bVarInit)
 {
 	CBot::init(bVarInit);
 }
@@ -491,7 +491,7 @@ void CHLDMBot :: getTasks (unsigned iIgnore)
 
 		if ( fDistance > BLAST_RADIUS && fDistance < 1500 )
 		{
-			CWeapon *pWeapon = CWeapons::getWeapon(HL2DM_WEAPON_FRAG);
+			const CWeapon *pWeapon = CWeapons::getWeapon(HL2DM_WEAPON_FRAG);
 			const CBotWeapon *pBotWeapon = m_pWeapons->getWeapon(pWeapon);
 
 			ADD_UTILITY(BOT_UTIL_THROW_GRENADE, pBotWeapon && pBotWeapon->getAmmo(this) > 0,1.0f- getHealthPercent()*0.2f)

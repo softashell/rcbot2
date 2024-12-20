@@ -13,7 +13,7 @@
 class CBotFuncResetAttackPoint : public IBotFunction
 {
 public:
-	CBotFuncResetAttackPoint(int team) { iTeam = team; }
+	CBotFuncResetAttackPoint(const int team) { iTeam = team; }
 	void execute ( CBot *pBot ) override
 	{
 		if ( pBot->getTeam() == iTeam )
@@ -26,7 +26,7 @@ private:
 class CBotFuncResetDefendPoint : public IBotFunction
 {
 public:
-	CBotFuncResetDefendPoint(int team) { iTeam = team; }
+	CBotFuncResetDefendPoint(const int team) { iTeam = team; }
 	void execute ( CBot *pBot ) override
 	{
 		if ( pBot->getTeam() == iTeam )

@@ -1,3 +1,8 @@
+#pragma push_macro("clamp") //Fix for C++17 [APG]RoboCop[CL]
+#undef clamp
+#include <algorithm>
+#pragma pop_macro("clamp")
+
 #include "engine_wrappers.h"
 
 #include "bot_wpt_dist.h"
@@ -35,7 +40,7 @@ void CWaypointDistances :: load ()
 
 		if ( (hdr.maxwaypoints == CWaypoints::MAX_WAYPOINTS) && (hdr.numwaypoints == CWaypoints::numWaypoints()) && (hdr.version == WPT_DIST_VER) )
 		{
-			bfp.read(reinterpret_cast<char*>(m_Distances), sizeof(int) * CWaypoints::MAX_WAYPOINTS * CWaypoints::MAX_WAYPOINTS);
+			bfp.read(reinterpret_cast<char*>(m_Distances), static_cast<std::streamsize>(sizeof(int) * CWaypoints::MAX_WAYPOINTS) * CWaypoints::MAX_WAYPOINTS);
 		}
 
 		m_fSaveTime = engine->Time() + 100.0f;
@@ -67,7 +72,7 @@ void CWaypointDistances :: save ()
 
 			bfp.write(reinterpret_cast<char*>(&hdr), sizeof(wpt_dist_hdr_t));
 
-			bfp.write(reinterpret_cast<char*>(m_Distances), sizeof(int) * CWaypoints::MAX_WAYPOINTS * CWaypoints::MAX_WAYPOINTS);
+			bfp.write(reinterpret_cast<char*>(m_Distances), static_cast<std::streamsize>(sizeof(int) * CWaypoints::MAX_WAYPOINTS) * CWaypoints::MAX_WAYPOINTS);
 
 			m_fSaveTime = engine->Time() + 100.0f;
 		}

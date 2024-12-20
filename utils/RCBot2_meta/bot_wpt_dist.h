@@ -20,12 +20,12 @@ public:
 
 	static float getDistance ( int iFrom, int iTo );
 
-	static bool isSet ( int iFrom, int iTo )
+	static bool isSet (const int iFrom, const int iTo)
 	{
 		return m_Distances[iFrom][iTo] >= 0;
 	}
 
-	static void setDistance ( int iFrom, int iTo, float fDist )
+	static void setDistance (const int iFrom, const int iTo, const float fDist)
 	{
 		m_Distances[iFrom][iTo] = static_cast<int>(fDist);
 	}

@@ -54,7 +54,7 @@ public:
 		m_iModId = MOD_ANY;
 	}
 
-	void setMod ( eModId iModId )
+	void setMod (const eModId iModId)
 	{
 		m_iModId = iModId;
 	}
@@ -70,12 +70,12 @@ public:
 	virtual void execute ( IBotEventInterface *pEvent ) {
 	}
 
-	void setEventId ( int iEventId )
+	void setEventId (const int iEventId)
 	{
 		m_iEventId = iEventId;
 	}
 
-	bool isEventId ( int iEventId ) const
+	bool isEventId (const int iEventId) const
 	{
 		return forCurrentMod() && m_iEventId == iEventId;
 	}

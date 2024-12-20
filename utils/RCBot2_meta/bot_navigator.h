@@ -409,7 +409,7 @@ public:
 
 	void updatePosition () override;
 
-	float getBelief ( int index ) override
+	float getBelief (const int index) override
 	{ if ( index >= 0 ) return m_fBelief[index]; return 0; }
 
 	void failMove () override;

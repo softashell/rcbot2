@@ -40,7 +40,7 @@
 #define BOT_WELCOME_MESSAGE "Welcome to RCBot by Cheeseh for Linux"
 #endif
 
-#define BOT_DEFAULT_FOV 80.0f
+constexpr float BOT_DEFAULT_FOV = 80.0f;
 
 #define __to_lower(a) (((a)>='A')&&((a)<='Z'))?('a'+((a)-'A')):(a)
 #define __strlow(str) { char *__strx = str; while ( __strx && *__strx ) { *__strx = __to_lower(*__strx); __strx++; } }
@@ -210,43 +210,44 @@ typedef enum : std::uint8_t
 }eBotFuncState;
 
 // bot condition bits
-#define CONDITION_ENEMY_OBSCURED		(1 <<  0) // bot lost sight of enemy and can't see clearly
-#define CONDITION_NO_WEAPON				(1 <<  1) // bot doesn't have a weapon
-#define CONDITION_OUT_OF_AMMO			(1 <<  2) // bot has no ammo
-#define CONDITION_SEE_CUR_ENEMY			(1 <<  3) // bot can see current enemy
-#define CONDITION_ENEMY_DEAD			(1 <<  4) // bot s enemy is dead
-#define CONDITION_SEE_WAYPOINT			(1 <<  5) // bot can see the current waypoint
-#define CONDITION_NEED_AMMO				(1 <<  6) // bot needs ammo (low)
-#define CONDITION_NEED_HEALTH			(1 <<  7) // bot needs health
-#define CONDITION_SEE_LOOK_VECTOR		(1 <<  8) // bot can see his 'look' vector
-#define CONDITION_POINT_CAPTURED		(1 <<  9) // a point has been captured recently
-#define CONDITION_PUSH					(1 << 10) // bots are more likely to attack and stop sniping etc
-#define CONDITION_LIFT					(1 << 11) // bot is on a lift
-#define CONDITION_SEE_PLAYERTOHELP		(1 << 12) // heal for non-TF mods
-#define CONDITION_SEE_LAST_ENEMY_POS	(1 << 13) // bots can see the last place they saw an enemy
-#define CONDITION_CHANGED				(1 << 14) // bots want to change their course of action
-#define CONDITION_COVERT				(1 << 15) // bots are more sensitive to enemies and more likely to take alternate paths
-#define CONDITION_RUN					(1 << 16) // bots have to run e.g. there is a grenade nearby
-#define CONDITION_GREN					(1 << 17) // bots will be more likely to throw a grenade
-#define CONDITION_NEED_BOMB				(1 << 18) // bot needs a bomb for dod:s bomb maps
-#define CONDITION_SEE_ENEMY_HEAD		(1 << 19) // bot can aim for a headshot
-#define CONDITION_PRONE					(1 << 20) // bot needs to go prone (lie down)
-#define CONDITION_PARANOID				(1 << 21) // bot is paranoid of spies or unknown enemy
-#define CONDITION_SEE_SQUAD_LEADER		(1 << 22) // bot can see his leader
-#define CONDITION_SQUAD_LEADER_DEAD		(1 << 23) // bots leader is dead
-#define CONDITION_SQUAD_LEADER_INRANGE	(1 << 24) // bots leader is in range
-#define CONDITION_SQUAD_IDLE			(1 << 25) // bots squad isn't doing anything fun
-#define CONDITION_DEFENSIVE				(1 << 26) // bot leader told me to defend
-#define CONDITION_BUILDING_SAPPED		(1 << 27) // one of engineers buildings sapped
-#define CONDITION_SEE_ENEMY_GROUND		(1 << 28) // can see enemy ground so aim for it if i have explosive
+constexpr int CONDITION_ENEMY_OBSCURED = 1 << 0;            // bot lost sight of enemy and can't see clearly
+constexpr int CONDITION_NO_WEAPON = 1 << 1;                 // bot doesn't have a weapon
+constexpr int CONDITION_OUT_OF_AMMO = 1 << 2;               // bot has no ammo
+constexpr int CONDITION_SEE_CUR_ENEMY = 1 << 3;             // bot can see current enemy
+constexpr int CONDITION_ENEMY_DEAD = 1 << 4;                // bot's enemy is dead
+constexpr int CONDITION_SEE_WAYPOINT = 1 << 5;              // bot can see the current waypoint
+constexpr int CONDITION_NEED_AMMO = 1 << 6;                 // bot needs ammo (low)
+constexpr int CONDITION_NEED_HEALTH = 1 << 7;               // bot needs health
+constexpr int CONDITION_SEE_LOOK_VECTOR = 1 << 8;           // bot can see his 'look' vector
+constexpr int CONDITION_POINT_CAPTURED = 1 << 9;            // a point has been captured recently
+constexpr int CONDITION_PUSH = 1 << 10;                     // bots are more likely to attack and stop sniping etc
+constexpr int CONDITION_LIFT = 1 << 11;                     // bot is on a lift
+constexpr int CONDITION_SEE_PLAYERTOHELP = 1 << 12;         // heal for non-TF mods
+constexpr int CONDITION_SEE_LAST_ENEMY_POS = 1 << 13;       // bots can see the last place they saw an enemy
+constexpr int CONDITION_CHANGED = 1 << 14;                  // bots want to change their course of action
+constexpr int CONDITION_COVERT = 1 << 15;                   // bots are more sensitive to enemies and more likely to take alternate paths
+constexpr int CONDITION_RUN = 1 << 16;                      // bots have to run e.g. there is a grenade nearby
+constexpr int CONDITION_GREN = 1 << 17;                     // bots will be more likely to throw a grenade
+constexpr int CONDITION_NEED_BOMB = 1 << 18;                // bot needs a bomb for dod:s bomb maps
+constexpr int CONDITION_SEE_ENEMY_HEAD = 1 << 19;           // bot can aim for a headshot
+constexpr int CONDITION_PRONE = 1 << 20;                    // bot needs to go prone (lie down)
+constexpr int CONDITION_PARANOID = 1 << 21;                 // bot is paranoid of spies or unknown enemy
+constexpr int CONDITION_SEE_SQUAD_LEADER = 1 << 22;         // bot can see his leader
+constexpr int CONDITION_SQUAD_LEADER_DEAD = 1 << 23;        // bot's leader is dead
+constexpr int CONDITION_SQUAD_LEADER_INRANGE = 1 << 24;     // bot's leader is in range
+constexpr int CONDITION_SQUAD_IDLE = 1 << 25;               // bot's squad isn't doing anything fun
+constexpr int CONDITION_DEFENSIVE = 1 << 26;                // bot leader told me to defend
+constexpr int CONDITION_BUILDING_SAPPED = 1 << 27;          // one of engineer's buildings sapped
+constexpr int CONDITION_SEE_ENEMY_GROUND = 1 << 28;         // can see enemy ground so aim for it if i have explosive
 
-// number of bits allocated to bot conditions (+1 from last bitshift)
-#define NUM_CONDITIONS					29
+// Number of bits allocated to bot conditions (+1 from last bitshift)
+constexpr int NUM_CONDITIONS = 29;
 
-#define CONDITION_SEE_HEAL				CONDITION_SEE_PLAYERTOHELP // TF: medic bot can see his player he wants to heal
+// Alias for TF: medic bot can see his player he wants to heal
+constexpr int CONDITION_SEE_HEAL = CONDITION_SEE_PLAYERTOHELP;
 
 ////////////////////////
-#define BLAST_RADIUS 200.0f
+constexpr float BLAST_RADIUS = 200.0f;
 ///////////////////////
 typedef enum : std::uint8_t
 {

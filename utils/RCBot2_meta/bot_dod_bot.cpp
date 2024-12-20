@@ -1092,7 +1092,7 @@ void CDODBot :: chooseClass ( bool bIsChangingClass )
 			fClassFit = 1.0f;
 		}
 
-		if (bIsChangingClass && ((m_iClass >= 0) && (m_iClass < 6)))
+		if (bIsChangingClass && (m_iClass < 6))
 			fClassFitness[m_iClass] = 0.1f;
 
 		for (int i = 1; i <= gpGlobals->maxClients; i++)
@@ -2112,10 +2112,10 @@ bool CDODBot :: executeAction ( CBotUtility *util )
 					// Check the yaw
 					QAngle eyes;
 
-					float iYaw = pWpt->getAimYaw();
+					float fYaw = pWpt->getAimYaw();
 
 					eyes.x = 0;
-					eyes.y = iYaw;
+					eyes.y = fYaw;
 					eyes.z = 0;
 
 					Vector vecLOS;
@@ -3252,7 +3252,7 @@ void CDODBot :: getTasks (unsigned iIgnore)
 
 	if ( !rcbot_melee_only.GetBool() && (m_pNearestWeapon.get() != nullptr) && hasSomeConditions(CONDITION_NEED_AMMO) )
 	{
-		CWeapon *pNearestWeapon = CWeapons::getWeapon(m_pNearestWeapon.get()->GetClassName());
+		const CWeapon *pNearestWeapon = CWeapons::getWeapon(m_pNearestWeapon.get()->GetClassName());
 		const CBotWeapon *pHaveWeapon = (pNearestWeapon== nullptr)? nullptr :(m_pWeapons->getWeapon(pNearestWeapon));
 
 		if ( pNearestWeapon && (!pHaveWeapon || !pHaveWeapon->hasWeapon() || pHaveWeapon->outOfAmmo(this) ) )

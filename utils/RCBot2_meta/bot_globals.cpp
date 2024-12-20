@@ -49,7 +49,6 @@
 #endif
 
 #include <sys/stat.h>
-#include <algorithm>
 #include <cmath>
 #include <cstring>
 #include <memory>
@@ -1219,7 +1218,7 @@ float CBotGlobals :: yawAngleFromEdict (edict_t *pEntity, const Vector& vOrigin)
 
 }
 
-void CBotGlobals::teleportPlayer ( edict_t *pPlayer, const Vector& v_dest )
+void CBotGlobals::teleportPlayer (const edict_t *pPlayer, const Vector& v_dest)
 {
 	CClient *pClient = CClients::get(pPlayer);
 	

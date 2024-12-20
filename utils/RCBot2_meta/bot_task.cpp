@@ -38,7 +38,6 @@
 #include "bot_schedule.h"
 #include "bot_task.h"
 
-#include <algorithm>
 #include "bot_navigator.h"
 #include "bot_waypoint_locations.h"
 #include "bot_globals.h"
@@ -55,22 +54,22 @@
 #include "bot_synergy.h"
 
 #ifdef WIN32
-#undef min
-#undef max
+#define NOMINMAX // Prevent Windows headers from defining min and max
 #endif
 
 // desx and desy must be normalized
 // desx = distance (should be 2d)
 // desy = height offset
-void getGrenadeAngle ( double v, double g, double desx, double desy, float *fa1, float *fa2 )
+void getGrenadeAngle(double v, double g, double desx, double desy, float* fa1, float* fa2)
 {
-	//normalize
-	const float fmax = MAX(v, MAX(g, MAX(desx, desy)));
+	// Normalize
+	const float fmax = static_cast<float>(std::max({ v, g, desx, desy }));
 
 	v /= fmax;
 	g /= fmax;
 	desx /= fmax;
 	desy /= fmax;
+
 	const double vsquared = v * v;
 	const double vfourth = vsquared * vsquared;
 	const double x2 = desx * desx;
@@ -105,9 +104,9 @@ float getGrenadeZ ( edict_t *pShooter, edict_t *pTarget, const Vector& vOrigin, 
 	// do a quick traceline to check which angle to choose (minimum angle = straight)
 
 	if (CBotGlobals::isShotVisible(pShooter,vOrigin,vTarget,pTarget))
-		angles.x = -MIN(fAngle1,fAngle2);
+		angles.x = -std::min(fAngle1,fAngle2);
 	else
-		angles.x = -MAX(fAngle1,fAngle2);
+		angles.x = -std::max(fAngle1,fAngle2);
 
 	AngleVectors(angles,&vForward);
 	
@@ -230,7 +229,7 @@ void CBotTF2ShootLastEnemyPosition ::  execute (CBot *pBot,CBotSchedule *pSchedu
 {
 	const CBotWeapon *pWeapon = pBot->getCurrentWeapon();
 	CBotTF2 *pTF2Bot = static_cast<CBotTF2*>(pBot);
-	CWeapon *pChange = nullptr;
+	const CWeapon *pChange = nullptr;
 
 	if ( m_fTime == 0.0f )
 		m_fTime = engine->Time() + randomFloat(2.0f,4.5f);
@@ -302,15 +301,15 @@ void CBotTF2ShootLastEnemyPosition :: debugString ( char *string )
 
 /////////////
 
-CBotTF2WaitHealthTask :: CBotTF2WaitHealthTask (const Vector& vOrigin ) : m_vOrigin(vOrigin)
+CBotTF2WaitHealthTask :: CBotTF2WaitHealthTask (const Vector& vOrigin )
 {
 	m_fWaitTime = 0.0f;
 }
 
 void CBotTF2WaitHealthTask :: execute (CBot *pBot,CBotSchedule *pSchedule)
 {
-	if ( !m_fWaitTime )
-		m_fWaitTime = engine->Time() + randomFloat(5.0f,10.0f);
+	if (m_fWaitTime == 0.0f)
+		m_fWaitTime = engine->Time() + randomFloat(5.0f, 10.0f);
 
 	 if ( !pBot->hasSomeConditions(CONDITION_NEED_HEALTH) )
 		complete();
@@ -350,7 +349,7 @@ void CBotTF2WaitHealthTask :: debugString ( char *string )
 }
 
 
-CBotTF2WaitFlagTask :: CBotTF2WaitFlagTask (const Vector& vOrigin, bool bFind ) : m_vOrigin(vOrigin)
+CBotTF2WaitFlagTask :: CBotTF2WaitFlagTask (const Vector& vOrigin, bool bFind)
 {
 	m_fWaitTime = 0.0f;
 	m_bFind = bFind;
@@ -358,7 +357,7 @@ CBotTF2WaitFlagTask :: CBotTF2WaitFlagTask (const Vector& vOrigin, bool bFind ) 
 
 void CBotTF2WaitFlagTask :: execute (CBot *pBot,CBotSchedule *pSchedule)
 {
-	if ( !m_fWaitTime )
+	if (m_fWaitTime == 0.0f)
 	{
 		if ( m_bFind )
 			m_fWaitTime = engine->Time() + 5.0f;
@@ -395,17 +394,17 @@ void CBotTF2WaitFlagTask :: debugString ( char *string )
 	std::sprintf(string,"CBotTF2WaitFlagTask\nm_vOrigin = (%0.4f,%0.4f,%0.4f)",m_vOrigin.x,m_vOrigin.y,m_vOrigin.z);
 }
 //////////
-CBotDODBomb::CBotDODBomb(int iBombType, int iBombID, edict_t* pBomb, const Vector& vPosition,
-                         int iPrevOwner) : m_vOrigin(vPosition)
+CBotDODBomb::CBotDODBomb(const int iBombType, const int iBombID, edict_t* m_pBomb, const Vector& vPosition,
+                         const int iPrevOwner) : m_vOrigin(vPosition)
 {
 	m_iType = iBombType;
 	m_iBombID = iBombID; 
 	m_fTime = 0.0f;
 
 	if ( m_iBombID == -1 )
-		m_iBombID = CDODMod::m_Flags.getBombID(pBomb);
+		m_iBombID = CDODMod::m_Flags.getBombID(m_pBomb);
 
-	m_pBombTarget = pBomb;
+	m_pBombTarget = m_pBomb;
 	
 	m_iPrevTeam = iPrevOwner;
 }
@@ -609,7 +608,7 @@ void CDODWaitForBombTask :: debugString ( char *string )
 
 //////////
 
-CBotDODAttackPoint :: CBotDODAttackPoint ( int iFlagID, const Vector& vOrigin, float fRadius ) : m_vOrigin(vOrigin)
+CBotDODAttackPoint :: CBotDODAttackPoint ( int iFlagID, const Vector& vOrigin, float fRadius )
 {
 	m_bProne = false;
 	m_fAttackTime = 0.0f;
@@ -705,12 +704,12 @@ void CBotDODAttackPoint :: debugString ( char *string )
 
 ///////////
 
-CBotTF2AttackPoint :: CBotTF2AttackPoint ( int iArea, const Vector& vOrigin, int iRadius ) : m_vOrigin(vOrigin)
+CBotTF2AttackPoint :: CBotTF2AttackPoint (const int iArea, const Vector& vOrigin, const float fRadius) : m_vOrigin(vOrigin)
 {
 	m_fAttackTime = 0.0f;
 	m_fTime = 0.0f;
 	m_iArea = iArea;
-	m_iRadius = iRadius;
+	m_fRadius = fRadius;
 }
 
 void CBotTF2AttackPoint :: execute (CBot *pBot,CBotSchedule *pSchedule)
@@ -744,7 +743,7 @@ void CBotTF2AttackPoint :: execute (CBot *pBot,CBotSchedule *pSchedule)
 		{
 			
 			m_fTime = engine->Time() + randomFloat(5.0f,10.0f);
-			m_vMoveTo = m_vOrigin + Vector(randomFloat(-m_iRadius,m_iRadius),randomFloat(-m_iRadius,m_iRadius),0);
+			m_vMoveTo = m_vOrigin + Vector(randomFloat(-m_fRadius,m_fRadius),randomFloat(-m_fRadius,m_fRadius),0);
 		}
 		else if ( m_fTime < engine->Time() )
 		{
@@ -799,7 +798,7 @@ void CBotTF2AttackPoint :: execute (CBot *pBot,CBotSchedule *pSchedule)
 
 void CBotTF2AttackPoint :: debugString ( char *string )
 {
-	std::sprintf(string,"CBotTF2AttackPoint (%d,%0.1f,%0.1f,%0.1f,%d)",m_iArea,m_vOrigin.x,m_vOrigin.y,m_vOrigin.z,m_iRadius);
+	std::sprintf(string,"CBotTF2AttackPoint (%d,%0.1f,%0.1f,%0.1f,%f)",m_iArea,m_vOrigin.x,m_vOrigin.y,m_vOrigin.z,m_fRadius);
 }
 
 ////////////////////////
@@ -927,12 +926,12 @@ void CBotTF2DefendPayloadBombTask :: debugString ( char *string )
 	std::sprintf(string,"CBotTF2DefendPayloadBombTask (%0.1f,%0.1f,%0.1f)",m_vOrigin.x,m_vOrigin.y,m_vOrigin.z);
 }
 //////////////////////
-CBotTF2DefendPoint :: CBotTF2DefendPoint ( int iArea, const Vector& vOrigin, int iRadius ) : m_vOrigin(vOrigin)
+CBotTF2DefendPoint :: CBotTF2DefendPoint (const int iArea, const Vector& vOrigin, const float fRadius) : m_vOrigin(vOrigin)
 {
 	m_fDefendTime = 0.0f;
 	m_fTime = 0.0f;
 	m_iArea = iArea;
-	m_iRadius = iRadius;
+	m_fRadius = fRadius;
 }
 
 void CBotTF2DefendPoint :: execute (CBot *pBot,CBotSchedule *pSchedule)
@@ -963,7 +962,7 @@ void CBotTF2DefendPoint :: execute (CBot *pBot,CBotSchedule *pSchedule)
 		if ( m_fTime == 0.0f )
 		{
 			m_fTime = engine->Time() + randomFloat(5.0f,10.0f);
-			m_vMoveTo = m_vOrigin + Vector(randomFloat(-m_iRadius,m_iRadius),randomFloat(-m_iRadius,m_iRadius),0);
+			m_vMoveTo = m_vOrigin + Vector(randomFloat(-m_fRadius,m_fRadius),randomFloat(-m_fRadius,m_fRadius),0);
 			const float fdist = pBot->distanceFrom(m_vMoveTo);
 
 			if ( fdist < 32 )
@@ -985,8 +984,8 @@ void CBotTF2DefendPoint :: execute (CBot *pBot,CBotSchedule *pSchedule)
 
 void CBotTF2DefendPoint :: debugString ( char *string )
 {
-	std::sprintf(string, "CBotTF2DefendPoint\nm_iArea=%d\nm_vOrigin=(%0.1f,%0.1f,%0.1f,%d)", m_iArea, 
-		m_vOrigin.x, m_vOrigin.y, m_vOrigin.z, m_iRadius);
+	std::sprintf(string, "CBotTF2DefendPoint\nm_iArea=%d\nm_vOrigin=(%0.1f,%0.1f,%0.1f,%f)", m_iArea, 
+		m_vOrigin.x, m_vOrigin.y, m_vOrigin.z, m_fRadius);
 }
 
 ///////////
@@ -1003,7 +1002,7 @@ void CBotTF2UpgradeBuilding :: execute (CBot *pBot,CBotSchedule *pSchedule)
 	pBot->wantToInvestigateSound(false);
 	pBot->wantToListen(false);
 
-	if (!m_fTime )
+	if (m_fTime == 0.0f)
 		m_fTime = engine->Time() + randomFloat(9.0f,11.0f);
 	
 	if ( m_fTime<engine->Time() )
@@ -1284,14 +1283,14 @@ void CBotTFEngiTankSentry :: execute (CBot *pBot,CBotSchedule *pSchedule)
 ////////////////////////
 
 
-CBotTF2WaitAmmoTask :: CBotTF2WaitAmmoTask (const Vector& vOrigin ) : m_vOrigin(vOrigin)
+CBotTF2WaitAmmoTask :: CBotTF2WaitAmmoTask (const Vector& vOrigin)
 {
 	m_fWaitTime = 0.0f;
 }
 	
 void CBotTF2WaitAmmoTask :: execute (CBot *pBot,CBotSchedule *pSchedule)
 {
-	if ( !m_fWaitTime )
+	if(m_fWaitTime == 0.0f)
 		m_fWaitTime = engine->Time() + randomFloat(5.0f,10.0f);
 
 	if ( !pBot->hasSomeConditions(CONDITION_NEED_AMMO) )
@@ -1378,7 +1377,7 @@ void CBotTaskEngiPickupBuilding :: debugString ( char *string )
 }
 
 /////////////////
-CBotTaskEngiPlaceBuilding :: CBotTaskEngiPlaceBuilding ( eEngiBuild iObject, const Vector& vOrigin ) : m_vOrigin(vOrigin)
+CBotTaskEngiPlaceBuilding :: CBotTaskEngiPlaceBuilding ( eEngiBuild iObject, const Vector& vOrigin )
 {
 	m_fTime = 0.0f;
 	m_iState = 1; // BEGIN HERE , otherwise bot will try to destroy the building
@@ -1540,7 +1539,7 @@ void CBotBackstab ::execute (CBot *pBot,CBotSchedule *pSchedule)
 	if ( !CBotGlobals::isAlivePlayer(pEnemy) )
 		fail();
 
-	if ( !m_fTime )
+	if (m_fTime == 0.0f)
 		m_fTime = engine->Time() + randomFloat(5.0f,10.0f);
 
 	pBot->setLookAtTask(LOOK_EDICT);
@@ -1758,7 +1757,7 @@ void CBotTF2EngiLookAfter :: execute (CBot *pBot,CBotSchedule *pSchedule)
 {
 	CBotFortress *tfBot = static_cast<CBotFortress*>(pBot);
 
-	if ( !m_fTime )
+	if (m_fTime == 0.0f)
 	{
 		m_fTime = engine->Time() + randomFloat(21.0f,60.0f);
 		m_fHitSentry = engine->Time() + randomFloat(1.0f,3.0f);
@@ -1822,7 +1821,7 @@ void CBotTF2EngiLookAfter :: execute (CBot *pBot,CBotSchedule *pSchedule)
 }
 
 ////////////////////////
-CBotTFEngiBuildTask :: CBotTFEngiBuildTask ( eEngiBuild iObject, CWaypoint *pWaypoint )
+CBotTFEngiBuildTask :: CBotTFEngiBuildTask (const eEngiBuild iObject, CWaypoint *pWaypoint )
 {
 	m_iObject = iObject;
 	m_vOrigin = pWaypoint->getOrigin()+pWaypoint->applyRadius();
@@ -2201,8 +2200,6 @@ CBotTF2FindPipeWaypoint::CBotTF2FindPipeWaypoint(const Vector& vOrigin, const Ve
 	: m_iters(0),
 	m_i(0),
 	m_j(0), // Initialize m_pTarget to nullptr
-	m_vOrigin(vOrigin),
-	m_vTarget(vTarget),
 	m_iTargetWaypoint(static_cast<short>(CWaypointLocations::NearestWaypoint(m_vTarget, BLAST_RADIUS, -1, true, true))),
 	m_fNearesti(2048.0f),
 	m_fNearestj(4096.0f),
@@ -2386,7 +2383,7 @@ void CMoveToTask :: execute ( CBot *pBot, CBotSchedule *pSchedule )
 	const float fDistance = pBot->distanceFrom(m_vVector);
 
 	// sort out looping move to origins by using previous distance check
-	if (fDistance < 64 || (fPrevDist && fPrevDist < fDistance))
+	if (fDistance < 64 || (fPrevDist != 0.0f && fPrevDist < fDistance))
 	{
 		complete();
 		return;
@@ -2446,7 +2443,7 @@ void CBotTFRocketJump :: execute (CBot *pBot,CBotSchedule *pSchedule)
 	{
 		CBotTF2 *tf2Bot = static_cast<CBotTF2*>(pBot);
 
-		if ( !m_fTime )
+		if (m_fTime == 0.0f)
 		{
 			m_fTime = engine->Time()+randomFloat(4.0f,5.0f);
 		}
@@ -2821,7 +2818,7 @@ void CBotRemoveSapper :: execute (CBot *pBot,CBotSchedule *pSchedule)
 
 ////////////////////////////////////////////////////
 
-CBotTF2SnipeCrossBow::CBotTF2SnipeCrossBow(const Vector& vOrigin, int iWpt) : m_vOrigin(vOrigin)
+CBotTF2SnipeCrossBow::CBotTF2SnipeCrossBow(const Vector& vOrigin, const int iWpt)
 {
 	const CWaypoint *pWaypoint = CWaypoints::getWaypoint(iWpt);
 	m_iHideWaypoint = 0;
@@ -3108,7 +3105,7 @@ void CBotTF2SnipeCrossBow::execute(CBot *pBot, CBotSchedule *pSchedule)
 	}
 }
 ///////////////////////////////////////////
-CBotTF2Snipe :: CBotTF2Snipe (const Vector& vOrigin, int iWpt) : m_vOrigin(vOrigin)
+CBotTF2Snipe :: CBotTF2Snipe (const Vector& vOrigin, const int iWpt)
 {
 	m_iHideWaypoint = 0;
 	m_fHideTime = 0.0f;
@@ -3520,7 +3517,7 @@ void CBotTFUseTeleporter :: execute (CBot *pBot,CBotSchedule *pSchedule)
 		}
 	}
 
-	if ( !m_fTime )
+	if (m_fTime == 0.0f)
 	{
 		// initialize
 		m_fTime = engine->Time() + 13.0f;
@@ -4746,7 +4743,7 @@ void CMessAround::execute ( CBot *pBot, CBotSchedule *pSchedule )
 			}
 		}
 
-		if ( !m_fTime )
+		if (m_fTime == 0.0f)
 			m_fTime = engine->Time() + randomFloat(3.5f,8.0f);
 	}
 	break;// taunt at my friendly player
@@ -4777,7 +4774,7 @@ void CMessAround::execute ( CBot *pBot, CBotSchedule *pSchedule )
 			//	((CDODBot*)pBot)->taunt(); pBot->impulse(100);
 		}
 
-		if ( !m_fTime )
+		if (m_fTime == 0.0f)
 			m_fTime = engine->Time() + randomFloat(3.5f,6.5f);
 
 	}
@@ -4785,10 +4782,10 @@ void CMessAround::execute ( CBot *pBot, CBotSchedule *pSchedule )
 	break;
 	case 2:
 	{
-		if ( !m_fTime )
+		if (m_fTime == 0.0f)
 			pBot->addVoiceCommand(randomInt(0,m_iMaxVoiceCmd-1));
 
-		if ( !m_fTime )
+		if (m_fTime == 0.0f)
 			m_fTime = engine->Time() + randomFloat(1.5f,3.0f);
 	}
 	// press some random buttons, such as attack2, jump
@@ -4806,7 +4803,7 @@ void CMessAround::execute ( CBot *pBot, CBotSchedule *pSchedule )
 			}
 		}
 
-		if ( !m_fTime )
+		if (m_fTime == 0.0f)
 			m_fTime = engine->Time() + randomFloat(1.5f,3.0f);
 	}
 	default:
@@ -4832,10 +4829,10 @@ void CMessAround::execute ( CBot *pBot, CBotSchedule *pSchedule )
 ///////////
 //defensive technique
 
-CBotTF2Spam :: CBotTF2Spam (CBot *pBot, const Vector& vStart, int iYaw, CBotWeapon *pWeapon) : m_vStart(vStart)
+CBotTF2Spam :: CBotTF2Spam (const CBot *pBot, const Vector& vStart, const float fYaw, CBotWeapon *pWeapon) : m_vStart(vStart)
 {
 	Vector forward;
-	const QAngle angle = QAngle(0,iYaw,0);
+	const QAngle angle = QAngle(0,fYaw,0);
 
 	AngleVectors(angle,&forward);
 	m_vTarget = vStart + forward*2000.0f;
@@ -5406,7 +5403,7 @@ void CBotDODSnipe :: execute (CBot *pBot,CBotSchedule *pSchedule)
 //////////////////////////
 
 CBotHL2DMSnipe::CBotHL2DMSnipe(CBotWeapon* pWeaponToUse, const Vector& vOrigin, const float fYaw, const bool bUseZ, const float z,
-                               const int iWaypointType) : m_vOrigin(vOrigin)
+                               const int iWaypointType)
 {
 	m_fEnemyTime = 0.0f;
 	m_fTime = 0.0f;

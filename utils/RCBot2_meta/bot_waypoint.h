@@ -250,14 +250,14 @@ public:
 		//m_iId = -1;
 	}
 
-	CWaypoint(const Vector& vOrigin, const int iFlags = 0, const float fYaw = 0)
+	CWaypoint(const Vector& vOrigin, const int iFlags = 0, const int iYaw = 0)
 	{
 		m_thePaths.clear();
 		init();
 		m_iFlags = iFlags;
 		m_vOrigin = vOrigin;
 		m_bUsed = true;
-		setAim(fYaw);
+		setAim(iYaw);
 		m_fNextCheckGroundTime = 0.0f;
 		m_bHasGround = false;
 		m_fRadius = 0.0f;
@@ -269,14 +269,14 @@ public:
 
 	bool checkGround();
 
-	void setAim(const float fYaw)
+	void setAim(const int fYaw)
 	{
-		m_fAimYaw = fYaw;
+		m_iAimYaw = fYaw;
 	}
 
 	float getAimYaw() const
 	{
-		return m_fAimYaw;
+		return static_cast<float>(m_iAimYaw);
 	}
 
 	Vector getOrigin()
@@ -397,7 +397,7 @@ public:
 private:
 	Vector m_vOrigin;
 	// aim of vector (used with certain waypoint types)
-	float m_fAimYaw;
+	int m_iAimYaw;
 	int m_iFlags;
 	int m_iArea;
 	float m_fRadius;
@@ -452,7 +452,7 @@ public:
 
 	static int addWaypoint(CClient *pClient, const char *type1, const char *type2, const char *type3, const char *type4, bool bUseTemplate = false);
 
-	static int addWaypoint(edict_t* pPlayer, const Vector& vOrigin, int iFlags = CWaypointTypes::W_FL_NONE, bool bAutoPath = false, float fYaw = 0.0f, int iArea = 0, float fRadius = 0.0f);
+	static int addWaypoint(edict_t* pPlayer, const Vector& vOrigin, int iFlags = CWaypointTypes::W_FL_NONE, bool bAutoPath = false, int iYaw = 0, int iArea = 0, float fRadius = 0.0f);
 
 	static void removeWaypoint(int iIndex);
 

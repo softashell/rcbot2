@@ -38,7 +38,7 @@
 
 float CSom :: m_fLearnRate = 1.0f;
 
-CSom :: CSom ( int iW, int iH, int iIn )
+CSom :: CSom (const int iW, const int iH, const int iIn)
 {       
 	unsigned short id = 0;
 

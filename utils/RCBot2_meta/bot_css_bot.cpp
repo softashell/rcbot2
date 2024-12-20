@@ -530,7 +530,7 @@ float CCSSBot::getNextAttackDelay()
 
 	dist = distanceFrom(getEnemy());
 	delay = dist/max;
-	clamp(delay, 0.050f, 0.300f);
+	delay = clamp(delay, 0.050f, 0.300f); // Uses the macro from mathlib.h [APG]RoboCop[CL]
 
 	//CClients::clientDebugMsg(this, BOT_DEBUG_AIM, "[CSS-ATTACK] Next Attack Delay: %2.4f", delay);
 

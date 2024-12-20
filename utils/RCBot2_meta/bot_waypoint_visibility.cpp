@@ -38,6 +38,11 @@
 #include <cstdio>
 #include <cstring>
 
+#pragma push_macro("clamp") //Fix for C++17 [APG]RoboCop[CL]
+#undef clamp
+#include <algorithm>
+#pragma pop_macro("clamp")
+
 #include "rcbot/logging.h"
 
  /*unsigned char *CWaypointVisibilityTable :: m_VisTable = NULL;
@@ -147,7 +152,7 @@ void CWaypointVisibilityTable::WorkOutVisibilityTable()
 	ClearVisibilityTable();
 
 	// loop through all waypoint possibilities.
-	for (short int i = 0; i < iNumWaypoints; i++)
+	for (int i = 0; i < iNumWaypoints; i++)
 	{
 		workVisibilityForWaypoint(i, iNumWaypoints, false);
 	}

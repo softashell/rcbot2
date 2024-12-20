@@ -32,6 +32,7 @@
 #define __BOT_GA_H__
 
 #include "bot_ga_nn_const.h"
+#include <memory>
 #include <vector>
 
 class IIndividual
@@ -41,7 +42,7 @@ public:
 
 	// get fitness for this individual
 	ga_nn_value getFitness () const { return m_fFitness; }
-	void setFitness ( float fVal ) { m_fFitness = fVal; }
+	void setFitness (const float fVal) { m_fFitness = fVal; }
 
 	// crossover with other individual
 	virtual void crossOver ( IIndividual *other ) = 0;
@@ -83,7 +84,7 @@ public:
 	ga_nn_value averageFitness () const;
 
 	// get back individual
-	IIndividual *pick ();
+	std::unique_ptr<IIndividual> pick();
 
 private:
 	std::vector<IIndividual*> m_theIndividuals;
@@ -142,7 +143,7 @@ public:
 	// can get an individual off new population
 	bool canPick () const;
 
-	IIndividual *pick ();
+	std::unique_ptr<IIndividual> pick();
 
 	unsigned m_iMaxPopSize;
 	static const int g_iDefaultMaxPopSize;

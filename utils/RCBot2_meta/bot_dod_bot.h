@@ -45,7 +45,7 @@ enum : std::uint8_t
 class CBroadcastBombEvent : public IBotFunction
 {
 public:
-	CBroadcastBombEvent ( int iEvent, int iCP, int iTeam ) 
+	CBroadcastBombEvent (const int iEvent, const int iCP, const int iTeam) 
 	{ 
 		m_iEvent = iEvent; m_iCP = iCP; m_iTeam = iTeam; 
 	}

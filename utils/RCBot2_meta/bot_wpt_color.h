@@ -1,6 +1,10 @@
 #pragma once
-#include <algorithm>
 #include <cstring>
+
+#pragma push_macro("clamp") //Fix for C++17 [APG]RoboCop[CL]
+#undef clamp
+#include <algorithm>
+#pragma pop_macro("clamp")
 
 #ifndef __BOT_WPT_COLOR_H__
 #define __BOT_WPT_COLOR_H__
@@ -20,7 +24,7 @@ public:
 		std::memset(this,0,sizeof(WptColor));
 	}
 
-	WptColor ( int _r, int _g, int _b, int _a )
+	WptColor (const unsigned char _r, const unsigned char _g, const unsigned char _b, const unsigned char _a)
 	{
 		r=_r;
 		g=_g;
@@ -28,7 +32,7 @@ public:
 		a=_a;
 	}
 
-	WptColor ( int _r, int _g, int _b )
+	WptColor (const unsigned char _r, const unsigned char _g, const unsigned char _b)
 	{
 		r=_r;
 		g=_g;
@@ -36,7 +40,7 @@ public:
 		a=WAYPOINT_ALPHA;
 	}
 
-	void mix ( WptColor other )
+	void mix (const WptColor other)
 	{
 		float fr = (r-other.r)*0.5f;
 		float fg = (g-other.g)*0.5f;

@@ -64,7 +64,7 @@ public:
 	
 	float neighbourDistance ( CSomNeuron *other ) const;
 
-	void setClassID ( unsigned short iId ) { m_iId = iId; }
+	void setClassID (const unsigned short iId) { m_iId = iId; }
 
 	unsigned short getClassID () const { return m_iId; }
 

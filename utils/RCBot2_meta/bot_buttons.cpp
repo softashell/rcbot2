@@ -32,22 +32,22 @@
 #include "bot_buttons.h"
 #include "in_buttons.h"
 
-void CBotButtons :: attack (float fFor, float fFrom) const
+void CBotButtons :: attack (const float fFor, const float fFrom) const
 {	
 	holdButton(IN_ATTACK,fFrom,fFor,0.1f);
 }
 
-void CBotButtons :: jump (float fFor, float fFrom) const
+void CBotButtons :: jump (const float fFor, const float fFrom) const
 {
 	holdButton(IN_JUMP,fFrom,fFor,0.25f);
 }
 
-void CBotButtons :: duck (float fFor, float fFrom) const
+void CBotButtons :: duck (const float fFor, const float fFrom) const
 {
 	holdButton(IN_DUCK,fFrom,fFor);
 }
 
-void CBotButton :: hold ( float fFrom, float fFor, float fLetGoTime )
+void CBotButton :: hold (float fFrom, const float fFor, const float fLetGoTime)
 {
 	fFrom += engine->Time();
 	m_fTimeStart = fFrom;
@@ -71,7 +71,7 @@ CBotButtons :: CBotButtons()
 	m_bLetGoAll = false;
 }
 
-void CBotButtons :: holdButton ( int iButtonId, float fFrom, float fFor, float fLetGoTime ) const
+void CBotButtons :: holdButton (const int iButtonId, const float fFrom, const float fFor, const float fLetGoTime) const
 {
 	for (CBotButton* const m_theButton : m_theButtons)
 	{			
@@ -83,7 +83,7 @@ void CBotButtons :: holdButton ( int iButtonId, float fFrom, float fFor, float f
 	}
 }
 
-void CBotButtons :: letGo (int iButtonId) const
+void CBotButtons :: letGo (const int iButtonId) const
 {
 	for (CBotButton* const m_theButton : m_theButtons)
 	{			
@@ -115,7 +115,7 @@ int CBotButtons :: getBitMask () const
 	return iBitMask;
 }
 
-bool CBotButtons :: canPressButton ( int iButtonId ) const
+bool CBotButtons :: canPressButton (const int iButtonId) const
 {
 	for (const CBotButton* m_theButton : m_theButtons)
 	{			
@@ -130,7 +130,7 @@ void CBotButtons :: add ( CBotButton *theButton )
 	m_theButtons.emplace_back(theButton);
 }
 
-bool CBotButtons :: holdingButton ( int iButtonId ) const
+bool CBotButtons :: holdingButton (const int iButtonId) const
 {
 	for (const CBotButton* m_theButton : m_theButtons)
 	{
@@ -141,7 +141,7 @@ bool CBotButtons :: holdingButton ( int iButtonId ) const
 	return false;
 }
 
-void CBotButtons :: tap ( int iButtonId ) const
+void CBotButtons :: tap (const int iButtonId) const
 {
 	for (CBotButton* const m_theButton : m_theButtons)
 	{

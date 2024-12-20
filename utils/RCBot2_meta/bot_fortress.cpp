@@ -30,6 +30,12 @@
  *    version.
  *
  */
+
+#pragma push_macro("clamp") //Fix for C++17 [APG]RoboCop[CL]
+#undef clamp
+#include <algorithm>
+#pragma pop_macro("clamp")
+
 #include "bot_plugin_meta.h"
 
 #include "bot.h"
@@ -58,7 +64,6 @@
 #include "bot_squads.h"
 //#include "bot_hooks.h"
 
-#include <algorithm>
 #include <cmath>
 #include <cstring>
 
@@ -540,10 +545,10 @@ float CBotFortress :: getHealFactor ( edict_t *pPlayer )
 		if ( iHighestScore == 0 )
 			iHighestScore = 1;
 
-		fFactor += (static_cast<float>(CClassInterface::getTF2Score(pPlayer)/iHighestScore))/2;
+		fFactor += (static_cast<float>(CClassInterface::getTF2Score(pPlayer)) / static_cast<float>(iHighestScore)) / 2;
 
 		if ( (fLastCalledMedic = m_fCallMedicTime[ENTINDEX(pPlayer)-1]) > 0 )
-			fFactor += MAX(0.0f,1.0f-((engine->Time() - fLastCalledMedic)/5));
+			fFactor += std::max(0.0f,1.0f-((engine->Time() - fLastCalledMedic)/5));
 		if ( ((m_fLastCalledMedicTime + 5.0f) > engine->Time()) && ( m_pLastCalledMedic == pPlayer ) )
 			fFactor += 0.5f;
 
@@ -1092,7 +1097,7 @@ int CBotFortress :: engiBuildObject (int *iState, eEngiBuild iObject, float *fTi
 			//////////////////////////////////////////
 
 			// forward
-			CBotGlobals::traceLine(building,building + forward*4096.0,MASK_SOLID_BRUSHONLY,&filter);
+			CBotGlobals::traceLine(building,building + forward*4096.0f,MASK_SOLID_BRUSHONLY,&filter);
 
 			int iNextState = 8;
 			float bestfraction = tr->fraction;
@@ -1102,7 +1107,7 @@ int CBotFortress :: engiBuildObject (int *iState, eEngiBuild iObject, float *fTi
 		const Vector v_left = -v_right;
 		
 			// left
-			CBotGlobals::traceLine(building,building - v_right*4096.0,MASK_SOLID_BRUSHONLY,&filter);
+			CBotGlobals::traceLine(building,building - v_right*4096.0f,MASK_SOLID_BRUSHONLY,&filter);
 
 			if ( tr->fraction > bestfraction )
 			{
@@ -1112,23 +1117,23 @@ int CBotFortress :: engiBuildObject (int *iState, eEngiBuild iObject, float *fTi
 			}
 			////////////////////////////////////////
 			// back
-			CBotGlobals::traceLine(building,building - forward*4096.0,MASK_SOLID_BRUSHONLY,&filter);
+			CBotGlobals::traceLine(building,building - forward*4096.0f,MASK_SOLID_BRUSHONLY,&filter);
 
 			if ( tr->fraction > bestfraction )
 			{
 				iNextState = 4;
 				bestfraction = tr->fraction;
-				vchosen = building - forward*4096.0;
+				vchosen = building - forward*4096.0f;
 			}
 			///////////////////////////////////
 			// right
-			CBotGlobals::traceLine(building,building + v_right*4096.0,MASK_SOLID_BRUSHONLY,&filter);
+			CBotGlobals::traceLine(building,building + v_right*4096.0f,MASK_SOLID_BRUSHONLY,&filter);
 
 			if ( tr->fraction > bestfraction )
 			{
 				iNextState = 2;
 				bestfraction = tr->fraction;
-				vchosen = building + v_right*4096.0;
+				vchosen = building + v_right*4096.0f;
 			}
 			////////////////////////////////////
 			*iState = iNextState;
@@ -1837,7 +1842,7 @@ bool CBotTF2 ::checkAttackPoint()
 	return false;
 }
 
-void CBotTF2 :: setClass ( TF_Class _class )
+void CBotTF2 :: setClass (const TF_Class _class)
 {
 	m_iClass = _class;
 }
@@ -1849,7 +1854,7 @@ void CBotTF2 :: highFivePlayer ( edict_t *pPlayer, const float fYaw ) const
 }
 
 // bOverride will be true in messaround mode
-void CBotTF2 :: taunt ( bool bOverride )
+void CBotTF2 :: taunt (const bool bOverride)
 {
 	// haven't taunted for a while, no emeny, not ubered, OK! Taunt!
 	if ( bOverride || (!m_bHasFlag && rcbot_taunt.GetBool() && !CTeamFortress2Mod::TF2_IsPlayerOnFire(m_pEdict) && !m_pEnemy && (m_fTauntTime < engine->Time()) && (!CTeamFortress2Mod::TF2_IsPlayerInvuln(m_pEdict))) )
@@ -1860,7 +1865,7 @@ void CBotTF2 :: taunt ( bool bOverride )
 	}
 }
 
-void CBotTF2::healedPlayer(edict_t *pPlayer, float fAmount)
+void CBotTF2::healedPlayer(edict_t *pPlayer, const float fAmount)
 {
 	if ( m_iClass == TF_CLASS_ENGINEER ) // my dispenser was used
 	{
@@ -1921,7 +1926,7 @@ NEW COMMAND SYNTAX:
 - "build 1 0" - Build teleporter entrance
 - "build 1 1" - Build teleporter exit
 */
-void CBotTF2 :: engineerBuild ( eEngiBuild iBuilding, eEngiCmd iEngiCmd )
+void CBotTF2 :: engineerBuild (const eEngiBuild iBuilding, const eEngiCmd iEngiCmd)
 {
 	//char buffer[16];
 	//char cmd[256];
@@ -2780,7 +2785,7 @@ void CBotFortress::chooseClass()
 		for (i = 1; i < 10; i++)
 			fClassFitness[i] = 1.0f;
 
-		if ((m_iClass >= 0) && (m_iClass < 10))
+		if (m_iClass < 10)
 			fClassFitness[m_iClass] = 0.1f;
 
 		for (i = 1; i <= gpGlobals->maxClients; i++)
@@ -7069,7 +7074,7 @@ bool CBotTF2 :: handleAttack ( CBotWeapon *pWeapon, edict_t *pEnemy )
 	return true;
 }
 
-int CBotFortress :: getMetal ()
+int CBotFortress :: getMetal () const
 {
 	if ( m_iClass == TF_CLASS_ENGINEER )
 	{

@@ -50,10 +50,14 @@
 #include "bot_tf2_points.h"
 #include "bot_sigscan.h"
 
-#include <algorithm>
 #include <cstring>
 
 #include "rcbot/logging.h"
+
+#pragma push_macro("clamp") //Fix for C++17 [APG]RoboCop[CL]
+#undef clamp
+#include <algorithm>
+#pragma pop_macro("clamp")
 
 eTFMapType CTeamFortress2Mod :: m_MapType = TF_MAP_CTF;
 tf_tele_t CTeamFortress2Mod :: m_Teleporters[RCBOT_MAXPLAYERS];

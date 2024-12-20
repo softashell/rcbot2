@@ -176,14 +176,14 @@ public:
 	float passedFloat() const { return fPass; }
 	Vector passedVector() { return vPass; }
 	edict_t *passedEdict() const { return pPass; }
-	bool isID ( eBotSchedule iId ) const { return m_iSchedId == iId; }
+	bool isID (const eBotSchedule iId) const { return m_iSchedId == iId; }
 
 	bool hasPassInt () const { return (m_bitsPass&BITS_SCHED_PASS_INT)>0; }
 	bool hasPassFloat () const { return (m_bitsPass&BITS_SCHED_PASS_FLOAT)>0; }
 	bool hasPassVector () const { return (m_bitsPass&BITS_SCHED_PASS_VECTOR)>0; }
 	bool hasPassEdict () const { return (m_bitsPass&BITS_SCHED_PASS_EDICT)>0; }
 
-	void setID ( eBotSchedule iId ) { m_iSchedId = iId; }
+	void setID (const eBotSchedule iId) { m_iSchedId = iId; }
 
 private:
 	std::deque<CBotTask*> m_Tasks;
@@ -210,7 +210,7 @@ public:
 			});
 	}
 
-	bool isCurrentSchedule ( eBotSchedule iSchedule ) const
+	bool isCurrentSchedule (const eBotSchedule iSchedule) const
 	{
 		if ( m_Schedules.empty() )
 			return false;
@@ -372,7 +372,7 @@ public:
 class CBotAttackPointSched : public CBotSchedule
 {
 public:
-	CBotAttackPointSched (const Vector& vPoint, int iRadius, int iArea, bool bHasRoute = false, const Vector& vRoute = Vector(0,0,0), bool bNest = false, edict_t *pLastEnemySentry = nullptr);
+	CBotAttackPointSched (const Vector& vPoint, float fRadius, int iArea, bool bHasRoute = false, const Vector& vRoute = Vector(0,0,0), bool bNest = false, edict_t *pLastEnemySentry = nullptr);
 
 	void init () override;
 }; 
@@ -380,7 +380,7 @@ public:
 class CBotDefendPointSched : public CBotSchedule
 {
 public:
-	CBotDefendPointSched (const Vector& vPoint, int iRadius, int iArea );
+	CBotDefendPointSched (const Vector& vPoint, float fRadius, int iArea );
 
 	void init () override;
 }; 

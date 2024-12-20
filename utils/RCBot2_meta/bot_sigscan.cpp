@@ -50,7 +50,7 @@ void *GetGameRules()
 	return *g_pGameRules;
 }
 
-size_t CSignatureFunction::decodeHexString(unsigned char* buffer, size_t maxlength, const char* hexstr)
+size_t CSignatureFunction::decodeHexString(unsigned char* buffer, const size_t maxlength, const char* hexstr)
 {
 	size_t written = 0;
 	const size_t length = std::strlen(hexstr);
