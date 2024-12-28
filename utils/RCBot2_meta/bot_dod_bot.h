@@ -37,10 +37,10 @@ enum : std::uint8_t
 	TEAM_AXIS = 3
 };
 
-#define MAX_GREN_THROW_DIST 1024.0f
+constexpr float MAX_GREN_THROW_DIST = 1024.0f;
 
-#define SMOKE_RADIUS 150.0f
-#define DOD_BOMB_EXPLODE_IMMINENT_TIME 7.0f
+constexpr float SMOKE_RADIUS = 150.0f;
+constexpr float DOD_BOMB_EXPLODE_IMMINENT_TIME = 7.0f;
 
 class CBroadcastBombEvent : public IBotFunction
 {

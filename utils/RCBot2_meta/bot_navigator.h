@@ -50,7 +50,7 @@ public:
 };
 class CWaypointVisibilityTable;
 
-#define MAX_BELIEF 200.0f
+constexpr float MAX_BELIEF = 200.0f;
 
 class INavigatorNode
 {
