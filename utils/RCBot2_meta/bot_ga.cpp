@@ -37,6 +37,10 @@
 
 #include <random>
 
+#include <algorithm> // For std::min
+#undef min           // Undefine macro if it exists
+#undef max           // Undefine macro if it exists
+
 #include "logging.h"
 
 const int CGA::g_iDefaultMaxPopSize = 16;

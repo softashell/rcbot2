@@ -50,6 +50,8 @@
 #pragma push_macro("clamp") //Fix for C++17 [APG]RoboCop[CL]
 #undef clamp
 #include <algorithm>
+#undef min           // Undefine macro if it exists
+#undef max           // Undefine macro if it exists
 #pragma pop_macro("clamp")
 
 edict_t *CDODMod::m_pResourceEntity = nullptr;

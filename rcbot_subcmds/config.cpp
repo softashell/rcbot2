@@ -32,6 +32,8 @@
 #pragma push_macro("clamp") //Fix for C++17 [APG]RoboCop[CL]
 #undef clamp
 #include <algorithm>
+#undef min           // Undefine macro if it exists
+#undef max           // Undefine macro if it exists
 #pragma pop_macro("clamp")
 
 CBotCommandInline GameEventVersion("event_version", CMD_ACCESS_CONFIG, [](CClient *pClient, const BotCommandArgs& args)

@@ -64,6 +64,8 @@
 #pragma push_macro("clamp")
 #undef clamp
 #include <algorithm>
+#undef min           // Undefine macro if it exists
+#undef max           // Undefine macro if it exists
 #pragma pop_macro("clamp")
 
 int CWaypoints::m_iNumWaypoints = 0;
