@@ -64,6 +64,7 @@
 #include "bot_squads.h"
 //#include "bot_hooks.h"
 
+#include <array>
 #include <cmath>
 #include <cstring>
 
@@ -2739,10 +2740,10 @@ void CBotTF2 ::spyCloak()
 
 void CBotFortress::chooseClass()
 {
-	const int _forcedClass = rcbot_force_class.GetInt();
-	if (_forcedClass > 0 && _forcedClass < 10)
+	const int forcedClass = rcbot_force_class.GetInt();
+	if (forcedClass > 0 && forcedClass < 10)
 	{
-		switch (_forcedClass)
+		switch (forcedClass)
 		{
 		case 1:
 			m_iDesiredClass = TF_CLASS_SCOUT;
@@ -2775,20 +2776,19 @@ void CBotFortress::chooseClass()
 	}
 	else
 	{
-		float fClassFitness[10];
+		std::array<float, 10> fClassFitness;
 		float fTotalFitness = 0.0f;
 
 		int iNumMedics = 0;
-		int i;
 		const int iTeam = getTeam();
 
-		for (i = 1; i < 10; i++)
+		for (int i = 1; i < 10; ++i)
 			fClassFitness[i] = 1.0f;
 
 		if (m_iClass < 10)
 			fClassFitness[m_iClass] = 0.1f;
 
-		for (i = 1; i <= gpGlobals->maxClients; i++)
+		for (int i = 1; i <= gpGlobals->maxClients; ++i)
 		{
 			edict_t* pPlayer = INDEXENT(i);
 
@@ -2797,7 +2797,7 @@ void CBotFortress::chooseClass()
 				const int iClass = CClassInterface::getTF2Class(pPlayer);
 
 				if (iClass == TF_CLASS_MEDIC)
-					iNumMedics++;
+					++iNumMedics;
 
 				if ((iClass >= 0) && (iClass < 10))
 					fClassFitness[iClass] *= 0.6f;
@@ -2818,7 +2818,7 @@ void CBotFortress::chooseClass()
 		}
 		else if (CTeamFortress2Mod::isAttackDefendMap())
 		{
-			if (getTeam() == TF2_TEAM_BLUE)
+			if (iTeam == TF2_TEAM_BLUE)
 			{
 				fClassFitness[TF_CLASS_ENGINEER] *= 0.75f;
 				fClassFitness[TF_CLASS_SPY] *= 1.25f;
@@ -2835,7 +2835,7 @@ void CBotFortress::chooseClass()
 		else if (CTeamFortress2Mod::isMapType(TF_MAP_CP))
 			fClassFitness[TF_CLASS_SCOUT] *= 1.2f;
 
-		if (m_pLastEnemySentry.get() != nullptr)
+		if (m_pLastEnemySentry)
 		{
 			fClassFitness[TF_CLASS_SPY] *= 1.25f;
 			fClassFitness[TF_CLASS_DEMOMAN] *= 1.3f;
@@ -2844,9 +2844,8 @@ void CBotFortress::chooseClass()
 		if (iNumMedics == 0)
 			fClassFitness[TF_CLASS_MEDIC] *= 2.0f;
 
-
-		for (int j = 1; j < 10; j++)
-			fTotalFitness += fClassFitness[j];
+		for (const float& fitness : fClassFitness)
+			fTotalFitness += fitness;
 
 		const float fRandom = randomFloat(0.0f, fTotalFitness);
 
@@ -2854,13 +2853,13 @@ void CBotFortress::chooseClass()
 
 		m_iDesiredClass = 0;
 
-		for (int k = 1; k < 10; k++)
+		for (int i = 1; i < 10; ++i)
 		{
-			fTotalFitness += fClassFitness[k];
+			fTotalFitness += fClassFitness[i];
 
 			if (fRandom <= fTotalFitness)
 			{
-				m_iDesiredClass = k;
+				m_iDesiredClass = i;
 				break;
 			}
 		}

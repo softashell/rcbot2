@@ -35,14 +35,14 @@
 #include "bot_strings.h"
 #include <vector>    //bir3yk
 
-std::vector<char *> CStrings::m_Strings[MAX_STRINGS_HASH];
+std::vector<char*> CStrings::m_Strings[MAX_STRINGS_HASH];
 
-CStrings :: CStrings ()
+CStrings::CStrings()
 {
 	return;
 }
 
-void CStrings :: freeAllMemory()
+void CStrings::freeAllMemory()
 {
 	// clear strings 
 	for (std::vector<char*>& m_String : m_Strings)
@@ -52,7 +52,7 @@ void CStrings :: freeAllMemory()
 			const char* pszFree = j;
 
 			//if ( pszFree )
-				delete pszFree;
+			delete pszFree;
 
 			j = nullptr;
 		}
@@ -62,29 +62,29 @@ void CStrings :: freeAllMemory()
 }
 
 // Either : 1 . Return the existing string or 2 . make a new string and return it.
-char *CStrings :: getString ( const char *szString )
+char* CStrings::getString(const char* szString)
 {
 	if (szString == nullptr)
 		return nullptr;
 
-	const unsigned short int iHash = szString[0]%MAX_STRINGS_HASH;
-	
+	const unsigned short int iHash = szString[0] % MAX_STRINGS_HASH;
+
 	for (char* const szCompString : m_Strings[iHash])
 	{
 		// check if pointers match first
-		if ( szCompString == szString )
+		if (szCompString == szString)
 			return szCompString;
 
 		// if not do a full string comparison
-		if ( FStrEq(szString,szCompString) )
+		if (FStrEq(szString, szCompString))
 			return szCompString;
 	}
 
 	const size_t len = std::strlen(szString);
 
-	char *szNew = new char[len+1];
+	char* szNew = new char[len + 1];
 
-	std::strcpy(szNew,szString);
+	std::strcpy(szNew, szString);
 
 	szNew[len] = 0;
 

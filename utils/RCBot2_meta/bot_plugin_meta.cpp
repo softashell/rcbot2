@@ -545,7 +545,7 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxle
 					continue;
 				}
 
-				if (human_count >= 0 && human_count <= RCBOT_MAXPLAYERS) {
+				if (human_count < RCBOT_MAXPLAYERS) { // Ensure human_count is within bounds
 					m_iTargetBots[human_count] = bot_count;
 					logger->Log(LogLevel::INFO, "Bot Quota - Humans: %d, Bots: %d", human_count, bot_count);
 				}

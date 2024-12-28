@@ -127,7 +127,7 @@ bool CDODMod :: shouldAttack ( int iTeam )
 }
 
 ////////////////////////////////////////////////
-void CDODMod :: initMod ()
+void CDODMod::initMod()
 {
 ///-------------------------------------------------
 	CBotGlobals::botMessage(nullptr, 0, "Training DOD:S capture decision 'NN' ... hold on...");
@@ -136,21 +136,21 @@ void CDODMod :: initMod ()
 
 	CTrainingSet tset(2, 1, 4);
 
-	tset.setScale(0.0f,1.0f);
+	tset.setScale(0.0f, 1.0f);
 
 	tset.addSet();
-	tset.in(1.0f/5); // E - enemy flag ratio
-	tset.in(1.0f/5); // T - team flag ratio
+	tset.in(1.0f / 5); // E - enemy flag ratio
+	tset.in(1.0f / 5); // T - team flag ratio
 	tset.out(0.9f); // probability of attack
 
 	tset.addSet();
-	tset.in(4.0f/5); // E - enemy flag ratio
-	tset.in(1.0f/5); // T - team flag ratio
+	tset.in(4.0f / 5); // E - enemy flag ratio
+	tset.in(1.0f / 5); // T - team flag ratio
 	tset.out(0.2f); // probability of attack (mostly defend)
-	
+
 	tset.addSet();
-	tset.in(1.0f/5); // E - enemy flag ratio
-	tset.in(4.0f/5); // T - team flag ratio
+	tset.in(1.0f / 5); // E - enemy flag ratio
+	tset.in(4.0f / 5); // T - team flag ratio
 	tset.out(0.9f); // probability of attack
 
 	tset.addSet();
@@ -158,18 +158,18 @@ void CDODMod :: initMod ()
 	tset.in(0.5f); // T - team flag ratio
 	tset.out(0.6f); // probability of attack
 
-	nn.batch_train(&tset,1000);
+	nn.batch_train(&tset, 1000);
 
 	// create look up table for probabilities
-	for ( short int i = 0; i <= MAX_DOD_FLAGS; i ++ )
+	for (short int i = 0; i <= MAX_DOD_FLAGS; i++)
 	{
-		for ( short int j = 0; j <= MAX_DOD_FLAGS; j ++ )
+		for (short int j = 0; j <= MAX_DOD_FLAGS; j++)
 		{
 			tset.init();
 			tset.addSet();
 			tset.in(i / static_cast<ga_nn_value>(MAX_DOD_FLAGS));
 			tset.in(j / static_cast<ga_nn_value>(MAX_DOD_FLAGS));
-			nn.execute(tset.getBatches()->in,&fAttackProbLookUp[i][j],0.0f,1.0f);
+			nn.execute(tset.getBatches()->in, &fAttackProbLookUp[i][j], 0.0f, 1.0f);
 		}
 	}
 

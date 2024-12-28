@@ -180,15 +180,15 @@ void CBroadcastVoiceCommand :: execute ( CBot *pBot )
 		pBot->hearVoiceCommand(m_pPlayer,m_VoiceCmd);
 }
 ///////////////////////////////////////
-void CBot :: runPlayerMove()
+void CBot::runPlayerMove()
 {
-	const int cmdnumbr = cmd.command_number+1;
+	const int cmdnumbr = cmd.command_number + 1;
 
 	//////////////////////////////////
-	Q_memset( &cmd, 0, sizeof cmd );
+	Q_memset(&cmd, 0, sizeof cmd);
 	//////////////////////////////////
 
-	if ( rcbot_dont_move.GetBool() )
+	if (rcbot_dont_move.GetBool())
 	{
 		cmd.forwardmove = 0;
 		cmd.sidemove = 0;
@@ -207,19 +207,19 @@ void CBot :: runPlayerMove()
 	cmd.tick_count = gpGlobals->tickcount;
 	cmd.command_number = cmdnumbr;
 
-	if ( bot_attack.GetInt() == 1 )
+	if (bot_attack.GetInt() == 1) {
 		cmd.buttons = IN_ATTACK;
+	}
 
 	m_iSelectWeapon = 0;
 	m_iImpulse = 0;
 
-	if ( CClients::clientsDebugging(BOT_DEBUG_BUTTONS) )
-	{
-			char dbg[512];
+	if (CClients::clientsDebugging(BOT_DEBUG_BUTTONS)) {
+		char dbg[512];
 
-			snprintf(dbg, sizeof(dbg), "m_pButtons = %d/%x, Weapon Select = %d, impulse = %d", cmd.buttons, cmd.buttons, cmd.weaponselect, cmd.impulse);
+		snprintf(dbg, sizeof(dbg), "m_pButtons = %d/%x, Weapon Select = %d, impulse = %d", cmd.buttons, cmd.buttons, cmd.weaponselect, cmd.impulse);
 
-			CClients::clientDebugMsg(BOT_DEBUG_BUTTONS,dbg,this);
+		CClients::clientDebugMsg(BOT_DEBUG_BUTTONS, dbg, this);
 	}
 
 #ifndef OVERRIDE_RUNCMD
@@ -312,6 +312,11 @@ bool CBot :: createBotFromEdict(edict_t *pEdict, CBotProfile *pProfile)
 	/////////////////////////////
 
 	m_pProfile = pProfile;
+
+	if (!pEdict || !pProfile) {
+		logger->Log(LogLevel::ERROR, "Invalid edict or profile");
+		return false;
+	}
 
 	logger->Log(LogLevel::TRACE, "===================================");
 	logger->Log(LogLevel::TRACE, "Creating Bot: %s", m_pProfile->m_szName);

@@ -57,67 +57,72 @@ CBotCommandInline WaypointAddCommand("add", CMD_ACCESS_WAYPOINT, [](CClient *pCl
 	return COMMAND_ACCESSED;
 });
 
-CBotCommandInline WaypointDeleteCommand("delete", CMD_ACCESS_WAYPOINT, [](CClient *pClient, const BotCommandArgs& args)
-{	
-	if ( pClient )
-	{
-		if ( args[0] && *args[0] )
+CBotCommandInline WaypointDeleteCommand("delete", CMD_ACCESS_WAYPOINT, [](CClient* pClient, const BotCommandArgs& args)
+{
+	if (!pClient)
+		return COMMAND_ERROR;
+
+	auto deleteWaypointsInRange = [&](const float radius) {
+		int numdeleted = 0;
+		const Vector vOrigin = pClient->getOrigin();
+		WaypointList pWpt;
+		CWaypointLocations::GetAllInArea(vOrigin, &pWpt, -1);
+
+		for (const int i : pWpt)
 		{
-			const float radius = static_cast<float>(std::atof(args[0]));
-
-			if ( radius > 0 )
+			const CWaypoint* pWaypoint = CWaypoints::getWaypoint(i);
+			if (pWaypoint && pWaypoint->distanceFrom(vOrigin) < radius)
 			{
-				int numdeleted = 0;
-				const Vector vOrigin = pClient->getOrigin();
-
-				WaypointList pWpt;
-				CWaypointLocations::GetAllInArea(vOrigin,&pWpt,-1);
-
-				for (const int i : pWpt)
-				{
-					const CWaypoint *pWaypoint = CWaypoints::getWaypoint(i);
-
-					if ( pWaypoint->distanceFrom(vOrigin) < radius)
-					{
-						CWaypoints::deleteWaypoint(i);
-						numdeleted++;
-					}
-				}
-
-				if ( numdeleted > 0 )
-				{
-					CBotGlobals::botMessage(pClient->getPlayer(),0,"%d waypoints within range of %0.0f deleted",numdeleted,radius);
-					pClient->updateCurrentWaypoint(); // waypoint deleted so get a new one
-					pClient->playSound("buttons/combine_button_locked");
-					pClient->giveMessage("Waypoints deleted");
-				}
-				else
-				{
-					CBotGlobals::botMessage(pClient->getPlayer(),0,"no waypoints within range of %0.0f",radius);
-					pClient->playSound("weapons/wpn_denyselect");
-					pClient->giveMessage("Waypoints deleted");
-					pClient->updateCurrentWaypoint(); // waypoint deleted so get a new one
-				}
+				CWaypoints::deleteWaypoint(i);
+				numdeleted++;
 			}
+		}
+
+		if (numdeleted > 0)
+		{
+			CBotGlobals::botMessage(pClient->getPlayer(), 0, "%d waypoints within range of %0.0f deleted", numdeleted, radius);
+			pClient->updateCurrentWaypoint();
+			pClient->playSound("buttons/combine_button_locked");
+			pClient->giveMessage("Waypoints deleted");
 		}
 		else
 		{
+			CBotGlobals::botMessage(pClient->getPlayer(), 0, "no waypoints within range of %0.0f", radius);
+			pClient->playSound("weapons/wpn_denyselect");
+			pClient->giveMessage("Waypoints deleted");
 			pClient->updateCurrentWaypoint();
+		}
+	};
 
-			if ( CWaypoints::validWaypointIndex(pClient->currentWaypoint()) )
-			{
-				CWaypoints::deleteWaypoint(pClient->currentWaypoint());
-				CBotGlobals::botMessage(pClient->getPlayer(),0,"waypoint %d deleted",pClient->currentWaypoint());
-				pClient->updateCurrentWaypoint(); // waypoint deleted so get a new one
-				pClient->playSound("buttons/combine_button_locked");
-				pClient->giveMessage("Waypoint deleted");
-			}
-			else
-			{
-				CBotGlobals::botMessage(pClient->getPlayer(),0,"no waypoint nearby to delete");
-				pClient->playSound("weapons/wpn_denyselect");
-				pClient->giveMessage("No Waypoint");
-			}
+	if (args[0] && *args[0])
+	{
+		const float radius = static_cast<float>(std::atof(args[0]));
+		if (radius > 0)
+		{
+			deleteWaypointsInRange(radius);
+		}
+		else
+		{
+			CBotGlobals::botMessage(pClient->getPlayer(), 0, "Invalid radius value");
+			return COMMAND_ERROR;
+		}
+	}
+	else
+	{
+		pClient->updateCurrentWaypoint();
+		if (CWaypoints::validWaypointIndex(pClient->currentWaypoint()))
+		{
+			CWaypoints::deleteWaypoint(pClient->currentWaypoint());
+			CBotGlobals::botMessage(pClient->getPlayer(), 0, "waypoint %d deleted", pClient->currentWaypoint());
+			pClient->updateCurrentWaypoint();
+			pClient->playSound("buttons/combine_button_locked");
+			pClient->giveMessage("Waypoint deleted");
+		}
+		else
+		{
+			CBotGlobals::botMessage(pClient->getPlayer(), 0, "no waypoint nearby to delete");
+			pClient->playSound("weapons/wpn_denyselect");
+			pClient->giveMessage("No Waypoint");
 		}
 	}
 

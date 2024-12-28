@@ -41,7 +41,8 @@
 #include "bot_globals.h"
 #include "bot_client.h"
 
-#include <cstring>
+#include <string>
+#include <vector>
 
 extern IVDebugOverlay* debugoverlay;
 

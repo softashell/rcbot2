@@ -72,11 +72,13 @@ bool CHLDMBot :: startGame ()
 // the bot killed pVictim
 void CHLDMBot :: killed ( edict_t *pVictim, char *weapon )
 {
-	CBot::killed(pVictim,weapon);
+    CBot::killed(pVictim, weapon);
 
-	// update belief around this waypoint
-	if ( pVictim && CBotGlobals::entityIsValid(pVictim) )
-		m_pNavigator->belief(CBotGlobals::entityOrigin(pVictim),getEyePosition(),bot_beliefmulti.GetFloat(),distanceFrom(pVictim),BELIEF_SAFETY);
+    // update belief around this waypoint
+    if (pVictim && CBotGlobals::entityIsValid(pVictim))
+    {
+        m_pNavigator->belief(CBotGlobals::entityOrigin(pVictim), getEyePosition(), bot_beliefmulti.GetFloat(), distanceFrom(pVictim), BELIEF_SAFETY);
+    }
 }
 
 // the bot was killed by pKiller
@@ -145,29 +147,29 @@ void CHLDMBot :: spawnInit ()
 // Is pEdict an enemy? return true if enemy / false if not
 // if checkWeapons is true, check if current weapon can attack enemy 
 //							return false if not 
-bool CHLDMBot :: isEnemy ( edict_t *pEdict,bool bCheckWeapons )
+bool CHLDMBot::isEnemy(edict_t* pEdict, bool bCheckWeapons)
 {
 	static int entity_index;
 
 	entity_index = ENTINDEX(pEdict);
 
 	// if no target on - listen sever player is a non target
-	if ( rcbot_notarget.GetBool() && entity_index == 1 )
+	if (rcbot_notarget.GetBool() && entity_index == 1)
 		return false;
 
 	// not myself
-	if ( pEdict == m_pEdict )
+	if (pEdict == m_pEdict)
 		return false;
 
 	// not a player - false
-	if ( !entity_index || entity_index > CBotGlobals::maxClients() )
+	if (!entity_index || entity_index > CBotGlobals::maxClients())
 	{
-		if ( !m_pCarryingObject && pEdict->GetUnknown() && pEdict == m_NearestBreakable && CClassInterface::getPlayerHealth(pEdict)>0 )
+		if (!m_pCarryingObject && pEdict->GetUnknown() && pEdict == m_NearestBreakable && CClassInterface::getPlayerHealth(pEdict) > 0)
 		{
-			if ( distanceFrom(CBotGlobals::entityOrigin(pEdict)) < rcbot_jump_obst_dist.GetFloat() )
+			if (distanceFrom(CBotGlobals::entityOrigin(pEdict)) < rcbot_jump_obst_dist.GetFloat())
 			{
-				if ( BotFunc_BreakableIsEnemy(m_NearestBreakable,m_pEdict) || (CBotGlobals::entityOrigin(pEdict) - m_vMoveTo).Length()+48 < (getOrigin() - m_vMoveTo).Length() )
-					return true;				
+				if (BotFunc_BreakableIsEnemy(m_NearestBreakable, m_pEdict) || (CBotGlobals::entityOrigin(pEdict) - m_vMoveTo).Length() + 48 < (getOrigin() - m_vMoveTo).Length())
+					return true;
 			}
 		}
 
@@ -175,18 +177,18 @@ bool CHLDMBot :: isEnemy ( edict_t *pEdict,bool bCheckWeapons )
 	}
 
 	// not alive -- false
-	if ( !CBotGlobals::entityIsAlive(pEdict) )
+	if (!CBotGlobals::entityIsAlive(pEdict))
 		return false;
 
 	// team game?
-	if ( CBotGlobals::getTeamplayOn() )
+	if (CBotGlobals::getTeamplayOn())
 	{
 		// same team ? false
-		if ( CBotGlobals::getTeam(pEdict) == getTeam() )
+		if (CBotGlobals::getTeam(pEdict) == getTeam())
 			return false;
 	}
 
-	return true;	
+	return true;
 }
 
 // from the bots UTILITIES , execute the given action

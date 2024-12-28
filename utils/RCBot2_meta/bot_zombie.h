@@ -10,4 +10,4 @@ class CBotZombie : public CBot
 	void getTasks (unsigned iIgnore) override;
 };
 
-#endif
+#endif // _BOT_ZOMBIE_H_

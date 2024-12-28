@@ -89,7 +89,7 @@ static const char* g_szHL2DMWeapons[] =
 };
 
 //TODO: Add Black Mesa weapons support [APG]RoboCop[CL]
-static const char* g_szBMSWeapons[] =
+/*static const char* g_szBMSWeapons[] =
 {
 	"weapon_357",
 	"weapon_assassin_glock",
@@ -106,7 +106,7 @@ static const char* g_szBMSWeapons[] =
 	"weapon_snark",
 	"weapon_tau",
 	"weapon_tripmine",
-};
+};*/
 
 static const char* g_szSYNWeapons[] =
 {
@@ -222,11 +222,11 @@ WeaponsData_t HL2DMWeaps[] =
 
 //SENTRYGUN ID = 34
 //TODO: Add Black Mesa weapons support [APG]RoboCop[CL]
-WeaponsData_t BMSWeaps[] =
+/*WeaponsData_t BMSWeaps[] =
 {
-	/*
-		slot, id , weapon name, flags, min dist, max dist, ammo index, preference
-	*/
+	//
+	//	slot, id , weapon name, flags, min dist, max dist, ammo index, preference
+	//
 		{2,BMS_WEAPON_GLOCK,		g_szBMSWeapons[0],	WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,1000,-1,1,0},
 		{1,BMS_WEAPON_CROWBAR,	g_szBMSWeapons[1],	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,128,-1,1,0},
 		{2,BMS_WEAPON_PYTHON,		g_szBMSWeapons[2],	WEAP_FL_PRIM_ATTACK,0,768,-1,2,0},
@@ -243,7 +243,7 @@ WeaponsData_t BMSWeaps[] =
 		{5,BMS_WEAPON_SATCHEL,		g_szBMSWeapons[13],	WEAP_FL_EXPLOSIVE,0,180,-1,1,0},
 		//Snark?
 		{ 0, 0, "\0", 0, 0, 0, 0, 0, 0 }//signal last weapon
-};
+};*/
 
 WeaponsData_t TF2Weaps[] =
 {
@@ -276,7 +276,7 @@ WeaponsData_t TF2Weaps[] =
 		{TF2_SLOT_SCNDR,TF2_WEAPON_REVOLVER,			"tf_weapon_revolver",	WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,1400,2,1,0},
 
 		// Custom Weapons
-	
+
 		{TF2_SLOT_PRMRY, TF2_WEAPON_POMSON6000, "tf_weapon_drg_pomson", WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER, 0, 800, 1, 2, 0 },
 		//{TF2_SLOT_PDA,TF2_WEAPON_PDA_ENGI_BUILD,		"tf_weapon_pda_engineer_build",	WEAP_FL_NONE,0,100,0,1,0},
 		// this class is used with all classes that can use shotgun but the slot might be different
@@ -457,7 +457,7 @@ bool CBotWeapons::update(const bool bOverrideAllFromEngine)
 {
 	uintptr_t iWeaponsSignature = 0x0; // check sum of weapons
 	edict_t* pWeapon;
-	
+
 	const CBaseHandle* m_Weapons = CClassInterface::getWeaponList(m_pBot->getEdict());
 	const CBaseHandle* m_Weapon_iter = m_Weapons;
 
@@ -467,7 +467,7 @@ bool CBotWeapons::update(const bool bOverrideAllFromEngine)
 		pWeapon = m_Weapon_iter == nullptr ? nullptr : INDEXENT(m_Weapon_iter->GetEntryIndex());
 		iWeaponsSignature += (reinterpret_cast<uintptr_t>(pWeapon)) + ((pWeapon == nullptr) ? 0 : static_cast<unsigned>(CClassInterface::getWeaponState(pWeapon)));
 		if (m_Weapon_iter != nullptr) {
-		m_Weapon_iter++;
+			m_Weapon_iter++;
 		}
 	}
 
@@ -830,7 +830,7 @@ void CWeapons::loadWeapons(const char* szWeaponListName, const WeaponsData_t* pD
 		char szFilename[1024];
 
 		CBotGlobals::buildFileName(szFilename, "weapons", BOT_CONFIG_FOLDER, "ini", false);
-		
+
 		if (kv->LoadFromFile(filesystem, szFilename, nullptr))
 		{
 			KeyValues* tempKv = kv->FindKey(szWeaponListName);
