@@ -807,68 +807,66 @@ void CWeapons::loadWeapons(const char* szWeaponListName, const WeaponsData_t* pD
 		char szFilename[1024];
 
 		CBotGlobals::buildFileName(szFilename, "weapons", BOT_CONFIG_FOLDER, "ini", false);
-
-		if (kv)
+		
+		if (kv->LoadFromFile(filesystem, szFilename, nullptr))
 		{
-			if (kv->LoadFromFile(filesystem, szFilename, nullptr))
+			KeyValues* tempKv = kv->FindKey(szWeaponListName);
+			if (tempKv)
 			{
-				kv = kv->FindKey(szWeaponListName);
+				kv->deleteThis(); // Release the original memory
+				kv = tempKv;
+				kv = kv->GetFirstSubKey();
 
-				if (kv)
+				if (false)
+					kv = kv->GetFirstTrueSubKey(); // Unreachable? [APG]RoboCop[CL]
+
+				while (kv != nullptr)
 				{
-					kv = kv->GetFirstSubKey();
+					WeaponsData_t newWeapon;
 
-					if (false)
-						kv = kv->GetFirstTrueSubKey(); //Unreachable? [APG]RoboCop[CL]
+					std::memset(&newWeapon, 0, sizeof(WeaponsData_t));
 
-					while (kv != nullptr)
-					{
-						WeaponsData_t newWeapon;
+					const char* szKeyName = kv->GetName();
 
-						std::memset(&newWeapon, 0, sizeof(WeaponsData_t));
+					char lowered[64];
 
-						const char* szKeyName = kv->GetName();
+					std::strncpy(lowered, szKeyName, 63);
+					lowered[63] = 0;
 
-						char lowered[64];
-
-						std::strncpy(lowered, szKeyName, 63);
-						lowered[63] = 0;
-
-						__strlow(lowered)
+					__strlow(lowered)
 
 						newWeapon.szWeaponName = CStrings::getString(lowered);
-						newWeapon.iId = kv->GetInt("id");
-						newWeapon.iSlot = kv->GetInt("slot");
-						newWeapon.minPrimDist = kv->GetFloat("minPrimDist");
-						newWeapon.maxPrimDist = kv->GetFloat("maxPrimDist");
-						newWeapon.m_fProjSpeed = kv->GetFloat("m_fProjSpeed");
-						newWeapon.m_iAmmoIndex = kv->GetInt("m_iAmmoIndex");
-						newWeapon.m_iPreference = kv->GetInt("m_iPreference");
+					newWeapon.iId = kv->GetInt("id");
+					newWeapon.iSlot = kv->GetInt("slot");
+					newWeapon.minPrimDist = kv->GetFloat("minPrimDist");
+					newWeapon.maxPrimDist = kv->GetFloat("maxPrimDist");
+					newWeapon.m_fProjSpeed = kv->GetFloat("m_fProjSpeed");
+					newWeapon.m_iAmmoIndex = kv->GetInt("m_iAmmoIndex");
+					newWeapon.m_iPreference = kv->GetInt("m_iPreference");
 
-						KeyValues* flags = kv->FindKey("flags");
+					KeyValues* flags = kv->FindKey("flags");
 
-						if (flags)
+					if (flags)
+					{
+						int i = 0;
+
+						while (szWeaponFlags[i][0] != '\0')
 						{
-							int i = 0;
+							if (flags->FindKey(szWeaponFlags[i]) && flags->GetInt(szWeaponFlags[i]) == 1)
+								newWeapon.m_iFlags |= 1 << i;
 
-							while (szWeaponFlags[i][0] != '\0')
-							{
-								if (flags->FindKey(szWeaponFlags[i]) && flags->GetInt(szWeaponFlags[i]) == 1)
-									newWeapon.m_iFlags |= 1 << i;
-
-								i++;
-							}
+							i++;
 						}
-
-						addWeapon(new CWeapon(&newWeapon));
-
-						kv = kv->GetNextTrueSubKey();
 					}
+
+					addWeapon(new CWeapon(&newWeapon));
+
+					kv = kv->GetNextTrueSubKey();
 				}
 			}
-
-			kv->deleteThis();
 		}
+
+		kv->deleteThis();
 	}
 
 	if (pDefault != nullptr)

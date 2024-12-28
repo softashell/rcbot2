@@ -36,6 +36,8 @@
 #include "bot_mtrand.h"
 #include "bot_perceptron.h"
 
+#include "logging.h"
+
 ga_nn_value CPerceptron::m_fDefaultLearnRate = 0.5f;
 ga_nn_value CPerceptron::m_fDefaultBias = 1.0f;
 
@@ -50,23 +52,26 @@ CNeuron :: CNeuron ()
 	m_inputs = nullptr;
 }
 
-CPerceptron :: CPerceptron (const unsigned short iInputs)
+CPerceptron::CPerceptron(const unsigned short iInputs)
 {
 	m_inputs = new ga_nn_value [iInputs];//.clear();
 	m_weights = new ga_nn_value[iInputs];
 	m_iInputs = iInputs;
-	
+
 	m_LearnRate = 0.4f;
 	// bias weight
 	m_Bias = -0.5;
-	
-	for ( unsigned short int i = 0; i < m_iInputs; i++ )
-		m_weights[i] = -0.3f+randomFloat(0.0f,0.6f);
+
+	for (unsigned short int i = 0; i < m_iInputs; i++)
+		m_weights[i] = -0.3f + randomFloat(0.0f, 0.6f);
 }
 
-void CPerceptron :: setWeights (const ga_nn_value* weights) const
-{
-	std::memcpy(m_weights,weights,sizeof(ga_nn_value)*m_iInputs);
+void CPerceptron::setWeights(const ga_nn_value* weights) const {
+	if (!weights) {
+		logger->Log(LogLevel::WARN, "Weights pointer is null");
+	}
+
+	std::memcpy(m_weights, weights, sizeof(ga_nn_value) * m_iInputs);
 }
 
 void CNeuron :: input ( ga_nn_value *inputs )
@@ -118,7 +123,7 @@ ga_nn_value CPerceptron :: getOutput () const
 	return m_output;
 }
 
-void CPerceptron :: train ( ga_nn_value expectedOutput )
+void CPerceptron::train(const ga_nn_value expectedOutput)
 {
 	static unsigned short int i;
 	static ga_nn_value *w;
@@ -129,7 +134,7 @@ void CPerceptron :: train ( ga_nn_value expectedOutput )
 
 	// bias
 	m_Bias += m_LearnRate*(expectedOutput-m_output);
-	
+
 	for ( i = 0; i < m_iInputs; i ++ )
 	{
 		*w = *w + m_LearnRate*(expectedOutput-m_output)* *x;

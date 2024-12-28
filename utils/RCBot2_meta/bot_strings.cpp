@@ -64,7 +64,7 @@ void CStrings :: freeAllMemory()
 // Either : 1 . Return the existing string or 2 . make a new string and return it.
 char *CStrings :: getString ( const char *szString )
 {
-	if ( szString == nullptr)
+	if (szString == nullptr)
 		return nullptr;
 
 	const unsigned short int iHash = szString[0]%MAX_STRINGS_HASH;

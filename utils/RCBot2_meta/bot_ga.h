@@ -66,6 +66,7 @@ public:
 	void freeMemory ();
 
 	void setGA ( CGA *ga ) { m_ga = ga; }
+
 	// size of population
 	unsigned size () const { return m_theIndividuals.size(); }
 
