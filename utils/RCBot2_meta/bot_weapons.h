@@ -60,10 +60,10 @@ enum : std::uint8_t
 	TF2_WEAPON_BAT = 0,
 	TF2_WEAPON_BOTTLE, //1
 	TF2_WEAPON_FIREAXE, //2
-	TF2_WEAPON_CLUB, //3 
-	TF2_WEAPON_KNIFE, //4 
-	TF2_WEAPON_FISTS, //5 
-	TF2_WEAPON_SHOVEL, //6 
+	TF2_WEAPON_CLUB, //3
+	TF2_WEAPON_KNIFE, //4
+	TF2_WEAPON_FISTS, //5
+	TF2_WEAPON_SHOVEL, //6
 	TF2_WEAPON_WRENCH,//7
 	TF2_WEAPON_BONESAW,//8
 	TF2_WEAPON_SHOTGUN_PRIMARY,//9
@@ -393,12 +393,12 @@ public:
 		m_iFlags = iFlags;
 	}
 
-	bool primaryInRange(float fDistance) const
+	bool primaryInRange(const float fDistance) const
 	{
 		return fDistance > m_fPrimMinWeaponShootDist && fDistance < m_fPrimMaxWeaponShootDist;
 	}
 
-	bool primaryGreaterThanRange(float fDistance) const
+	bool primaryGreaterThanRange(const float fDistance) const
 	{
 		return fDistance < m_fPrimMaxWeaponShootDist;
 	}
@@ -478,7 +478,7 @@ public:
 		return hasAllFlags(WEAP_FL_SPECIAL);
 	}
 
-	bool secondaryInRange(float fDistance) const
+	bool secondaryInRange(const float fDistance) const
 	{
 		return fDistance > m_fSecMinWeaponShootDist && fDistance < m_fSecMaxWeaponShootDist;
 	}
@@ -498,13 +498,13 @@ public:
 		return m_iWeaponId;
 	}
 
-	void setPrimaryRange(float fMinRange, float fMaxRange)
+	void setPrimaryRange(const float fMinRange, const float fMaxRange)
 	{
 		m_fPrimMinWeaponShootDist = fMinRange;
 		m_fPrimMaxWeaponShootDist = fMaxRange;
 	}
 
-	void setSecondaryRange(float fMinRange, float fMaxRange)
+	void setSecondaryRange(const float fMinRange, const float fMaxRange)
 	{
 		m_fSecMinWeaponShootDist = fMinRange;
 		m_fSecMaxWeaponShootDist = fMaxRange;
@@ -525,7 +525,7 @@ public:
 		return m_iSlot;
 	}
 
-	void setAmmoIndex(int iAmmoIndex1, int iAmmoIndex2 = -1)
+	void setAmmoIndex(const int iAmmoIndex1, const int iAmmoIndex2 = -1)
 	{
 		m_iAmmoIndex1 = iAmmoIndex1;
 		m_iAmmoIndex2 = iAmmoIndex2;
@@ -542,12 +542,12 @@ public:
 	}
 
 private:
-	bool hasAllFlags(int iFlags) const
+	bool hasAllFlags(const int iFlags) const
 	{
 		return (m_iFlags & iFlags) == iFlags;
 	}
 
-	bool hasSomeFlags(int iFlags) const
+	bool hasSomeFlags(const int iFlags) const
 	{
 		return (m_iFlags & iFlags) > 0;
 	}
@@ -587,7 +587,7 @@ public:
 
 	static CWeapon* getWeapon(const char* szWeapon);
 
-	static CWeapon* getWeaponByShortName(const char* pszWeapon);
+	static CWeapon* getWeaponByShortName(const char* szWeapon);
 
 	static void eachWeapon(IWeaponFunc* pFunc);
 
@@ -634,12 +634,12 @@ public:
 		return m_pWeaponInfo->primaryMaxRange();
 	}
 
-	bool primaryInRange(float fDistance) const
+	bool primaryInRange(const float fDistance) const
 	{
 		return m_pWeaponInfo->primaryInRange(fDistance);
 	}
 
-	bool primaryGreaterThanRange(float fDistance) const
+	bool primaryGreaterThanRange(const float fDistance) const
 	{
 		return m_pWeaponInfo->primaryGreaterThanRange(fDistance);
 	}
@@ -653,7 +653,6 @@ public:
 	{
 		return m_pWeaponInfo->isGravGun();
 	}
-
 
 	bool isExplosive() const
 	{
@@ -735,7 +734,7 @@ public:
 		return m_pWeaponInfo->isMeleeSecondary();
 	}
 
-	bool secondaryInRange(float fDistance) const
+	bool secondaryInRange(const float fDistance) const
 	{
 		return m_pWeaponInfo->secondaryInRange(fDistance);
 	}
@@ -749,7 +748,7 @@ public:
 
 	bool needToReload(const CBot* pBot) const;
 
-	void setHasWeapon(bool bHas)
+	void setHasWeapon(const bool bHas)
 	{
 		m_bHasWeapon = bHas;
 	}
@@ -786,12 +785,11 @@ public:
 
 	int getWeaponIndex() const { return m_iWeaponIndex; }
 
-	void setWeaponIndex(int iIndex) { m_iWeaponIndex = iIndex; } // Entity Index
+	void setWeaponIndex(const int iIndex) { m_iWeaponIndex = iIndex; } // Entity Index
 
 	void setWeaponEntity(edict_t* pent, bool bOverrideAmmoTypes = true);
 
 	edict_t* getWeaponEntity() const { return m_pEnt; }
-
 
 private:
 
@@ -860,7 +858,7 @@ private:
 	// checksum mask of weapons bot already has so we know if we need to update or not
 	uintptr_t m_iWeaponsSignature;
 
-	// weapons local to the bot only 
+	// weapons local to the bot only
 	// (holds ammo/preference etc and link to actual weapon)
 	CBotWeapon m_theWeapons[MAX_WEAPONS];//[MAX_WEAPONS];
 

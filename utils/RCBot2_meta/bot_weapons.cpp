@@ -35,13 +35,9 @@
 #include "bot_weapons.h"
 #include "bot_getprop.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstring>
-
-#pragma push_macro("clamp") //Fix for C++17 [APG]RoboCop[CL]
-#undef clamp
-#include <algorithm>
-#pragma pop_macro("clamp")
 
 static const char* g_szDODWeapons[] =
 {
@@ -433,7 +429,7 @@ CBotWeapons::CBotWeapons(CBot* pBot)
 	m_iWeaponsSignature = 0x0;
 }
 
-edict_t* CWeapons::findWeapon(edict_t* pPlayer, const char* pszWeaponName)
+edict_t* CWeapons::findWeapon(edict_t* pPlayer, const char* szWeaponName)
 {
 	const CBaseHandle* m_Weapons = CClassInterface::getWeaponList(pPlayer);
 	const CBaseHandle* m_Weapon_iter = m_Weapons;
@@ -444,7 +440,7 @@ edict_t* CWeapons::findWeapon(edict_t* pPlayer, const char* pszWeaponName)
 		edict_t* pWeapon = INDEXENT(m_Weapon_iter->GetEntryIndex());
 
 		// TODO get familiar with validity of handles / edicts
-		if (pWeapon && !pWeapon->IsFree() && std::strcmp(pWeapon->GetClassName(), pszWeaponName) == 0)
+		if (pWeapon && !pWeapon->IsFree() && std::strcmp(pWeapon->GetClassName(), szWeaponName) == 0)
 			return pWeapon;
 
 		m_Weapon_iter++;
@@ -600,7 +596,7 @@ bool CBotWeapons ::update ( bool bOverrideAllFromEngine )
 	return false;
 }*/
 
-CBotWeapon* CBotWeapons::getBestWeapon(edict_t* pEnemy, bool bAllowMelee, bool bAllowMeleeFallback, bool bMeleeOnly, bool bExplosivesOnly, bool bIgnorePrimaryMinimum)
+CBotWeapon* CBotWeapons::getBestWeapon(edict_t* pEnemy, const bool bAllowMelee, const bool bAllowMeleeFallback, const bool bMeleeOnly, const bool bExplosivesOnly, const bool bIgnorePrimaryMinimum)
 {
 	CBotWeapon* m_theBestWeapon = nullptr;
 	CBotWeapon* m_FallbackMelee = nullptr;
@@ -673,7 +669,7 @@ CBotWeapon* CBotWeapons::getBestWeapon(edict_t* pEnemy, bool bAllowMelee, bool b
 	return m_theBestWeapon;
 }
 
-void CBotWeapon::setWeaponEntity(edict_t* pent, bool bOverrideAmmoTypes)
+void CBotWeapon::setWeaponEntity(edict_t* pent, const bool bOverrideAmmoTypes)
 {
 	m_pEnt = pent;
 	m_iClip1 = CClassInterface::getWeaponClip1Pointer(pent);
@@ -689,7 +685,7 @@ void CBotWeapon::setWeaponEntity(edict_t* pent, bool bOverrideAmmoTypes)
 	setWeaponIndex(ENTINDEX(m_pEnt));
 }
 
-CBotWeapon* CBotWeapons::addWeapon(CWeapon* pWeaponInfo, int iId, edict_t* pent, bool bOverrideAll)
+CBotWeapon* CBotWeapons::addWeapon(CWeapon* pWeaponInfo, const int iId, edict_t* pent, const bool bOverrideAll)
 {
 	m_theWeapons[iId].setHasWeapon(true);
 	m_theWeapons[iId].setWeapon(pWeaponInfo);
@@ -831,65 +827,67 @@ void CWeapons::loadWeapons(const char* szWeaponListName, const WeaponsData_t* pD
 
 		CBotGlobals::buildFileName(szFilename, "weapons", BOT_CONFIG_FOLDER, "ini", false);
 
-		if (kv->LoadFromFile(filesystem, szFilename, nullptr))
+		if (kv)
 		{
-			KeyValues* tempKv = kv->FindKey(szWeaponListName);
-			if (tempKv)
+			if (kv->LoadFromFile(filesystem, szFilename, nullptr))
 			{
-				kv->deleteThis(); // Release the original memory
-				kv = tempKv;
-				kv = kv->GetFirstSubKey();
+				kv = kv->FindKey(szWeaponListName);
 
-				if (false)
-					kv = kv->GetFirstTrueSubKey(); // Unreachable? [APG]RoboCop[CL]
-
-				while (kv != nullptr)
+				if (kv)
 				{
-					WeaponsData_t newWeapon;
+					kv = kv->GetFirstSubKey();
 
-					std::memset(&newWeapon, 0, sizeof(WeaponsData_t));
+					if (false)
+						kv = kv->GetFirstTrueSubKey(); //Unreachable? [APG]RoboCop[CL]
 
-					const char* szKeyName = kv->GetName();
+					while (kv != nullptr)
+					{
+						WeaponsData_t newWeapon;
 
-					char lowered[64];
+						std::memset(&newWeapon, 0, sizeof(WeaponsData_t));
 
-					std::strncpy(lowered, szKeyName, 63);
-					lowered[63] = 0;
+						const char* szKeyName = kv->GetName();
 
-					__strlow(lowered)
+						char lowered[64];
+
+						std::strncpy(lowered, szKeyName, 63);
+						lowered[63] = 0;
+
+						__strlow(lowered)
 
 						newWeapon.szWeaponName = CStrings::getString(lowered);
-					newWeapon.iId = kv->GetInt("id");
-					newWeapon.iSlot = kv->GetInt("slot");
-					newWeapon.minPrimDist = kv->GetFloat("minPrimDist");
-					newWeapon.maxPrimDist = kv->GetFloat("maxPrimDist");
-					newWeapon.m_fProjSpeed = kv->GetFloat("m_fProjSpeed");
-					newWeapon.m_iAmmoIndex = kv->GetInt("m_iAmmoIndex");
-					newWeapon.m_iPreference = kv->GetInt("m_iPreference");
+						newWeapon.iId = kv->GetInt("id");
+						newWeapon.iSlot = kv->GetInt("slot");
+						newWeapon.minPrimDist = kv->GetFloat("minPrimDist");
+						newWeapon.maxPrimDist = kv->GetFloat("maxPrimDist");
+						newWeapon.m_fProjSpeed = kv->GetFloat("m_fProjSpeed");
+						newWeapon.m_iAmmoIndex = kv->GetInt("m_iAmmoIndex");
+						newWeapon.m_iPreference = kv->GetInt("m_iPreference");
 
-					KeyValues* flags = kv->FindKey("flags");
+						KeyValues* flags = kv->FindKey("flags");
 
-					if (flags)
-					{
-						int i = 0;
-
-						while (szWeaponFlags[i][0] != '\0')
+						if (flags)
 						{
-							if (flags->FindKey(szWeaponFlags[i]) && flags->GetInt(szWeaponFlags[i]) == 1)
-								newWeapon.m_iFlags |= 1 << i;
+							int i = 0;
 
-							i++;
+							while (szWeaponFlags[i][0] != '\0')
+							{
+								if (flags->FindKey(szWeaponFlags[i]) && flags->GetInt(szWeaponFlags[i]) == 1)
+									newWeapon.m_iFlags |= 1 << i;
+
+								i++;
+							}
 						}
+
+						addWeapon(new CWeapon(&newWeapon));
+
+						kv = kv->GetNextTrueSubKey();
 					}
-
-					addWeapon(new CWeapon(&newWeapon));
-
-					kv = kv->GetNextTrueSubKey();
 				}
 			}
-		}
 
-		kv->deleteThis();
+			kv->deleteThis();
+		}
 	}
 
 	if (pDefault != nullptr)
@@ -936,7 +934,7 @@ CBotWeapon* CBotWeapons::getPrimaryWeapon()
 	return pBest;
 }
 
-CBotWeapon* CBotWeapons::getActiveWeapon(const char* szWeaponName, edict_t* pWeaponUpdate, bool bOverrideAmmoTypes)
+CBotWeapon* CBotWeapons::getActiveWeapon(const char* szWeaponName, edict_t* pWeaponUpdate, const bool bOverrideAmmoTypes)
 {
 	CBotWeapon* toReturn = nullptr;
 
@@ -1008,7 +1006,7 @@ public:
 class CGetWeapID : public IWeaponFunc
 {
 public:
-	CGetWeapID(int iId)
+	CGetWeapID(const int iId)
 	{
 		m_iId = iId;
 		m_pFound = nullptr;
