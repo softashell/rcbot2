@@ -86,7 +86,7 @@ void CSom :: updateAround (const std::vector<float>* inputs, CSomNeuron* bmu) co
 	float dist;
 	const float nsiz = m_fNSize*m_fNSize;
 
-	for (CSomNeuron* const current : m_Neurons)
+	for (const CSomNeuron* const current : m_Neurons)
 	{
 		if ( (dist = bmu->neighbourDistance(current)) <= nsiz )
 		{

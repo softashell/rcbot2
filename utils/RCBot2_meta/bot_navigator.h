@@ -178,14 +178,14 @@ public:
 	bool isClosed () const { return hasFlag(FL_ASTAR_CLOSED); }
 	void open () { setFlag(FL_ASTAR_OPEN); }
 	//////////////////////////////////////////////////////	
-	void setHeuristic ( float fHeuristic ) { m_fHeuristic = fHeuristic; setFlag(FL_HEURISTIC_SET); }
+	void setHeuristic (const float fHeuristic) { m_fHeuristic = fHeuristic; setFlag(FL_HEURISTIC_SET); }
 	bool heuristicSet () const { return hasFlag(FL_HEURISTIC_SET); }
 	float getHeuristic() const { return m_fHeuristic; }
 
 	////////////////////////////////////////////////////////
-	void setFlag(int iFlag) { m_iFlags |= iFlag; }
-	bool hasFlag ( int iFlag ) const { return (m_iFlags & iFlag) == iFlag; }
-	void removeFlag ( int iFlag ) { m_iFlags &= ~iFlag; }
+	void setFlag(const int iFlag) { m_iFlags |= iFlag; }
+	bool hasFlag (const int iFlag) const { return (m_iFlags & iFlag) == iFlag; }
+	void removeFlag (const int iFlag) { m_iFlags &= ~iFlag; }
 	/////////////////////////////////////////////////////////
 	int getParent () const
 	{
@@ -204,14 +204,14 @@ public:
 	}
 	////////////////////////////////////////////////////////
 	float getCost () const { return m_fCost; }
-	void setCost(float fCost) { m_fCost = fCost; }
+	void setCost(const float fCost) { m_fCost = fCost; }
 	////////////////////////////////////////////////////////
 	// for comparison
 	bool precedes (const AStarNode *other) const
 	{
 		return m_fCost+m_fHeuristic < other->getCost() + other->getHeuristic();
 	}
-	void setWaypoint ( int iWpt ) { m_iWaypoint = iWpt; }
+	void setWaypoint (const int iWpt) { m_iWaypoint = iWpt; }
 	int getWaypoint () const { return m_iWaypoint; }
 private:
 	float m_fCost;

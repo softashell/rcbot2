@@ -82,9 +82,9 @@ public:
 // default constructor: uses default seed only if this is the first instance
   MTRand_int32() { if (!init) seed(5489UL); init = true; }
 // constructor with 32 bit int as seed
-  MTRand_int32(unsigned long s) { seed(s); init = true; }
+  MTRand_int32(const unsigned long s) { seed(s); init = true; }
 // constructor with array of size 32 bit ints as seed
-  MTRand_int32(const unsigned long* array, int size) { seed(array, size); init = true; }
+  MTRand_int32(const unsigned long* array, const int size) { seed(array, size); init = true; }
 // make copy constructor and assignment operator unavailable, they don't make sense
   MTRand_int32(const MTRand_int32&) = delete; // copy constructor not defined
   void operator=(const MTRand_int32&) = delete; // assignment operator not defined
@@ -109,7 +109,7 @@ static unsigned long twiddle(unsigned long, unsigned long); // used by gen_state
 };
 
 // inline for speed, must therefore reside in header file
-inline unsigned long MTRand_int32::twiddle(unsigned long u, unsigned long v) {
+inline unsigned long MTRand_int32::twiddle(const unsigned long u, const unsigned long v) {
 	return ((u & 0x80000000UL) | (v & 0x7FFFFFFFUL)) >> 1
 		^ (v & 1UL ? 0x9908B0DFUL : 0x0UL);
 }
@@ -129,8 +129,8 @@ inline unsigned long MTRand_int32::rand_int32() { // generate 32 bit random int
 class MTRand : public MTRand_int32 {
 public:
   MTRand() = default;
-  MTRand(unsigned long seed) : MTRand_int32(seed) {}
-  MTRand(const unsigned long* seed, int size) : MTRand_int32(seed, size) {}
+  MTRand(const unsigned long seed) : MTRand_int32(seed) {}
+  MTRand(const unsigned long* seed, const int size) : MTRand_int32(seed, size) {}
   ~MTRand() override = default;
 
   MTRand(const MTRand&) = delete; // copy constructor not defined
@@ -145,8 +145,8 @@ private:
 class MTRand_closed : public MTRand_int32 {
 public:
   MTRand_closed() = default;
-  MTRand_closed(unsigned long seed) : MTRand_int32(seed) {}
-  MTRand_closed(const unsigned long* seed, int size) : MTRand_int32(seed, size) {}
+  MTRand_closed(const unsigned long seed) : MTRand_int32(seed) {}
+  MTRand_closed(const unsigned long* seed, const int size) : MTRand_int32(seed, size) {}
   ~MTRand_closed() override = default;
 
   MTRand_closed(const MTRand_closed&) = delete; // copy constructor not defined
@@ -162,8 +162,8 @@ private:
 class MTRand_open : public MTRand_int32 {
 public:
   MTRand_open() = default;
-  MTRand_open(unsigned long seed) : MTRand_int32(seed) {}
-  MTRand_open(const unsigned long* seed, int size) : MTRand_int32(seed, size) {}
+  MTRand_open(const unsigned long seed) : MTRand_int32(seed) {}
+  MTRand_open(const unsigned long* seed, const int size) : MTRand_int32(seed, size) {}
   ~MTRand_open() override = default;
 
   MTRand_open(const MTRand_open&) = delete; // copy constructor not defined
@@ -178,8 +178,8 @@ private:
 class MTRand53 : public MTRand_int32 {
 public:
   MTRand53() = default;
-  MTRand53(unsigned long seed) : MTRand_int32(seed) {}
-  MTRand53(const unsigned long* seed, int size) : MTRand_int32(seed, size) {}
+  MTRand53(const unsigned long seed) : MTRand_int32(seed) {}
+  MTRand53(const unsigned long* seed, const int size) : MTRand_int32(seed, size) {}
   ~MTRand53() override = default;
 
   MTRand53(const MTRand53&) = delete; // copy constructor not defined

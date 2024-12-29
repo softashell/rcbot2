@@ -78,7 +78,7 @@ float CDODBot :: getEnemyFactor ( edict_t *pEnemy )
 
 
 // could be a bomb or flag capture event
-void CDODBot :: bombEvent ( int iEvent, int iCP, int iTeam )
+void CDODBot :: bombEvent ( int iEvent, const int iCP, const int iTeam )
 {
 	const int iWaypoint = CDODMod::m_Flags.getWaypointAtFlag(iCP);
 
@@ -103,7 +103,7 @@ CDODBot :: CDODBot()
 	CDODBot::init(true);
 }
 
-void CDODBot :: init (bool bVarInit)
+void CDODBot :: init (const bool bVarInit)
 {
 	CBot::init(bVarInit);
 
@@ -129,7 +129,7 @@ void CDODBot :: freeMapMemory ()
 	CBot::freeMapMemory();
 }
 
-bool CDODBot::canGotoWaypoint(Vector vPrevWaypoint, CWaypoint *pWaypoint, CWaypoint *pPrev )
+bool CDODBot::canGotoWaypoint(const Vector vPrevWaypoint, CWaypoint *pWaypoint, CWaypoint *pPrev)
 {
 	if ( CBot::canGotoWaypoint(vPrevWaypoint,pWaypoint,pPrev) )
 	{
@@ -183,7 +183,7 @@ bool CDODBot::canGotoWaypoint(Vector vPrevWaypoint, CWaypoint *pWaypoint, CWaypo
 #define NULLIFY_VISIBLE(visobj,pent,distance)  if ( (visobj) == (pent) ) { if ( !bValid || (distanceFrom(visobj)>(distance)) ) { (visobj) = NULL; } }
 #define NULLIFY_VISIBLE_CONDITION(visobj,pent,distance,condition) if ( (visobj) == (pent) ) { if ( !bValid || (distanceFrom(visobj)>(distance)) || (condition) ) { (visobj) = NULL; } }
 
-bool CDODBot :: setVisible ( edict_t *pEntity, bool bVisible )
+bool CDODBot :: setVisible ( edict_t *pEntity, const bool bVisible )
 {
 	//static float fDist;
 	static const char *szClassname;
@@ -292,7 +292,7 @@ bool CDODBot :: setVisible ( edict_t *pEntity, bool bVisible )
 	return bValid;
 }
 
-void CDODBot :: selectedClass ( int iClass )
+void CDODBot :: selectedClass (const int iClass)
 {
 	m_iSelectedClass = iClass;
 }
@@ -716,7 +716,6 @@ bool CDODBot :: wantToListenToPlayerAttack ( edict_t *pPlayer, int iWeaponID )
 			// otherwise just random
 			return true;
 		}
-
 	}
 
 	return false;
@@ -774,7 +773,7 @@ void CDODBot :: spawnInit ()
 	m_LastHearVoiceCommand = DOD_VC_INVALID;
 }
 
-bool CDODBot :: isEnemy ( edict_t *pEdict,bool bCheckWeapons )
+bool CDODBot :: isEnemy ( edict_t *pEdict, const bool bCheckWeapons )
 {
 	const int entity_index = ENTINDEX(pEdict);
 //#ifdef _DEBUG
@@ -882,7 +881,7 @@ void CDODBot :: handleWeapons ()
 	}
 }
 
-void CDODBot :: touchedWpt ( CWaypoint *pWaypoint, int iNextWaypoint, int iPrevWaypoint )
+void CDODBot :: touchedWpt ( CWaypoint *pWaypoint, const int iNextWaypoint, const int iPrevWaypoint )
 {
 	static int wptindex; //Unused? [APG]RoboCop[CL]
 
@@ -1002,7 +1001,7 @@ void CDODBot :: touchedWpt ( CWaypoint *pWaypoint, int iNextWaypoint, int iPrevW
 					}
 
 #endif
-//					debugoverlay->AddTextOverlayRGB((pWaypoint->getOrigin()+pPath->getOrigin())/2,0,7.0f,255,255,255,255,"Dot: %0.3f",flDot);
+					//debugoverlay->AddTextOverlayRGB((pWaypoint->getOrigin()+pPath->getOrigin())/2,0,7.0f,255,255,255,255,"Dot: %0.3f",flDot);
 				}
 				
 			}
@@ -1045,7 +1044,7 @@ void CDODBot :: changeClass ()
 	m_fChangeClassTime = engine->Time() + randomFloat(bot_min_cc_time.GetFloat(),bot_max_cc_time.GetFloat());
 }
 
-void CDODBot :: chooseClass ( bool bIsChangingClass )
+void CDODBot :: chooseClass (const bool bIsChangingClass)
 {
 	const int _forcedClass = rcbot_force_class.GetInt();
 	if (_forcedClass > 0 && _forcedClass < 10)
@@ -1138,6 +1137,7 @@ void CDODBot :: prone ()
 		m_fProneTime = engine->Time() + randomFloat(4.0f,8.0f);
 	}
 }
+
 void CDODBot :: unProne()
 {
 	if ( m_bProne && (hasSomeConditions(CONDITION_RUN) || (m_fProneTime < engine->Time())) )
@@ -1336,7 +1336,7 @@ void CDODBot :: modThink ()
 
 	if ( m_pEnemyGrenade )
 	{
-		m_fShoutGrenade = m_fShoutGrenade/2 + 0.5f;
+		m_fShoutGrenade = m_fShoutGrenade / 2 + 0.5f;
 
 		if ( m_fShoutGrenade > 0.95f ) 
 		{
@@ -1446,7 +1446,7 @@ void CDODBot ::defending()
 	// check to go prone or not
 }
 
-void CDODBot ::voiceCommand (byte voiceCmd)
+void CDODBot ::voiceCommand (const byte voiceCmd)
 {
 	// find voice command
 	extern eDODVoiceCommand_t g_DODVoiceCommands[DOD_VC_INVALID];
@@ -1929,7 +1929,7 @@ void CDODBot::hearVoiceCommand(edict_t* pPlayer, byte voiceCmd)
 		m_fLastVoiceCommand[voiceCmd] = engine->Time() + randomFloat(1.0f,3.0f);
 }
 
-void CDODBot :: sayInPosition ( )
+void CDODBot :: sayInPosition ()
 {
 	signal("yes");
 }
@@ -1944,7 +1944,7 @@ void CDODBot :: sayMoveOut ()
 	updateCondition(CONDITION_CHANGED);
 }
 
-bool CDODBot :: withinTeammate ( ) const
+bool CDODBot :: withinTeammate () const
 {
 	// check if the bot is right next to a team mate (sometimes bots can't deploy if theyr are next to one already)
 
@@ -2131,7 +2131,7 @@ bool CDODBot :: executeAction ( CBotUtility *util )
 	
 					flDot = DotProduct (vecLOS , vForward );
 	
-					if ( flDot > 0 ) // 90 degrees 
+					if ( flDot > 0.0f ) // 90 degrees 
 					{
 						fDist = pWpt->distanceFrom(vOrigin);
 
@@ -2144,7 +2144,7 @@ bool CDODBot :: executeAction ( CBotUtility *util )
 				}
 			}
 
-			if ( pNearest != nullptr)
+			if (pNearest != nullptr)
 			{
 				m_pSchedules->freeMemory();
 
@@ -2757,7 +2757,7 @@ bool CDODBot :: executeAction ( CBotUtility *util )
 	return false;
 }
 
-void CDODBot :: reachedCoverSpot (int flags)
+void CDODBot :: reachedCoverSpot (const int flags)
 {
 	// reached cover
 	// dont need to run there any more
@@ -3252,7 +3252,7 @@ void CDODBot :: getTasks (unsigned iIgnore)
 
 	if ( !rcbot_melee_only.GetBool() && (m_pNearestWeapon.get() != nullptr) && hasSomeConditions(CONDITION_NEED_AMMO) )
 	{
-		CWeapon *pNearestWeapon = CWeapons::getWeapon(m_pNearestWeapon.get()->GetClassName());
+		const CWeapon *pNearestWeapon = CWeapons::getWeapon(m_pNearestWeapon.get()->GetClassName());
 		const CBotWeapon *pHaveWeapon = (pNearestWeapon== nullptr)? nullptr :(m_pWeapons->getWeapon(pNearestWeapon));
 
 		if ( pNearestWeapon && (!pHaveWeapon || !pHaveWeapon->hasWeapon() || pHaveWeapon->outOfAmmo(this) ) )
@@ -3423,8 +3423,8 @@ bool CDODBot :: walkingTowardsWaypoint ( CWaypoint *pWaypoint, bool *bOffsetAppl
 
 
 void CDODBot :: modAim ( edict_t *pEntity, Vector &v_origin, 
-						Vector *v_desired_offset, Vector &v_size, 
-						float fDist, float fDist2D )
+						Vector *v_desired_offset, Vector &v_size,
+						const float fDist, const float fDist2D )
 {
 	//static Vector vAim;
 	//static bool bProne;
@@ -3491,7 +3491,7 @@ void CDODBot :: modAim ( edict_t *pEntity, Vector &v_origin,
 	if ( m_pNearestSmokeToEnemy )
 	{
 		static int iSlot;
-		iSlot = ENTINDEX(pEntity)-1;
+		iSlot = ENTINDEX(pEntity) - 1;
 
 		if (( iSlot >= 0 ) && ( iSlot < RCBOT_MAXPLAYERS ))
 		{
@@ -3514,9 +3514,9 @@ bool CDODBot :: isVisibleThroughSmoke ( edict_t *pSmoke, edict_t *pCheck )
 	static float fTime = 0.0f; //Unused? [APG]RoboCop[CL]
 	static float fProb = 0.0f; //Unused? [APG]RoboCop[CL]
 
-	static short int iSlot;
+	static int iSlot;
 
-	iSlot = ENTINDEX(pCheck)-1;
+	iSlot = ENTINDEX(pCheck) - 1;
 
 	// if pCheck is a player
 	if (( iSlot >= 0 ) && ( iSlot < RCBOT_MAXPLAYERS ))

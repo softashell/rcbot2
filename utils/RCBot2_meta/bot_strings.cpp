@@ -67,7 +67,7 @@ char* CStrings::getString(const char* szString)
 	if (szString == nullptr)
 		return nullptr;
 
-	const unsigned short int iHash = szString[0] % MAX_STRINGS_HASH;
+	const unsigned short iHash = szString[0] % MAX_STRINGS_HASH;
 
 	for (char* const szCompString : m_Strings[iHash])
 	{

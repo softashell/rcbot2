@@ -37,7 +37,7 @@ public:
 		a=WAYPOINT_ALPHA;
 	}
 
-	void mix (const WptColor other)
+	void mix (const WptColor& other)
 	{
 		float fr = (r-other.r)*0.5f;
 		float fg = (g-other.g)*0.5f;

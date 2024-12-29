@@ -57,7 +57,7 @@
 extern IVDebugOverlay* debugoverlay;
 extern IServerGameEnts* servergameents; // for accessing the server game entities
 
-void CBotSynergy::init(bool bVarInit)
+void CBotSynergy::init(const bool bVarInit)
 {
 	CBot::init(bVarInit); // call base first
 	m_fFov = 110.0f; // Coop mod, give bot larger FOV (default is 75)
@@ -363,7 +363,7 @@ bool CBotSynergy::isEnemy(edict_t* pEdict, bool bCheckWeapons)
 	return false;
 }
 
-bool CBotSynergy::setVisible(edict_t* pEntity, bool bVisible)
+bool CBotSynergy::setVisible(edict_t* pEntity, const bool bVisible)
 {
 	const bool bValid = CBot::setVisible(pEntity, bVisible);
 
@@ -557,7 +557,7 @@ void CBotSynergy::getTasks(unsigned iIgnore)
 	utils.freeMemory();
 }
 
-bool CBotSynergy::executeAction(eBotAction iAction)
+bool CBotSynergy::executeAction(const eBotAction iAction)
 {
 	switch (iAction)
 	{
@@ -707,7 +707,7 @@ bool CBotSynergy::executeAction(eBotAction iAction)
 	return false;
 }
 
-void CBotSynergy::touchedWpt(CWaypoint* pWaypoint, int iNextWaypoint, int iPrevWaypoint)
+void CBotSynergy::touchedWpt(CWaypoint* pWaypoint, const int iNextWaypoint, const int iPrevWaypoint)
 {
 	if (iNextWaypoint != -1 && pWaypoint->hasFlag(CWaypointTypes::W_FL_USE)) // Use waypoint: Check for door
 	{
@@ -975,5 +975,5 @@ bool CBotSynergy::filterAmmo(edict_t* pAmmo, const char* szclassname)
  **/
 bool CBotSynergy::wantsToChangeCourseOfAction()
 {
-	return false; // TO-DO
+	return false; // TODO
 }

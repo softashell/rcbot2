@@ -89,7 +89,7 @@ public:
 class CBotSeeFriendlyHurtEnemy : public IBotFunction
 {
 public:
-	CBotSeeFriendlyHurtEnemy ( edict_t *pTeammate, edict_t *pEnemy, int iWeaponID )
+	CBotSeeFriendlyHurtEnemy ( edict_t *pTeammate, edict_t *pEnemy, const int iWeaponID )
 	{
 		m_pTeammate = pTeammate;
 		m_pEnemy = pEnemy;
@@ -116,7 +116,7 @@ private:
 class CBroadcastMVMAlarm : public IBotFunction
 {
 public:
-	CBroadcastMVMAlarm(float fRadius)
+	CBroadcastMVMAlarm(const float fRadius)
 	{
 		m_bValid = CTeamFortress2Mod::getMVMCapturePoint(&m_vLoc);
 		m_fRadius = fRadius;
@@ -136,7 +136,7 @@ private:
 class CBotSeeEnemyHurtFriendly : public IBotFunction
 {
 public:
-	CBotSeeEnemyHurtFriendly ( edict_t *pEnemy, edict_t *pTeammate, int iWeaponID )
+	CBotSeeEnemyHurtFriendly ( edict_t *pEnemy, edict_t *pTeammate, const int iWeaponID )
 	{
 		m_pTeammate = pTeammate;
 		m_pEnemy = pEnemy;
@@ -190,7 +190,7 @@ private:
 class CBotHearPlayerAttack : public IBotFunction
 {
 public:
-	CBotHearPlayerAttack ( edict_t *pAttacker, int iWeaponID )
+	CBotHearPlayerAttack ( edict_t *pAttacker, const int iWeaponID )
 	{
 		m_pAttacker = pAttacker;
 		m_iWeaponID = iWeaponID;
@@ -215,7 +215,7 @@ private:
 class CTF2BroadcastRoundWin : public IBotFunction
 {
 public:
-	CTF2BroadcastRoundWin ( int iTeamWon, bool bFullRound )
+	CTF2BroadcastRoundWin (const int iTeamWon, const bool bFullRound)
 	{
 		m_iTeam = iTeamWon;
 		m_bFullRound = bFullRound;
@@ -398,7 +398,6 @@ void CBombPickupEvent :: execute ( IBotEventInterface *pEvent )
 
 void CPlayerFootstepEvent :: execute ( IBotEventInterface *pEvent )
 {
-	
 }
 
 void CBombDroppedEvent :: execute ( IBotEventInterface *pEvent )
@@ -457,7 +456,7 @@ void CTF2ObjectSapped :: execute ( IBotEventInterface *pEvent )
 	if ( m_pActivator && owner>=0 && building>=0 && sapperid>=0 )
 	{
 		edict_t *pSpy = m_pActivator;
-		edict_t *pOwner = CBotGlobals::playerByUserId(owner);
+		const edict_t *pOwner = CBotGlobals::playerByUserId(owner);
 		edict_t *pSapper = INDEXENT(sapperid);
 		CBotTF2 *pBot = static_cast<CBotTF2*>(CBots::getBotPointer(pOwner));
 		
@@ -506,7 +505,7 @@ void CPlayerTeleported ::execute(IBotEventInterface *pEvent)
 
 	if ( builderid >= 0 )
 	{
-		edict_t *pPlayer = CBotGlobals::playerByUserId(builderid);
+		const edict_t *pPlayer = CBotGlobals::playerByUserId(builderid);
 
 		CBot *pBot = CBots::getBotPointer(pPlayer);
 
@@ -610,7 +609,7 @@ void CPostInventoryApplicationTF2 :: execute ( IBotEventInterface *pEvent )
 {
 	const int iUserID = pEvent->getInt( "userid" );
 
-	edict_t *pEdict = CBotGlobals::playerByUserId(iUserID);
+	const edict_t *pEdict = CBotGlobals::playerByUserId(iUserID);
 
 	CBot *pBot = CBots::getBotPointer(pEdict);
 
@@ -639,7 +638,7 @@ void CTF2UpgradeObjectEvent :: execute ( IBotEventInterface *pEvent )
 		if ( !isbuilder )
 		{
 			// see if builder is a bot
-			edict_t *pOwner = CTeamFortress2Mod::getBuildingOwner (object, index);
+			const edict_t *pOwner = CTeamFortress2Mod::getBuildingOwner (object, index);
 			CBotTF2 *pBot;
 
 			if ( (pBot = static_cast<CBotTF2*>(CBots::getBotPointer(pOwner))) != nullptr)
@@ -884,7 +883,7 @@ void CTF2PointCaptured :: execute ( IBotEventInterface *pEvent )
 	CTeamFortress2Mod::updatePointMaster();
 
 	// update points
-	CTeamFortress2Mod::m_ObjectiveResource.m_fUpdatePointTime = 0;
+	CTeamFortress2Mod::m_ObjectiveResource.m_fUpdatePointTime = 0.0f;
 	CTeamFortress2Mod::m_ObjectiveResource.m_fNextCheckMonitoredPoint = engine->Time() + 0.2f;
 
     // MUST BE AFTER POINTS HAVE BEEN UPDATED!
@@ -1015,12 +1014,10 @@ void CFlagEvent :: execute ( IBotEventInterface *pEvent )
 	default:	
 		break;
 	}
-
 }
 
 void CFlagCaptured :: execute ( IBotEventInterface *pEvent )
 {
-
 }
 /////////////////////////////////////////////////
 void CDODPointCaptured :: execute ( IBotEventInterface *pEvent )

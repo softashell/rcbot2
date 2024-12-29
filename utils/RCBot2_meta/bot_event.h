@@ -725,15 +725,15 @@ public:
 		m_pEvent = pEvent;
 	}
 
-	float getFloat ( const char *keyName = nullptr, float defaultValue = 0 ) override
+	float getFloat ( const char *keyName = nullptr, const float defaultValue = 0 ) override
 	{
 		return m_pEvent->GetFloat(keyName,defaultValue);
 	}
-	int getInt ( const char *keyName = nullptr, int defaultValue = 0 ) override
+	int getInt ( const char *keyName = nullptr, const int defaultValue = 0 ) override
 	{
 		return m_pEvent->GetInt(keyName,defaultValue);
 	}
-	void setInt ( const char *keyName, int value ) override
+	void setInt ( const char *keyName, const int value ) override
 	{
 		m_pEvent->SetInt(keyName,value);
 	}
@@ -758,15 +758,15 @@ public:
 		m_pEvent = pEvent;
 	}
 
-	float getFloat ( const char *keyName = nullptr, float defaultValue = 0 ) override
+	float getFloat ( const char *keyName = nullptr, const float defaultValue = 0 ) override
 	{
 		return m_pEvent->GetFloat(keyName,defaultValue);
 	}
-	int getInt ( const char *keyName = nullptr, int defaultValue = 0 ) override
+	int getInt ( const char *keyName = nullptr, const int defaultValue = 0 ) override
 	{
 		return m_pEvent->GetInt(keyName,defaultValue);
 	}
-	void setInt ( const char *keyName, int value ) override
+	void setInt ( const char *keyName, const int value ) override
 	{
 		m_pEvent->SetInt(keyName,value);
 	}

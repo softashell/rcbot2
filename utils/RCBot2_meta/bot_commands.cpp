@@ -64,7 +64,7 @@ eBotCommandResult CBotCommandInline::execute(CClient* pClient, const BotCommandA
 	return m_Callback(pClient, args);
 }
 
-CBotCommandInline ControlCommand("control", CMD_ACCESS_BOT | CMD_ACCESS_DEDICATED, [](CClient *pClient,
+CBotCommandInline ControlCommand("control", CMD_ACCESS_BOT | CMD_ACCESS_DEDICATED, [](const CClient *pClient,
                                  const BotCommandArgs& args)
 {
 	edict_t *pEntity = nullptr;
@@ -85,7 +85,7 @@ CBotCommandInline ControlCommand("control", CMD_ACCESS_BOT | CMD_ACCESS_DEDICATE
 	return COMMAND_ERROR;
 });
 
-CBotCommandInline AddBotCommand("addbot", CMD_ACCESS_BOT | CMD_ACCESS_DEDICATED, [](CClient *pClient,
+CBotCommandInline AddBotCommand("addbot", CMD_ACCESS_BOT | CMD_ACCESS_DEDICATED, [](const CClient *pClient,
                                 const BotCommandArgs& args)
 {	
 //	bool bOkay = false;
@@ -140,7 +140,7 @@ CBotCommandInline KickBotCommand("kickbot", CMD_ACCESS_BOT | CMD_ACCESS_DEDICATE
 	return COMMAND_ACCESSED;
 }, R"(usage "kickbot" or "kickbot <team>" : kicks random bot or bot on team: <team>)");
 
-bool CBotCommand :: hasAccess ( CClient *pClient ) const
+bool CBotCommand :: hasAccess (const CClient *pClient) const
 {
 	// check access level excluding dedicated server flag
 	const int iClientAccessLevel = this->m_iAccessLevel & ~CMD_ACCESS_DEDICATED;
@@ -186,7 +186,7 @@ eBotCommandResult CBotSubcommands::execute(CClient* pClient, const BotCommandArg
 	return COMMAND_NOT_FOUND;
 }
 
-void CBotSubcommands::printCommand(edict_t *pPrintTo, int indent)
+void CBotSubcommands::printCommand(edict_t *pPrintTo, const int indent)
 {
 	if ( indent )
 	{
@@ -216,7 +216,7 @@ void CBotSubcommands::printHelp( edict_t *pPrintTo ) {
 	this->printCommand(pPrintTo);
 }
 
-CBotCommandInline PrintCommands("printcommands", CMD_ACCESS_DEDICATED, [](CClient *pClient, const BotCommandArgs& args)
+CBotCommandInline PrintCommands("printcommands", CMD_ACCESS_DEDICATED, [](const CClient *pClient, const BotCommandArgs& args)
 {
 	if ( pClient != nullptr)
 	{
@@ -234,7 +234,7 @@ CBotCommandInline PrintCommands("printcommands", CMD_ACCESS_DEDICATED, [](CClien
 
 ///////////////////////////////////////////
 
-void CBotCommand :: printCommand ( edict_t *pPrintTo, int indent )
+void CBotCommand :: printCommand ( edict_t *pPrintTo, const int indent )
 {
 	if ( indent )
 	{

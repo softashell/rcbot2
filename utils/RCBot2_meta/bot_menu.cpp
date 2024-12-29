@@ -1,3 +1,4 @@
+
 /*
  *    part of https://rcbot2.svn.sourceforge.net/svnroot/rcbot2
  *
@@ -399,7 +400,7 @@ void CBotMenuList::render(CClient* pClient) // render
 	//m_MenuList[iMenu]->render(pClient);
 }
 
-void CBotMenuList::selectedMenu(CClient* pClient, unsigned iMenu)
+void CBotMenuList::selectedMenu(CClient* pClient, const unsigned iMenu)
 {
 	const CBotMenu* pMenu = pClient->getCurrentMenu();
 
@@ -417,7 +418,7 @@ Color CBotMenu::getColor(CClient* pClient)
 	return Color();
 }
 
-void CBotMenu::selectedMenu(CClient* pClient, unsigned iMenu) const
+void CBotMenu::selectedMenu(CClient* pClient, const unsigned iMenu) const
 {
 	if (iMenu < m_MenuItems.size())
 		m_MenuItems[iMenu]->activate(pClient);

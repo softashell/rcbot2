@@ -140,7 +140,7 @@ void CBotTF2HealSched::init()
 
 /////////////////////////////////////////////
 
-CBotTFEngiBuild :: CBotTFEngiBuild ( CBot *pBot, const eEngiBuild iObject, CWaypoint *pWaypoint )
+CBotTFEngiBuild :: CBotTFEngiBuild (const CBot *pBot, const eEngiBuild iObject, CWaypoint *pWaypoint)
 {
 	CFindPathTask *pathtask = new CFindPathTask(CWaypoints::getWaypointIndex(pWaypoint));
 	addTask(pathtask); // first
@@ -177,7 +177,7 @@ void CBotGetMetalSched :: init ()
 
 //////////////////////////////////////////////
 
-CBotEngiMoveBuilding :: CBotEngiMoveBuilding ( edict_t *pBotEdict, edict_t *pBuilding, const eEngiBuild iObject, const Vector& vNewLocation, const bool bCarrying )
+CBotEngiMoveBuilding::CBotEngiMoveBuilding(edict_t *pBotEdict, edict_t *pBuilding, const eEngiBuild iObject, const Vector& vNewLocation, const bool bCarrying)
 {
 	// not carrying
 	if ( !bCarrying )
@@ -224,7 +224,7 @@ void CBotTF2DefendPayloadBombSched :: init ()
 
 //////////////////////////////////////////////
 
-CBotTFEngiUpgrade :: CBotTFEngiUpgrade ( CBot *pBot, edict_t *pBuilding )
+CBotTFEngiUpgrade :: CBotTFEngiUpgrade (const CBot *pBot, edict_t *pBuilding)
 {
 	CFindPathTask *pathtask = new CFindPathTask(pBuilding);
 
@@ -390,7 +390,7 @@ void CBotUseTeleSched :: init ()
 
 //////////////////////////////////////////
 
-CBotUseDispSched :: CBotUseDispSched ( CBot *pBot, edict_t *pDisp )//, bool bNest )
+CBotUseDispSched :: CBotUseDispSched (const CBot *pBot, edict_t *pDisp)//, bool bNest )
 {
 	CFindPathTask *pathtask = new CFindPathTask(pDisp);
 	CBotTF2WaitHealthTask *gethealth = new CBotTF2WaitHealthTask(CBotGlobals::entityOrigin(pDisp));
@@ -525,7 +525,7 @@ CBotDefendSched ::CBotDefendSched (const Vector& vOrigin, const float fMaxTime)
 	addTask(new CBotDefendTask(vOrigin,fMaxTime));
 }
 
-CBotDefendSched::CBotDefendSched (const int iWaypointID, const float fMaxTime )
+CBotDefendSched::CBotDefendSched (const int iWaypointID, const float fMaxTime)
 {
 	CWaypoint* pWaypoint = CWaypoints::getWaypoint(iWaypointID);
 
@@ -601,7 +601,7 @@ void CGotoHideSpotSched :: init ()
 	setID(SCHED_GOOD_HIDE_SPOT);
 }
 ///////////////
-CGotoNestSched :: CGotoNestSched (int iWaypoint )
+CGotoNestSched :: CGotoNestSched (int iWaypoint)
 {
 	//addTask(new CFindGoodHideSpot(1));
 	//addTask(new CNestTask());
@@ -633,7 +633,7 @@ CBotTF2AttackSentryGun::CBotTF2AttackSentryGun( edict_t *pSentry, CBotWeapon *pW
 	path->completeInRangeFromEdict();
 	path->completeIfSeeTaskEdict();
 
-	path->setRange(pWeapon->primaryMaxRange()-100);
+	path->setRange(pWeapon->primaryMaxRange() - 100);
 }
 
 /////////////

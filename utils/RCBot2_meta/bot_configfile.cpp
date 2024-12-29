@@ -128,7 +128,7 @@ void CRCBotTF2UtilFile :: init()
 	}
 }
 
-void CRCBotTF2UtilFile :: addUtilPerturbation (eBotAction iAction, eTF2UtilType iUtil, float fUtility[9][2])
+void CRCBotTF2UtilFile :: addUtilPerturbation (const eBotAction iAction, const eTF2UtilType iUtil, float fUtility[9][2])
 {
 	for ( short unsigned i = 0; i < 9; i ++ )
 	{

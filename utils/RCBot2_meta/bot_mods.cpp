@@ -132,6 +132,7 @@ void CBotMods::parseFile()
 			bottype = BOTTYPE_GENERIC;
 
 			//modtype = MOD_CUSTOM;
+			//TODO: Add Black Mesa Source support [APG]RoboCop[CL]
 
 			if (!strcmpi("CUSTOM", val))
 			{
@@ -246,7 +247,7 @@ void CBotMods::readMods()
 #elif SOURCE_ENGINE == SE_SDK2013
 	m_Mods.emplace_back(new CSynergyMod());
 #else
-	
+	//TODO: Add Black Mesa Source support [APG]RoboCop[CL]
 	m_Mods.emplace_back(new CFortressForeverMod());
 
 	m_Mods.emplace_back(new CHLDMSourceMod());
@@ -259,7 +260,7 @@ void CBotMods::readMods()
 
 //////////////////////////////////////////////////////////////////////////////
 
-void CBotMod::setup(const char* szModFolder, eModId iModId, eBotType iBotType, const char* szWeaponListName)
+void CBotMod::setup(const char* szModFolder, const eModId iModId, const eBotType iBotType, const char* szWeaponListName)
 {
 	m_szModFolder = CStrings::getString(szModFolder);
 	m_iModId = iModId;

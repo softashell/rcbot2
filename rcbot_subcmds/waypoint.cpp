@@ -445,7 +445,7 @@ CBotCommandInline WaypointCut("cut", 0, [](CClient *pClient, const BotCommandArg
 	{
 		pClient->updateCurrentWaypoint();
 
-		if ( CWaypoint *pWpt = CWaypoints::getWaypoint(pClient->currentWaypoint()) )
+		if ( const CWaypoint *pWpt = CWaypoints::getWaypoint(pClient->currentWaypoint()) )
 		{
 			pClient->setWaypointCut(pWpt);
 			CWaypoints::deleteWaypoint(pClient->currentWaypoint());
@@ -463,7 +463,7 @@ CBotCommandInline WaypointCopy("copy", 0, [](CClient *pClient, const BotCommandA
 	{
 		pClient->updateCurrentWaypoint();
 
-		if ( CWaypoint *pWpt = CWaypoints::getWaypoint(pClient->currentWaypoint()) )
+		if ( const CWaypoint *pWpt = CWaypoints::getWaypoint(pClient->currentWaypoint()) )
 		{
 			pClient->setWaypointCopy(pWpt);
 			return COMMAND_ACCESSED;

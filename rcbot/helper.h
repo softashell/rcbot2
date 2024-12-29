@@ -82,7 +82,7 @@ inline edict_t *CBotHelper::BaseEntityToEdict(CBaseEntity *pEntity)
 /// @brief Gets a CBaseEntity from an entity index
 /// @param entity Entity/Edict index
 /// @return CBaseEntity pointer
-inline CBaseEntity *CBotHelper::GetEntity(int entity)
+inline CBaseEntity *CBotHelper::GetEntity(const int entity)
 {
 	CBaseEntity *pEntity;
 	if (!IndexToAThings(entity, &pEntity, nullptr))

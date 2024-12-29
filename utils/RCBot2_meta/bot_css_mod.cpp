@@ -87,7 +87,7 @@ void CCounterStrikeSourceMod::mapInit()
     logger->Log(LogLevel::TRACE, "CCounterStrikeSourceMod::mapInit()\nMap Type: %s", szMapTypes[m_MapType]);
 }
 
-bool CCounterStrikeSourceMod::checkWaypointForTeam(CWaypoint *pWpt, int iTeam)
+bool CCounterStrikeSourceMod::checkWaypointForTeam(CWaypoint *pWpt, const int iTeam)
 {
     return (!pWpt->hasFlag(CWaypointTypes::W_FL_NOCOUNTERTR)||iTeam!=CS_TEAM_COUNTERTERRORIST)&&(!pWpt->hasFlag(CWaypointTypes::W_FL_NOTERRORIST)||iTeam!=CS_TEAM_TERRORIST);
 }
@@ -98,7 +98,7 @@ bool CCounterStrikeSourceMod::checkWaypointForTeam(CWaypoint *pWpt, int iTeam)
  * @param pBot      The bot to check
  * @return          TRUE if the bot is a bomb carrier
  **/
-bool CCounterStrikeSourceMod::isBombCarrier(CBot *pBot)
+bool CCounterStrikeSourceMod::isBombCarrier(const CBot *pBot)
 {
     return pBot->getWeapons()->hasWeapon(CS_WEAPON_C4);
 }
@@ -139,7 +139,7 @@ bool CCounterStrikeSourceMod::isBombDefused()
  * @param pBot      The bot to check
  * @return          TRUE if the bot can hear
  **/
-bool CCounterStrikeSourceMod::canHearPlantedBomb(CBot *pBot)
+bool CCounterStrikeSourceMod::canHearPlantedBomb(const CBot *pBot)
 {
     if(!isBombPlanted())
         return false;
@@ -160,7 +160,7 @@ bool CCounterStrikeSourceMod::canHearPlantedBomb(CBot *pBot)
  * @param pBot      The bot to check
  * @return          TRUE if the bot is scoped
  **/
-bool CCounterStrikeSourceMod::isScoped(CBot *pBot)
+bool CCounterStrikeSourceMod::isScoped(const CBot *pBot)
 {
     const int fov = CClassInterface::getPlayerFOV(pBot->getEdict());
     return fov != 0 && fov != 90; // For bots, FOVs are 0 or 90 when not scoped.
@@ -200,7 +200,7 @@ void CCounterStrikeSourceMod::onFreezeTimeEnd()
 {
     logger->Log(LogLevel::TRACE, "CCounterStrikeSourceMod::OnFreezeTimeEnd()");
 
-    const edict_t *pC4 = CClassInterface::FindEntityByClassnameNearest(Vector(0.0, 0.0, 0.0), "weapon_c4", 32000.0f);
+    const edict_t *pC4 = CClassInterface::FindEntityByClassnameNearest(Vector(0.0f, 0.0f, 0.0f), "weapon_c4", 32000.0f);
     if(pC4)
     {
         m_hBomb.Init(engine->IndexOfEdict(pC4), pC4->m_NetworkSerialNumber);
@@ -233,7 +233,7 @@ void CCounterStrikeSourceMod::onBombPlanted()
         m_hBomb.Init(engine->IndexOfEdict(pPlantedC4), pPlantedC4->m_NetworkSerialNumber);
     }
 
-	for(short int i = 0; i < RCBOT_MAXPLAYERS; i++)
+	for(short i = 0; i < RCBOT_MAXPLAYERS; i++)
 	{
         CBot *pBot = CBots::get(i);
 

@@ -160,7 +160,7 @@ void CClient :: playSound ( const char *pszSound )
 	}
 }
 
-void CClient :: autoEventWaypoint ( int iType, float fRadius, bool bAtOtherOrigin, int iTeam, const Vector& vOrigin, bool bIgnoreTeam, bool bAutoType )
+void CClient :: autoEventWaypoint (const int iType, const float fRadius, const bool bAtOtherOrigin, int iTeam, const Vector& vOrigin, const bool bIgnoreTeam, const bool bAutoType)
 {
 	m_iAutoEventWaypoint = iType;
 	m_fAutoEventWaypointRadius = fRadius;
@@ -210,7 +210,7 @@ void CClient :: teleportTo (const Vector& vOrigin)
 class CBotFunc_HighFiveSearch : public IBotFunction
 {
 public:
-	CBotFunc_HighFiveSearch ( edict_t *pPlayer, int iTeam )
+	CBotFunc_HighFiveSearch ( edict_t *pPlayer, const int iTeam )
 	{
 		m_pPlayer = pPlayer;
 		m_iTeam = iTeam;
@@ -936,7 +936,7 @@ void CClient :: think ()
 	}
 }
 
-void CClient::giveMessage(const char *msg,float fTime)
+void CClient::giveMessage(const char *msg, const float fTime)
 {
 	if ( rcbot_tooltips.GetBool() )
 	{
@@ -945,7 +945,7 @@ void CClient::giveMessage(const char *msg,float fTime)
 	}
 }
 
-void CClients::giveMessage(const char* msg, float fTime, edict_t* pPlayer)
+void CClients::giveMessage(const char* msg, const float fTime, const edict_t* pPlayer)
 {
 	CClient *pClient;
 
@@ -1069,7 +1069,7 @@ Vector CClient :: getOrigin () const
 	return CBotGlobals::entityOrigin(m_pPlayer) + Vector(0,0,32);//m_pPlayer->GetCollideable()->GetCollisionOrigin();
 }
 
-void CClients :: clientActive ( edict_t *pPlayer )
+void CClients :: clientActive (const edict_t *pPlayer)
 {
 	CClient *pClient = &m_Clients[slotOfEdict(pPlayer)];
 
@@ -1085,12 +1085,12 @@ CClient *CClients :: clientConnected ( edict_t *pPlayer )
 	return pClient;
 }
 
-void CClients :: init ( edict_t *pPlayer )
+void CClients :: init (const edict_t *pPlayer)
 {
 	m_Clients[slotOfEdict(pPlayer)].init();
 }
 
-void CClients :: clientDisconnected ( edict_t *pPlayer )
+void CClients :: clientDisconnected (const edict_t *pPlayer)
 {
 	CClient *pClient = &m_Clients[slotOfEdict(pPlayer)];
 
@@ -1135,7 +1135,7 @@ CClient *CClients :: findClientBySteamID (const char* szSteamID)
 	return nullptr;
 }
 
-void CClients::clientDebugMsg(CBot* pBot, int iLev, const char* fmt, ...)
+void CClients::clientDebugMsg(const CBot* pBot, const int iLev, const char* fmt, ...)
 {
 	va_list argptr;
 	static char string[1024];
@@ -1149,25 +1149,24 @@ void CClients::clientDebugMsg(CBot* pBot, int iLev, const char* fmt, ...)
 
 const char *g_szDebugTags[15] =
 {
-"GAME_EVENT",
-"NAV",
-"SPEED",
-"VIS",
-"TASK",
-"BUTTONS",
-"USERCMD",
-"UTIL",
-"PROFILE",
-"EDICTS",
-"THINK",
-"LOOK",
-"HUD",
-"AIM",
-"CHAT"
+	"GAME_EVENT",
+	"NAV",
+	"SPEED",
+	"VIS",
+	"TASK",
+	"BUTTONS",
+	"USERCMD",
+	"UTIL",
+	"PROFILE",
+	"EDICTS",
+	"THINK",
+	"LOOK",
+	"HUD",
+	"AIM",
+	"CHAT"
 };
 
-
-void CClients :: clientDebugMsg ( int iLev, const char *szMsg, CBot *pBot )
+void CClients :: clientDebugMsg (const int iLev, const char *szMsg, const CBot *pBot)
 {
 	for (CClient& m_Client : m_Clients)
 	{
@@ -1190,13 +1189,13 @@ void CClients :: clientDebugMsg ( int iLev, const char *szMsg, CBot *pBot )
 	}
 }
 
-	// get index in array
+// get index in array
 int CClients :: slotOfEdict (const edict_t* pPlayer)
 {
 	return ENTINDEX(pPlayer)-1;
 }
 
-bool CClients :: clientsDebugging (int iLev)
+bool CClients :: clientsDebugging (const int iLev)
 {
 	if ( iLev == 0 )
 		return m_bClientsDebugging;
@@ -1217,7 +1216,7 @@ bool CClients :: clientsDebugging (int iLev)
 	return false;
 }
 
-void CClient :: setWaypointCut (CWaypoint *pWaypoint)
+void CClient :: setWaypointCut (const CWaypoint *pWaypoint)
 {
 	if ( pWaypoint )
 	{
@@ -1234,7 +1233,7 @@ void CClient :: setWaypointCut (CWaypoint *pWaypoint)
 	}
 }
 
-void CClient :: setWaypointCopy (CWaypoint *pWaypoint) 
+void CClient :: setWaypointCopy (const CWaypoint *pWaypoint) 
 {
 	if (pWaypoint) 
 	{ 

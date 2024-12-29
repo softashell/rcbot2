@@ -125,7 +125,7 @@ public:
 class CBroadcastVoiceCommand : public IBotFunction
 {
 public:
-	CBroadcastVoiceCommand (edict_t *pPlayer, byte voicecmd) { m_pPlayer = pPlayer; m_VoiceCmd = voicecmd; }
+	CBroadcastVoiceCommand (edict_t *pPlayer, const byte voicecmd) { m_pPlayer = pPlayer; m_VoiceCmd = voicecmd; }
 	void execute ( CBot *pBot ) override;
 
 private:
@@ -215,7 +215,7 @@ public:
 
 	void update ();
 
-	bool check ( edict_t *pEdict )
+	bool check (const edict_t *pEdict)
 	{
 		return pEdict == m_pLastSee.get();
 	}
@@ -321,7 +321,7 @@ public:
     void clearFailedWeaponSelect () { m_iPrevWeaponSelectFailed = 0; }
     void failWeaponSelect () { m_iPrevWeaponSelectFailed ++; }
 
-	void debugMsg ( int iLev, const char *szMsg );
+	void debugMsg ( int iLev, const char *szMsg ) const;
 
 	virtual unsigned maxEntityIndex ( ) { return RCBOT_MAXPLAYERS; }
 
@@ -330,9 +330,9 @@ public:
 	
 	// return distance from this origin
 
-	int isDesiredClass ( int iclass ) const
+	int isDesiredClass (const int iClass) const
 	{
-		return m_iDesiredClass == iclass;
+		return m_iDesiredClass == iClass;
 	}
 
 	virtual void handleWeapons ();
@@ -399,7 +399,7 @@ public:
 
 	virtual bool isEnemy ( edict_t *pEdict, bool bCheckWeapons = true ) { return false; }
 
-    bool hasSomeConditions ( int iConditions ) const
+    bool hasSomeConditions (const int iConditions) const
     {
 		return (m_iConditions & static_cast<ConditionBitSet>(iConditions)).any();
 	}
@@ -409,7 +409,7 @@ public:
 	float DotProductFromOrigin (const Vector& pOrigin ) const;
 
 	bool FVisible ( edict_t *pEdict, bool bCheckHead = false );
-	bool isVisible ( edict_t *pEdict ) const;
+	bool isVisible (const edict_t *pEdict ) const;
 
     void setEnemy ( edict_t *pEnemy )
 	{
@@ -422,17 +422,17 @@ public:
 		return static_cast<int>(m_iConditions.to_ulong());
 	}
 
-    bool hasAllConditions ( int iConditions ) const
+    bool hasAllConditions (const int iConditions) const
     {
 		return (m_iConditions & static_cast<ConditionBitSet>(iConditions)) == iConditions;
 	}
 
-    void updateCondition ( int iCondition )
+    void updateCondition (const int iCondition)
 	{
 		m_iConditions |= iCondition;
 	}
 
-    void removeCondition ( int iCondition )
+    void removeCondition (const int iCondition)
 	{
 		m_iConditions &= ~iCondition;
 	}
@@ -522,7 +522,7 @@ public:
 	}
 
 	// this allows move speed to be changed in tasks
-    void setMoveSpeed ( float fNewSpeed )
+    void setMoveSpeed (const float fNewSpeed)
 	{
 		if ( m_iMoveLookPriority >= m_iMoveSpeedPriority )
 		{
@@ -538,7 +538,7 @@ public:
 
     IBotNavigator *getNavigator () const { return m_pNavigator; }
 
-    void setMoveLookPriority ( int iPriority ) { m_iMoveLookPriority = iPriority; }
+    void setMoveLookPriority (const int iPriority) { m_iMoveLookPriority = iPriority; }
 
     void stopMoving () 
 	{ 
@@ -560,7 +560,7 @@ public:
 		}
 	}
 
-    void setLookAtTask ( eLookTask lookTask, float fTime = 0 ) 
+    void setLookAtTask (const eLookTask lookTask, const float fTime = 0) 
 	{ 
 		if ( m_iMoveLookPriority >= m_iLookPriority && (fTime > 0 || m_fLookSetTime < engine->Time()) )
 		{
@@ -648,7 +648,7 @@ public:
 	virtual void seeFriendlyDie ( edict_t *pDied, edict_t *pKiller, CWeapon *pWeapon ) {}
 	virtual void seeFriendlyKill ( edict_t *pTeamMate, edict_t *pDied, CWeapon *pWeapon ) {}
 
-    void selectWeapon ( int iWeaponId ) { m_iSelectWeapon = iWeaponId; }
+    void selectWeapon (const int iWeaponId ) { m_iSelectWeapon = iWeaponId; }
 
 	void selectWeaponName ( const char *szWeaponName ) const;
 
@@ -656,7 +656,7 @@ public:
 
 	void kill () const;
 
-	bool isUsingProfile ( CBotProfile *pProfile ) const;
+	bool isUsingProfile (const CBotProfile *pProfile ) const;
 
     CBotProfile *getProfile () const { return m_pProfile; }
 
@@ -666,7 +666,7 @@ public:
 
 	void tapButton ( int iButton ) const;
 
-	int getAmmo(size_t iIndex) const {
+	int getAmmo(const size_t iIndex) const {
 		if (!m_iAmmo) return 0;
 		if (iIndex == static_cast<size_t>(-1)) return 0;
 		return m_iAmmo[iIndex];
@@ -713,12 +713,12 @@ public:
 	virtual bool wantToListenToPlayerFootsteps ( edict_t *pPlayer ) { return true; }
 
 	virtual bool wantToInvestigateSound ();
-    void wantToInvestigateSound ( bool bSet ) { m_bWantToInvestigateSound = bSet; }
+    void wantToInvestigateSound (const bool bSet) { m_bWantToInvestigateSound = bSet; }
     bool wantToShoot () const { return m_bOpenFire; }
-    void wantToShoot ( bool bSet ) { m_bOpenFire = bSet; }
-    void wantToListen ( bool bSet ) { m_bWantToListen = bSet; }
+    void wantToShoot (const bool bSet) { m_bOpenFire = bSet; }
+    void wantToListen (const bool bSet) { m_bWantToListen = bSet; }
 	bool wantToListen () const;
-    void wantToChangeWeapon ( bool bSet ) { m_bWantToChangeWeapon = bSet; }
+    void wantToChangeWeapon (const bool bSet) { m_bWantToChangeWeapon = bSet; }
 
 	int nearbyFriendlies (float fDistance);
 	
@@ -739,7 +739,7 @@ public:
 	    if (m_fWaypointTouchDistance > MIN_WPT_TOUCH_DIST) { m_fWaypointTouchDistance *= 0.9f; }
     }
 
-    void resetTouchDistance ( float fDist ) { m_fWaypointTouchDistance = fDist; }
+    void resetTouchDistance (const float fDist) { m_fWaypointTouchDistance = fDist; }
 
     float getTouchDistance () const { return m_fWaypointTouchDistance; }
 
@@ -773,7 +773,7 @@ public:
     void resetAreaClear () { m_uSquadDetail.b1.said_area_clear = false; }
 
 
-    bool inSquad ( CBotSquad *pSquad ) const
+    bool inSquad (const CBotSquad *pSquad) const
     {
 		return m_pSquad == pSquad;
 	}
@@ -785,7 +785,7 @@ public:
 
 	bool isSquadLeader () const;
 
-    void setSquadIdleTime ( float fTime )
+    void setSquadIdleTime (const float fTime)
 	{
 		m_fSquadIdleTime = fTime;
 	}
@@ -805,7 +805,7 @@ public:
 
 	virtual void hearPlayerAttack( edict_t *pAttacker, int iWeaponID );
 
-    bool isListeningToPlayer ( edict_t *pPlayer ) 
+    bool isListeningToPlayer (const edict_t *pPlayer) 
 	{
 		return m_PlayerListeningTo.get() == pPlayer;
 	}
@@ -1053,13 +1053,13 @@ class CBots
 public:
 	static void botThink ();
 
-	static CBot *getBotPointer ( edict_t *pEdict );
+	static CBot *getBotPointer (const edict_t *pEdict );
 	static CBot *getBot ( int slot );
 
 	static void freeMapMemory ();
 	static void freeAllMemory ();
 
-	static CBot *findBotByProfile ( CBotProfile *pProfile );
+	static CBot *findBotByProfile (const CBotProfile *pProfile );
 
 	static void init ();
 
@@ -1083,18 +1083,18 @@ public:
 	static bool needToAddBot ();
 	static bool needToKickBot ();
 
-	static void setMaxBots ( int iMax ) { m_iMaxBots = iMax; }
+	static void setMaxBots (const int iMax) { m_iMaxBots = iMax; }
 	static int getMaxBots () { return m_iMaxBots; }
 
-	static void setMinBots ( int iMin ) { m_iMinBots = iMin; }
+	static void setMinBots (const int iMin) { m_iMinBots = iMin; }
 	static int getMinBots () { return m_iMinBots; }
 
 	static void botFunction ( IBotFunction *function );
 
 	static void runPlayerMoveAll ();
 
-	static CBot* get(size_t iIndex) { return m_Bots[iIndex]; }
-	static CBot *get ( edict_t *pPlayer ) { return m_Bots[slotOfEdict(pPlayer)]; }
+	static CBot* get(const size_t iIndex) { return m_Bots[iIndex]; }
+	static CBot *get (const edict_t *pPlayer ) { return m_Bots[slotOfEdict(pPlayer)]; }
 	static int levelInit(); //TODO: Not implemented? [APG]RoboCop[CL]
 
 private:

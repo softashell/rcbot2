@@ -34,6 +34,8 @@
 #include <algorithm>
 #pragma pop_macro("clamp")
 
+#include <cmath>
+
 #include "helper.h"
 #include "IEngineTrace.h"
 #include "toolframework/itoolentity.h"
@@ -156,7 +158,7 @@ bool CBotHelper::isBrushEntity( edict_t *pEntity )
 
 /// @brief Searches for entities by classname
 /// @return Entity index/reference or INVALID_EHANDLE_INDEX if none is found
-int CBotHelper::FindEntityByClassname(int start,const char *classname)
+int CBotHelper::FindEntityByClassname(const int start,const char *classname)
 {
 	CBaseEntity *pEntity = servertools->FindEntityByClassname(GetEntity(start), classname);
 	return sm_gamehelpers->EntityToBCompatRef(pEntity);
@@ -164,7 +166,7 @@ int CBotHelper::FindEntityByClassname(int start,const char *classname)
 
 /// @brief Searches for entities in a sphere
 /// @return Entity index/reference or INVALID_EHANDLE_INDEX if none is found
-int CBotHelper::FindEntityInSphere(int start, const Vector& center, float radius)
+int CBotHelper::FindEntityInSphere(const int start, const Vector& center, const float radius)
 {
 	CBaseEntity *pEntity = servertools->FindEntityInSphere(GetEntity(start), center, radius);
 	return sm_gamehelpers->EntityToBCompatRef(pEntity);
@@ -209,7 +211,7 @@ int CBotHelper::FindEntityByNetClass(const int start, const char *classname)
 /// @param flCosHalfFOV The width of the forward view cone as a dot product result.
 /// @return True if the point is within view from the source position at the specified FOV.
 /// @note https://github.com/ValveSoftware/source-sdk-2013/blob/beaae8ac45a2f322a792404092d4482065bef7ef/sp/src/public/mathlib/vector.h#L462-L477
-bool CBotHelper::PointWithinViewAngle(Vector const &vecSrcPosition, Vector const &vecTargetPosition, Vector const &vecLookDirection, float flCosHalfFOV)
+bool CBotHelper::PointWithinViewAngle(Vector const &vecSrcPosition, Vector const &vecTargetPosition, Vector const &vecLookDirection, const float flCosHalfFOV)
 {
 	const Vector vecDelta = vecTargetPosition - vecSrcPosition;
 	const float cosDiff = DotProduct( vecLookDirection, vecDelta );
@@ -230,5 +232,5 @@ bool CBotHelper::PointWithinViewAngle(Vector const &vecSrcPosition, Vector const
 /// @return Width of the forward view cone as a dot product result
 float CBotHelper::GetForwardViewCone(const float angle)
 {
-	return cosf(DEG2RAD(angle) / 2.0f);
+	return std::cosf(DEG2RAD(angle) / 2.0f);
 }

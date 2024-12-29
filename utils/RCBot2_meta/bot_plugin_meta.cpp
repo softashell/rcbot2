@@ -185,7 +185,7 @@ public:
 	bool IsInitMessage() const override { return false; }
 
 	int	GetRecipientCount() const override { return m_iMaxCount; }
-	int	GetRecipientIndex(int slot) const override { return m_iPlayerSlot[slot] + 1; }
+	int	GetRecipientIndex(const int slot) const override { return m_iPlayerSlot[slot] + 1; }
 
 private:
 
@@ -285,7 +285,7 @@ void RCBotPluginMeta::Hook_PlayerRunCmd(CUserCmd *ucmd, IMoveHelper *moveHelper)
 
 	CBaseEntity *pPlayer = META_IFACEPTR(CBaseEntity);
 
-	edict_t *pEdict = servergameents->BaseEntityToEdict(pPlayer);
+	const edict_t *pEdict = servergameents->BaseEntityToEdict(pPlayer);
 
 	pBot = CBots::getBotPointer(pEdict);
 	
@@ -612,7 +612,7 @@ void RCBotPluginMeta::OnVSPListening(IServerPluginCallbacks *iface)
 	vsp_callbacks = iface;
 }
 
-void RCBotPluginMeta::Hook_ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
+void RCBotPluginMeta::Hook_ServerActivate(edict_t *pEdictList, const int edictCount, const int clientMax)
 {
 	META_LOG(g_PLAPI, "ServerActivate() called: edictCount = %d, clientMax = %d", edictCount, clientMax);
 
@@ -645,7 +645,7 @@ void* RCBotPluginMeta::OnMetamodQuery(const char* iface, int *ret) {
 }
 #endif
 
-void RCBotPluginMeta::Hook_ClientActive(edict_t *pEntity, bool bLoadGame)
+void RCBotPluginMeta::Hook_ClientActive(edict_t *pEntity, const bool bLoadGame)
 {
 	META_LOG(g_PLAPI, "Hook_ClientActive(%d, %d)", IndexOfEdict(pEntity), bLoadGame);
 
@@ -789,7 +789,7 @@ void RCBotPluginMeta::Hook_ClientDisconnect(edict_t *pEntity)
 	META_LOG(g_PLAPI, "Hook_ClientDisconnect(%d)", IndexOfEdict(pEntity));
 }
 
-void RCBotPluginMeta::Hook_GameFrame(bool simulating)
+void RCBotPluginMeta::Hook_GameFrame(const bool simulating)
 {
 	/**
 	 * simulating:

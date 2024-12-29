@@ -395,7 +395,7 @@ private:
 class CBroadcastRoundStart : public IBotFunction
 {
 public:
-	CBroadcastRoundStart ( bool bFullReset ) { m_bFullReset = bFullReset; }
+	CBroadcastRoundStart (const bool bFullReset) { m_bFullReset = bFullReset; }
 	void execute ( CBot *pBot ) override;
 private:
 	bool m_bFullReset;
@@ -441,11 +441,11 @@ public:
 
 	void checkDependantEntities() override;
 
-	int getMetal ();
+	int getMetal () const;
 
 	//virtual Vector getAimVector ( edict_t *pEntity ) { return CBot::getAimVector(pEntity); }
 
-	void modAim ( edict_t *pEntity, Vector &v_origin, Vector *v_desired_offset, Vector &v_size, float fDist, float fDist2D ) override
+	void modAim ( edict_t *pEntity, Vector &v_origin, Vector *v_desired_offset, Vector &v_size, const float fDist, const float fDist2D ) override
 	{
 		CBot::modAim(pEntity,v_origin,v_desired_offset,v_size,fDist,fDist2D);
 	}
@@ -462,7 +462,7 @@ public:
 
 	virtual void foundSpy (edict_t *pEdict, TF_Class iDisguise );
 
-	void getTasks ( unsigned iIgnore = 0 ) override { CBot :: getTasks(iIgnore); }
+	void getTasks (const unsigned iIgnore = 0) override { CBot :: getTasks(iIgnore); }
 
 	void died ( edict_t *pKiller, const char *pszWeapon ) override;
 
@@ -470,7 +470,7 @@ public:
 
 	void modThink () override;
 
-	bool isBuilding ( edict_t *pBuilding );
+	bool isBuilding (const edict_t *pBuilding );
 
 	float getHealFactor ( edict_t *pPlayer );
 
@@ -489,7 +489,7 @@ public:
 
 	virtual bool lookAfterBuildings (float *fTime) { return false; }
 
-	void nextLookAfterSentryTime ( float fTime ) { m_fLookAfterSentryTime = fTime; }
+	void nextLookAfterSentryTime (const float fTime) { m_fLookAfterSentryTime = fTime; }
 
 	edict_t *getSentry () { return m_pSentryGun; }
 
@@ -517,7 +517,7 @@ public:
 
 	virtual void setClass ( TF_Class _class );
 
-	edict_t *seeFlag ( bool reset = false ) { if ( reset ) { m_pFlag = nullptr; } return m_pFlag; }
+	edict_t *seeFlag (const bool reset = false) { if ( reset ) { m_pFlag = nullptr; } return m_pFlag; }
 
 	bool canAvoid ( edict_t *pEntity ) override;
 
@@ -531,7 +531,7 @@ public:
 
 	bool isTF2 () override { return false; }
 
-	bool hurt ( edict_t *pAttacker, int iHealthNow, bool bDontHide  = false ) override
+	bool hurt ( edict_t *pAttacker, const int iHealthNow, const bool bDontHide  = false ) override
 	{
 		return CBot::hurt(pAttacker,iHealthNow,bDontHide);
 	}
@@ -582,7 +582,7 @@ public:
 	void flagReset () { m_fLastKnownFlagTime = 0.0f; }
 	void teamFlagReset () { m_fLastKnownTeamFlagTime = 0.0f; }
 
-	bool canGotoWaypoint ( Vector vPrevWaypoint, CWaypoint *pWaypoint, CWaypoint *pPrev = nullptr) override
+	bool canGotoWaypoint (const Vector vPrevWaypoint, CWaypoint *pWaypoint, CWaypoint *pPrev = nullptr) override
 	{
 		return CBot::canGotoWaypoint(vPrevWaypoint,pWaypoint,pPrev);
 	}
@@ -635,7 +635,7 @@ public:
 	
 	bool incomingRocket ( float fRange );
 
-	void hearPlayerAttack( edict_t *pAttacker, int iWeaponID ) override { CBot::hearPlayerAttack(pAttacker,iWeaponID); }
+	void hearPlayerAttack( edict_t *pAttacker, const int iWeaponID ) override { CBot::hearPlayerAttack(pAttacker,iWeaponID); }
 protected:
 	virtual void selectTeam ();
 
@@ -925,7 +925,7 @@ public:
 
 	void detonateStickies (bool isJumping = false);
 
-	void setStickyTrapType (const Vector& vLocation, eDemoTrapType iTrapType) { m_vStickyLocation = vLocation; m_iTrapType = iTrapType; }
+	void setStickyTrapType (const Vector& vLocation, const eDemoTrapType iTrapType) { m_vStickyLocation = vLocation; m_iTrapType = iTrapType; }
 
 	bool canDeployStickies ();
 
@@ -951,7 +951,7 @@ public:
 
 	bool canAvoid ( edict_t *pEntity ) override;
 
-	void hearVoiceCommand ( edict_t *pPlayer, byte cmd ) override;
+	void hearVoiceCommand ( edict_t *pPlayer, byte voiceCmd ) override;
 		
 	void checkBeingHealed ( );
 

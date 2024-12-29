@@ -412,7 +412,7 @@ public:
 class CBotUseDispSched : public CBotSchedule
 {
 public:
-	CBotUseDispSched ( CBot *pBot, edict_t *pDisp );
+	CBotUseDispSched (const CBot *pBot, edict_t *pDisp );
 
 	void init () override;
 }; 
@@ -421,7 +421,7 @@ public:
 class CBotTFEngiUpgrade : public CBotSchedule
 {
 public:
-	CBotTFEngiUpgrade ( CBot *pBot, edict_t *pBuilding );
+	CBotTFEngiUpgrade (const CBot *pBot, edict_t *pBuilding );
 
 	void init () override;
 };
@@ -437,7 +437,7 @@ public:
 class CBotTFEngiBuild : public CBotSchedule
 {
 public:
-	CBotTFEngiBuild ( CBot *pBot, eEngiBuild iObject, CWaypoint *pWaypoint );
+	CBotTFEngiBuild (const CBot *pBot, eEngiBuild iObject, CWaypoint *pWaypoint );
 
 	void init () override;
 };

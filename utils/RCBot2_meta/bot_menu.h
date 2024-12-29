@@ -116,7 +116,7 @@ protected:
 class CWaypointFlagMenuItem : public CBotMenuItem
 {
 public:
-	CWaypointFlagMenuItem ( int iFlag )
+	CWaypointFlagMenuItem (const int iFlag)
 	{
 		m_iFlag = iFlag;
 	}
@@ -215,7 +215,7 @@ public:
 class CWaypointFlagShowMenuItem : public CBotMenuItem
 {
 public:
-	CWaypointFlagShowMenuItem ( int iFlag )
+	CWaypointFlagShowMenuItem (const int iFlag)
 	{
 		m_iFlag = iFlag;
 	}
@@ -482,7 +482,7 @@ public:
 
 	static void selectedMenu ( CClient *pClient, unsigned iMenu );
 
-	static CBotMenu *getMenu ( int id ) { return m_MenuList[id]; }
+	static CBotMenu *getMenu (const int id) { return m_MenuList[id]; }
 
 private:
 	static CBotMenu *m_MenuList[BOT_MENU_MAX];

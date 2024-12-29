@@ -9,7 +9,7 @@ using namespace SourceMod;
 
 RCBotSourceModExt g_RCBotSourceMod;
 
-bool RCBotSourceModExt::OnExtensionLoad(IExtension *me, IShareSys *sys,  char *error,
+bool RCBotSourceModExt::OnExtensionLoad(IExtension *me, IShareSys *sys, char *error,
 		const size_t maxlength, bool late) {
 	sharesys = sys;
 	myself = me;
@@ -79,7 +79,7 @@ const char *RCBotSourceModExt::GetExtensionDateString() {
 	return g_RCBotPluginMeta.GetDate();
 }
 
-bool SM_LoadExtension(char *error, size_t maxlength) {
+bool SM_LoadExtension(char *error, const size_t maxlength) {
 	if ((smexts = static_cast<IExtensionManager*>(g_SMAPI->
 		MetaFactory(SOURCEMOD_INTERFACE_EXTENSIONS, nullptr, nullptr))) == nullptr)
 	{

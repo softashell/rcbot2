@@ -251,7 +251,7 @@ CBotEntProp *entprops = &s_entprops;
 		return retval; \
 	}
 
-void CBotEntProp::Init(bool reset)
+void CBotEntProp::Init(const bool reset)
 {
 	if (initialized && !reset)
 		return;
@@ -299,7 +299,7 @@ bool CBotEntProp::IsNetworkedEntity(CBaseEntity *pEntity)
 	return true;
 }
 
-bool CBotEntProp::FindSendProp(SourceMod::sm_sendprop_info_t *info, CBaseEntity *pEntity, char *prop, int entity)
+bool CBotEntProp::FindSendProp(SourceMod::sm_sendprop_info_t *info, CBaseEntity *pEntity, char *prop, const int entity)
 {
 	IServerUnknown *pUnk = reinterpret_cast<IServerUnknown*>(pEntity);
 	IServerNetworkable *pNet = pUnk->GetNetworkable();
@@ -322,7 +322,7 @@ bool CBotEntProp::FindSendProp(SourceMod::sm_sendprop_info_t *info, CBaseEntity 
 /* Given an entity reference or index, fill out a CBaseEntity and/or edict.
    If lookup is successful, returns true and writes back the two parameters.
    If lookup fails, returns false and doesn't touch the params.  */
-bool CBotEntProp::IndexToAThings(int num, CBaseEntity **pEntData, edict_t **pEdictData)
+bool CBotEntProp::IndexToAThings(const int num, CBaseEntity **pEntData, edict_t **pEdictData)
 {
 	CBaseEntity *pEntity = sm_gamehelpers->ReferenceToEntity(num);
 
@@ -367,7 +367,7 @@ bool CBotEntProp::IndexToAThings(int num, CBaseEntity **pEntData, edict_t **pEdi
 /// @param size Number of bytes to write (valid values are 1, 2, or 4). This value is auto-detected, and the size parameter is only used as a fallback in case detection fails.
 /// @param element Element # (starting from 0) if property is an array.
 /// @return Value at the given property offset.
-int CBotEntProp::GetEntProp(int entity, PropType proptype, char *prop, int size, int element)
+int CBotEntProp::GetEntProp(const int entity, const PropType proptype, char *prop, const int size, const int element)
 {
 	edict_t *pEdict;
 	CBaseEntity *pEntity;
@@ -494,7 +494,7 @@ int CBotEntProp::GetEntProp(int entity, PropType proptype, char *prop, int size,
 /// @param size Number of bytes to write (valid values are 1, 2, or 4). This value is auto-detected, and the size parameter is only used as a fallback in case detection fails.
 /// @param element Element # (starting from 0) if property is an array.
 /// @return Pointer at the given property offset.
-int *CBotEntProp::GetEntPropPointer(int entity, PropType proptype, char *prop, int size, int element)
+int *CBotEntProp::GetEntPropPointer(const int entity, const PropType proptype, char *prop, const int size, const int element)
 {
 	edict_t *pEdict;
 	CBaseEntity *pEntity;
@@ -620,7 +620,7 @@ int *CBotEntProp::GetEntPropPointer(int entity, PropType proptype, char *prop, i
 /// @param prop Property name.
 /// @param element Element # (starting from 0) if property is an array.
 /// @return Value at the given property offset.
-bool CBotEntProp::GetEntPropBool(int entity, PropType proptype, char *prop, int element)
+bool CBotEntProp::GetEntPropBool(const int entity, const PropType proptype, char *prop, const int element)
 {
 	return GetEntProp(entity, proptype, prop, 1, element) != 0;
 }
@@ -633,7 +633,7 @@ bool CBotEntProp::GetEntPropBool(int entity, PropType proptype, char *prop, int 
 /// @param prop Property name.
 /// @param element Element # (starting from 0) if property is an array.
 /// @return Pointer at the given property offset.
-bool *CBotEntProp::GetEntPropBoolPointer(int entity, PropType proptype, char *prop, int element)
+bool *CBotEntProp::GetEntPropBoolPointer(const int entity, const PropType proptype, char *prop, const int element)
 {
 	edict_t *pEdict;
 	CBaseEntity *pEntity;
@@ -746,7 +746,7 @@ bool *CBotEntProp::GetEntPropBoolPointer(int entity, PropType proptype, char *pr
 /// @param size Number of bytes to write (valid values are 1, 2, or 4). This value is auto-detected, and the size parameter is only used as a fallback in case detection fails.
 /// @param element Element # (starting from 0) if property is an array.
 /// @return true if the value was changed, false if an error occurred
-bool CBotEntProp::SetEntProp(int entity, PropType proptype, char *prop, int value, int size, int element)
+bool CBotEntProp::SetEntProp(const int entity, const PropType proptype, char *prop, const int value, const int size, const int element)
 {
 	edict_t *pEdict;
 	CBaseEntity *pEntity;
@@ -879,7 +879,7 @@ bool CBotEntProp::SetEntProp(int entity, PropType proptype, char *prop, int valu
 /// @param prop Property name.
 /// @param element Element # (starting from 0) if property is an array.
 /// @return Value at the given property offset.
-float CBotEntProp::GetEntPropFloat(int entity, PropType proptype, char *prop, int element)
+float CBotEntProp::GetEntPropFloat(const int entity, const PropType proptype, char *prop, const int element)
 {
 	edict_t *pEdict;
 	CBaseEntity *pEntity;
@@ -954,7 +954,7 @@ float CBotEntProp::GetEntPropFloat(int entity, PropType proptype, char *prop, in
 /// @param prop Property name.
 /// @param element Element # (starting from 0) if property is an array.
 /// @return Pointer at the given property offset.
-float *CBotEntProp::GetEntPropFloatPointer(int entity, PropType proptype, char *prop, int element)
+float *CBotEntProp::GetEntPropFloatPointer(const int entity, const PropType proptype, char *prop, const int element)
 {
 	edict_t *pEdict;
 	CBaseEntity *pEntity;
@@ -1030,7 +1030,7 @@ float *CBotEntProp::GetEntPropFloatPointer(int entity, PropType proptype, char *
 /// @param value Value to set.
 /// @param element Element # (starting from 0) if property is an array.
 /// @return true if the value was changed, false if an error occurred
-bool CBotEntProp::SetEntPropFloat(int entity, PropType proptype, char *prop, float value, int element)
+bool CBotEntProp::SetEntPropFloat(const int entity, const PropType proptype, char *prop, const float value, const int element)
 {
 	edict_t *pEdict;
 	CBaseEntity *pEntity;
@@ -1120,7 +1120,7 @@ bool CBotEntProp::SetEntPropFloat(int entity, PropType proptype, char *prop, flo
 /// @param prop Property name.
 /// @param element Element # (starting from 0) if property is an array.
 /// @return Entity index at the given property. If there is no entity, or the entity is not valid, then -1 is returned.
-int CBotEntProp::GetEntPropEnt(int entity, PropType proptype, char *prop, int element)
+int CBotEntProp::GetEntPropEnt(const int entity, const PropType proptype, char *prop, const int element)
 {
 	edict_t *pEdict;
 	CBaseEntity *pEntity;
@@ -1314,7 +1314,7 @@ int CBotEntProp::GetEntPropEnt(int entity, PropType proptype, char *prop, int el
 /// @param other Entity index to set, or -1 to unset.
 /// @param element Element # (starting from 0) if property is an array.
 /// @return true if the value was changed, false if an error occurred
-bool CBotEntProp::SetEntPropEnt(int entity, PropType proptype, char *prop, int other, int element)
+bool CBotEntProp::SetEntPropEnt(const int entity, const PropType proptype, char *prop, const int other, const int element)
 {
 	edict_t *pEdict;
 	CBaseEntity *pEntity;
@@ -1481,7 +1481,7 @@ bool CBotEntProp::SetEntPropEnt(int entity, PropType proptype, char *prop, int o
 /// @param prop Property name.
 /// @param element Element # (starting from 0) if property is an array.
 /// @return Value at the given property offset.
-Vector CBotEntProp::GetEntPropVector(int entity, PropType proptype, char *prop, int element)
+Vector CBotEntProp::GetEntPropVector(const int entity, const PropType proptype, char *prop, const int element)
 {
 	edict_t *pEdict;
 	CBaseEntity *pEntity;
@@ -1573,7 +1573,7 @@ Vector CBotEntProp::GetEntPropVector(int entity, PropType proptype, char *prop, 
 /// @param prop Property name.
 /// @param element Element # (starting from 0) if property is an array.
 /// @return Vector pointer from the property
-Vector *CBotEntProp::GetEntPropVectorPointer(int entity, PropType proptype, char *prop, int element)
+Vector *CBotEntProp::GetEntPropVectorPointer(const int entity, const PropType proptype, char *prop, const int element)
 {
 	edict_t *pEdict;
 	CBaseEntity *pEntity;
@@ -1666,7 +1666,7 @@ Vector *CBotEntProp::GetEntPropVectorPointer(int entity, PropType proptype, char
 /// @param value Vector to set.
 /// @param element Element # (starting from 0) if property is an array.
 /// @return true if the value was changed, false if an error occurred
-bool CBotEntProp::SetEntPropVector(int entity, PropType proptype, char *prop, const Vector& value, int element)
+bool CBotEntProp::SetEntPropVector(const int entity, const PropType proptype, char *prop, const Vector& value, const int element)
 {
 	edict_t *pEdict;
 	CBaseEntity *pEntity;
@@ -1768,7 +1768,7 @@ bool CBotEntProp::SetEntPropVector(int entity, PropType proptype, char *prop, co
 /// @param len 
 /// @param element Element # (starting from 0) if property is an array.
 /// @return Value at the given property offset.
-char *CBotEntProp::GetEntPropString(int entity, PropType proptype, char *prop, int maxlen, int *len, int element)
+char *CBotEntProp::GetEntPropString(const int entity, const PropType proptype, char *prop, const int maxlen, int *len, const int element)
 {
 	edict_t *pEdict;
 	CBaseEntity *pEntity;
@@ -2049,7 +2049,7 @@ bool CBotEntProp::SetEntPropString(int entity, PropType proptype, char *prop, ch
 /// @param offset Offset to use.
 /// @param size Number of bytes to read (valid values are 1, 2, or 4).
 /// @return Value at the given memory location.
-int CBotEntProp::GetEntData(int entity, int offset, int size)
+int CBotEntProp::GetEntData(const int entity, const int offset, const int size)
 {
 	CBaseEntity *pEntity = GetEntity(entity);
 
@@ -2086,7 +2086,7 @@ int CBotEntProp::GetEntData(int entity, int offset, int size)
 /// @param size Number of bytes to write (valid values are 1, 2, or 4).
 /// @param changeState If true, change will be sent over the network.
 /// @return true on success, false on failure
-bool CBotEntProp::SetEntData(int entity, int offset, int value, int size, bool changeState)
+bool CBotEntProp::SetEntData(const int entity, const int offset, const int value, const int size, const bool changeState)
 {
 	CBaseEntity *pEntity;
 	edict_t *pEdict;
@@ -2137,7 +2137,7 @@ bool CBotEntProp::SetEntData(int entity, int offset, int value, int size, bool c
 /// @param entity Edict index.
 /// @param offset Offset to use.
 /// @return Value at the given memory location.
-float CBotEntProp::GetEntDataFloat(int entity, int offset)
+float CBotEntProp::GetEntDataFloat(const int entity, const int offset)
 {
 	CBaseEntity *pEntity = GetEntity(entity);
 
@@ -2162,7 +2162,7 @@ float CBotEntProp::GetEntDataFloat(int entity, int offset)
 /// @param value Value to set.
 /// @param changeState If true, change will be sent over the network.
 /// @return true on success, false on failure
-bool CBotEntProp::SetEntDataFloat(int entity, int offset, float value, bool changeState)
+bool CBotEntProp::SetEntDataFloat(const int entity, const int offset, const float value, const bool changeState)
 {
 	CBaseEntity *pEntity;
 	edict_t *pEdict;
@@ -2196,7 +2196,7 @@ bool CBotEntProp::SetEntDataFloat(int entity, int offset, float value, bool chan
 /// @param entity Edict index.
 /// @param offset Offset to use.
 /// @return Entity index at the given location. If there is no entity, or the stored entity is invalid, then -1 is returned.
-int CBotEntProp::GetEntDataEnt(int entity, int offset)
+int CBotEntProp::GetEntDataEnt(const int entity, const int offset)
 {
 	CBaseEntity *pEntity = GetEntity(entity);
 
@@ -2230,7 +2230,7 @@ int CBotEntProp::GetEntDataEnt(int entity, int offset)
 /// @param value Entity index to set, or -1 to clear.
 /// @param changeState If true, change will be sent over the network.
 /// @return true on success, false on failure
-bool CBotEntProp::SetEntDataEnt(int entity, int offset, int value, bool changeState)
+bool CBotEntProp::SetEntDataEnt(const int entity, const int offset, const int value, const bool changeState)
 {
 	CBaseEntity *pEntity;
 	edict_t *pEdict;
@@ -2279,7 +2279,7 @@ bool CBotEntProp::SetEntDataEnt(int entity, int offset, int value, bool changeSt
 /// @param entity Edict index.
 /// @param offset Offset to use.
 /// @return Vector value at the given memory location.
-Vector CBotEntProp::GetEntDataVector(int entity, int offset)
+Vector CBotEntProp::GetEntDataVector(const int entity, const int offset)
 {
 	CBaseEntity *pEntity = GetEntity(entity);
 
@@ -2306,7 +2306,7 @@ Vector CBotEntProp::GetEntDataVector(int entity, int offset)
 /// @param value Vector to set.
 /// @param changeState If true, change will be sent over the network.
 /// @return true on success, false on failure
-bool CBotEntProp::SetEntDataVector(int entity, int offset, const Vector& value, bool changeState)
+bool CBotEntProp::SetEntDataVector(const int entity, const int offset, const Vector& value, const bool changeState)
 {
 	CBaseEntity *pEntity;
 	edict_t *pEdict;
@@ -2341,7 +2341,7 @@ bool CBotEntProp::SetEntDataVector(int entity, int offset, const Vector& value, 
 /// @param maxlen Maximum length of output string buffer.
 /// @param len Number of non-null bytes written.
 /// @return String pointer at the given memory location.
-char *CBotEntProp::GetEntDataString(int entity, int offset, int maxlen, int *len)
+char *CBotEntProp::GetEntDataString(const int entity, const int offset, const int maxlen, int *len)
 {
 	CBaseEntity *pEntity = GetEntity(entity);
 
@@ -2377,7 +2377,7 @@ char *CBotEntProp::GetEntDataString(int entity, int offset, int maxlen, int *len
 /// @param maxlen Maximum length of output string buffer.
 /// @param changeState If true, change will be sent over the network.
 /// @return true on success, false on failure
-bool CBotEntProp::SetEntDataString(int entity, int offset, char *value, int maxlen, bool changeState)
+bool CBotEntProp::SetEntDataString(const int entity, const int offset, char *value, const int maxlen, const bool changeState)
 {
 	CBaseEntity *pEntity;
 	edict_t *pEdict;
@@ -2426,7 +2426,7 @@ CBaseEntity *CBotEntProp::GetGameRulesProxyEntity()
 /// @param size Number of bytes to read (valid values are 1, 2, or 4). This value is auto-detected, and the size parameter is only used as a fallback in case detection fails.
 /// @param element Element # (starting from 0) if property is an array.
 /// @return Value at the given property offset.
-int CBotEntProp::GameRules_GetProp(char *prop, int size, int element) const
+int CBotEntProp::GameRules_GetProp(char *prop, const int size, const int element) const
 {
 	int offset;
 	int bit_count;
@@ -2486,7 +2486,7 @@ int CBotEntProp::GameRules_GetProp(char *prop, int size, int element) const
 /// @param prop Property name.
 /// @param element Element # (starting from 0) if property is an array.
 /// @return Value at the given property offset.
-float CBotEntProp::GameRules_GetPropFloat(char *prop, int element) const
+float CBotEntProp::GameRules_GetPropFloat(char *prop, const int element) const
 {
 	int offset;
 	int bit_count; //Unused? [APG]RoboCop[CL]
@@ -2508,7 +2508,7 @@ float CBotEntProp::GameRules_GetPropFloat(char *prop, int element) const
 /// @param prop Property name.
 /// @param element Element # (starting from 0) if property is an array.
 /// @return Entity index at the given property. If there is no entity, or the entity is not valid, then -1 is returned.
-int CBotEntProp::GameRules_GetPropEnt(char *prop, int element) const
+int CBotEntProp::GameRules_GetPropEnt(char *prop, const int element) const
 {
 	int offset;
 	int bit_count; //Unused? [APG]RoboCop[CL]
@@ -2538,7 +2538,7 @@ int CBotEntProp::GameRules_GetPropEnt(char *prop, int element) const
 /// @param prop Property name.
 /// @param element Element # (starting from 0) if property is an array.
 /// @return Value at the given property offset.
-Vector CBotEntProp::GameRules_GetPropVector(char *prop, int element) const
+Vector CBotEntProp::GameRules_GetPropVector(char *prop, const int element) const
 {
 	int offset;
 	int bit_count; //Unused? [APG]RoboCop[CL]
@@ -2562,7 +2562,7 @@ Vector CBotEntProp::GameRules_GetPropVector(char *prop, int element) const
 /// @param maxlen Maximum length of output string buffer.
 /// @param element Element # (starting from 0) if property is an array.
 /// @return Value at the given property offset.
-char *CBotEntProp::GameRules_GetPropString(char *prop, int *len, int maxlen, int element) const
+char *CBotEntProp::GameRules_GetPropString(char *prop, int *len, const int maxlen, const int element) const
 {
 	int offset;
 	int bit_count; //Unused? [APG]RoboCop[CL]

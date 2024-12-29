@@ -827,7 +827,7 @@ void CWeapons::loadWeapons(const char* szWeaponListName, const WeaponsData_t* pD
 
 		CBotGlobals::buildFileName(szFilename, "weapons", BOT_CONFIG_FOLDER, "ini", false);
 
-		if (kv)
+		if (kv) //TODO: Memory leak fix [APG]RoboCop[CL]
 		{
 			if (kv->LoadFromFile(filesystem, szFilename, nullptr))
 			{

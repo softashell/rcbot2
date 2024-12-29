@@ -37,10 +37,10 @@
 // List of all timers
 CProfileTimer CProfileTimers :: m_Timers[PROFILING_TIMERS] = 
 {
-CProfileTimer("CBots::botThink()"), // BOTS_THINK_TIMER
-CProfileTimer("CBot::think()"), // BOT_THINK_TIMER
-CProfileTimer("Nav::findRoute()"), // BOT_ROUTE_TIMER
-CProfileTimer("updateVisibles()") // BOT_VISION_TIMER
+	CProfileTimer("CBots::botThink()"), // BOTS_THINK_TIMER
+	CProfileTimer("CBot::think()"), // BOT_THINK_TIMER
+	CProfileTimer("Nav::findRoute()"), // BOT_ROUTE_TIMER
+	CProfileTimer("updateVisibles()") // BOT_VISION_TIMER
 };
 
 // initialise update time
@@ -129,8 +129,6 @@ void CProfileTimer :: Stop()
 #endif
 }
 
-
-
 // print the values, first work out average (use max/min/previous values), 
 // and work out percentage of power
 void CProfileTimer :: print (const double* high)
@@ -158,7 +156,7 @@ void CProfileTimer :: print (const double* high)
 }
 
 // get the required timer
-CProfileTimer *CProfileTimers::getTimer (int id)
+CProfileTimer *CProfileTimers::getTimer (const int id)
 {
 	if ( id >= 0 && id < PROFILING_TIMERS )
 		return &m_Timers[id];

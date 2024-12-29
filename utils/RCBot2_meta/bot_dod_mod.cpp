@@ -104,17 +104,18 @@ eDODVoiceCommand_t g_DODVoiceCommands[DOD_VC_INVALID] =
 //
 
 // Returns true if team can go to waypoint
-bool CDODMod :: checkWaypointForTeam(CWaypoint *pWpt, int iTeam)
+bool CDODMod :: checkWaypointForTeam(CWaypoint *pWpt, const int iTeam)
 {
 	return (!pWpt->hasFlag(CWaypointTypes::W_FL_NOALLIES)||iTeam!=TEAM_ALLIES)&&(!pWpt->hasFlag(CWaypointTypes::W_FL_NOAXIS)||iTeam!=TEAM_AXIS);
 }
 
-bool CDODMod :: shouldAttack ( int iTeam )
+bool CDODMod :: shouldAttack (const int iTeam)
 // uses the perceptron to return probability of attack
 {
-	static short int iFlags_0;
-	static short int iFlags_1;
-	static short int iNumFlags;
+	static short iFlags_0;
+	static short iFlags_1;
+	static short iNumFlags;
+
 	//TODO: Improve on the integer and floating point precision conversion [APG]RoboCop[CL]
 	iNumFlags = m_Flags.getNumFlags();
 
@@ -160,9 +161,9 @@ void CDODMod::initMod()
 	nn.batch_train(&tset, 1000);
 
 	// create look up table for probabilities
-	for (short int i = 0; i <= MAX_DOD_FLAGS; i++)
+	for (short i = 0; i <= MAX_DOD_FLAGS; i++)
 	{
-		for (short int j = 0; j <= MAX_DOD_FLAGS; j++)
+		for (short j = 0; j <= MAX_DOD_FLAGS; j++)
 		{
 			tset.init();
 			tset.addSet();
@@ -229,7 +230,7 @@ int CDODMod::getHighestScore ()
 	return highest;
 }
 
-bool CDODFlags::isTeamMateDefusing ( edict_t *pIgnore, int iTeam, int id ) const
+bool CDODFlags::isTeamMateDefusing (const edict_t *pIgnore, const int iTeam, const int id) const
 {
 	if ( m_pBombs[id][0] != nullptr)
 		return isTeamMateDefusing(pIgnore,iTeam,CBotGlobals::entityOrigin(m_pBombs[id][0]));
@@ -237,7 +238,7 @@ bool CDODFlags::isTeamMateDefusing ( edict_t *pIgnore, int iTeam, int id ) const
 	return false;
 }
 
-bool CDODFlags::isTeamMateDefusing ( edict_t *pIgnore, int iTeam, const Vector& vOrigin )
+bool CDODFlags::isTeamMateDefusing (const edict_t *pIgnore, const int iTeam, const Vector& vOrigin)
 {
 	for ( int i = 1; i <= gpGlobals->maxClients; i ++ )
 	{
@@ -267,7 +268,7 @@ bool CDODFlags::isTeamMateDefusing ( edict_t *pIgnore, int iTeam, const Vector& 
 	return false;
 }
 
-bool CDODFlags::isTeamMatePlanting ( edict_t *pIgnore, int iTeam, const Vector& vOrigin )
+bool CDODFlags::isTeamMatePlanting (const edict_t *pIgnore, const int iTeam, const Vector& vOrigin)
 {
 	for ( int i = 1; i <= gpGlobals->maxClients; i ++ )
 	{
@@ -294,7 +295,7 @@ bool CDODFlags::isTeamMatePlanting ( edict_t *pIgnore, int iTeam, const Vector& 
 	return false;
 }
 
-bool CDODFlags::isTeamMatePlanting ( edict_t *pIgnore, int iTeam, int id ) const
+bool CDODFlags::isTeamMatePlanting (const edict_t *pIgnore, const int iTeam, const int id) const
 {
 	if ( m_pBombs[id][0] )
 		return isTeamMatePlanting(pIgnore,iTeam,CBotGlobals::entityOrigin(m_pBombs[id][0]));
@@ -302,7 +303,7 @@ bool CDODFlags::isTeamMatePlanting ( edict_t *pIgnore, int iTeam, int id ) const
 	return false;
 }
 
-int CDODFlags::findNearestObjective (const Vector& vOrigin ) const
+int CDODFlags::findNearestObjective (const Vector& vOrigin) const
 {
 	float fNearest = 1024.0f;
 	float fDistance;
@@ -321,11 +322,10 @@ int CDODFlags::findNearestObjective (const Vector& vOrigin ) const
 	}
 
 	return iNearest;
-
 }
 
 // return the flag with the least danger (randomly)
-bool CDODFlags::getRandomEnemyControlledFlag ( CBot *pBot, Vector *position, int iTeam, int *id ) const
+bool CDODFlags::getRandomEnemyControlledFlag (const CBot *pBot, Vector *position, const int iTeam, int *id) const
 {
 	if ( id )
 		*id = -1;
@@ -391,7 +391,7 @@ bool CDODFlags::getRandomEnemyControlledFlag ( CBot *pBot, Vector *position, int
 	return false;
 }
 
-bool CDODFlags::getRandomBombToDefuse  ( Vector *position, int iTeam, edict_t **pBombTarget, int *id ) const
+bool CDODFlags::getRandomBombToDefuse  ( Vector *position, const int iTeam, edict_t **pBombTarget, int *id ) const
 {
 	std::vector<int> iPossible; // int is control point entry
 
@@ -429,7 +429,7 @@ bool CDODFlags::getRandomBombToDefuse  ( Vector *position, int iTeam, edict_t **
 }
 
 //return random bomb with highest danger
-bool CDODFlags:: getRandomBombToDefend ( CBot *pBot, Vector *position, int iTeam, edict_t **pBombTarget, int *id ) const
+bool CDODFlags:: getRandomBombToDefend ( CBot *pBot, Vector *position, const int iTeam, edict_t **pBombTarget, int *id ) const
 {
 	std::vector<int> iPossible; // int is control point entry
 
@@ -467,7 +467,7 @@ bool CDODFlags:: getRandomBombToDefend ( CBot *pBot, Vector *position, int iTeam
 }
 
 // return rnaomd flag with lowest danger
-bool CDODFlags:: getRandomBombToPlant ( CBot *pBot, Vector *position, int iTeam, edict_t **pBombTarget, int *id ) const
+bool CDODFlags:: getRandomBombToPlant (const CBot *pBot, Vector *position, const int iTeam, edict_t **pBombTarget, int *id) const
 {
 	if ( id )
 		*id = -1;
@@ -534,7 +534,7 @@ bool CDODFlags:: getRandomBombToPlant ( CBot *pBot, Vector *position, int iTeam,
 }
 
 
-bool CDODFlags::getRandomTeamControlledFlag ( CBot *pBot, Vector *position, int iTeam, int *id ) const
+bool CDODFlags::getRandomTeamControlledFlag (const CBot *pBot, Vector *position, const int iTeam, int *id) const
 {
 	if ( id )
 		*id = -1;
@@ -590,7 +590,6 @@ bool CDODFlags::getRandomTeamControlledFlag ( CBot *pBot, Vector *position, int 
 
 void CDODMod::freeMemory()
 {
-
 }
 
 // returns map type
@@ -618,8 +617,8 @@ int CDODFlags::setup(edict_t *pResourceEntity)
 	}
 
 	//	string_t model;		
-//	const char *modelname;
-//	bool bVisible;
+	//	const char *modelname;
+	//	bool bVisible;
 				
 
 	// find the edicts of the flags using the origin and classname
@@ -751,7 +750,7 @@ int CDODMod ::getScore(edict_t *pPlayer)
 	return 0;
 }
 
-edict_t *CDODMod :: getBreakable ( CWaypoint *pWpt )
+edict_t *CDODMod :: getBreakable (const CWaypoint *pWpt)
 {
 	const size_t size = m_BreakableWaypoints.size();
 
@@ -764,7 +763,7 @@ edict_t *CDODMod :: getBreakable ( CWaypoint *pWpt )
 	return nullptr;
 }
 
-edict_t *CDODMod :: getBombTarget ( CWaypoint *pWpt )
+edict_t *CDODMod :: getBombTarget (const CWaypoint *pWpt)
 {
 	const size_t size = m_BombWaypoints.size();
 
@@ -777,39 +776,39 @@ edict_t *CDODMod :: getBombTarget ( CWaypoint *pWpt )
 	return nullptr;
 }
 
-void CDODMod ::roundStart()
+void CDODMod::roundStart()
 {
 	if ( !m_pResourceEntity )
-		m_pResourceEntity = CClassInterface::FindEntityByNetClass(gpGlobals->maxClients+1, "CDODObjectiveResource");
+		m_pResourceEntity = CClassInterface::FindEntityByNetClass(gpGlobals->maxClients + 1, "CDODObjectiveResource");
 	if ( !m_pPlayerResourceEntity )
-		m_pPlayerResourceEntity = CClassInterface::FindEntityByNetClass(gpGlobals->maxClients+1, "CDODPlayerResource");
+		m_pPlayerResourceEntity = CClassInterface::FindEntityByNetClass(gpGlobals->maxClients + 1, "CDODPlayerResource");
 	if ( !m_pGameRules )
-		m_pGameRules = CClassInterface::FindEntityByNetClass(gpGlobals->maxClients+1, "CDODGameRulesProxy");
+		m_pGameRules = CClassInterface::FindEntityByNetClass(gpGlobals->maxClients + 1, "CDODGameRulesProxy");
 
 	// find main map type
 	m_iMapType = m_Flags.setup(m_pResourceEntity);
 
 	//if ( m_iMapType == DOD_MAPTYPE_UNKNOWN )
 	//{
-		if ( CClassInterface::FindEntityByNetClass(gpGlobals->maxClients+1,"CDODBombDispenserMapIcon") != nullptr)
+		if ( CClassInterface::FindEntityByNetClass(gpGlobals->maxClients + 1,"CDODBombDispenserMapIcon") != nullptr)
 		{
 			// add bitmask
 			m_iMapType |= DOD_MAPTYPE_BOMB;
-/*
+			/*
 			if ( m_iMapType == DOD_MAPTYPE_FLAG) 
 				CRCBotPlugin::HudTextMessage(CClients::get(0)->getPlayer(),"RCBot detected Flag map","RCBot2","RCbot2 detected a flag map");
 			else if ( m_iMapType == DOD_MAPTYPE_BOMB )
 				CRCBotPlugin::HudTextMessage(CClients::get(0)->getPlayer(),"RCBot detected bomb map","RCBot2","RCbot2 detected a bomb map");
 			else if ( m_iMapType == 3 )
 				CRCBotPlugin::HudTextMessage(CClients::get(0)->getPlayer(),"RCBot detected flag map with bombs ","RCBot2","RCbot2 detected a flag capture map with bombs");
+			*/
 
-*/
 			const CWaypoint* pWaypointAllies = CWaypoints::randomWaypointGoal(CWaypointTypes::W_FL_BOMBS_HERE,TEAM_ALLIES);
 			const CWaypoint* pWaypointAxis = CWaypoints::randomWaypointGoal(CWaypointTypes::W_FL_BOMBS_HERE,TEAM_AXIS);
 
 			if ( pWaypointAllies && pWaypointAxis )
 			{
-				m_bCommunalBombPoint = pWaypointAllies->getArea()>0 || pWaypointAxis->getArea()>0;
+				m_bCommunalBombPoint = pWaypointAllies->getArea() > 0 || pWaypointAxis->getArea() > 0;
 
 				m_iBombAreaAllies = pWaypointAllies->getArea();
 				m_iBombAreaAxis = pWaypointAxis->getArea();
@@ -849,9 +848,9 @@ Vector CDODMod :: getGround ( CWaypoint *pWaypoint )
 	return pWaypoint->getOrigin();
 }
 
-void CDODMod :: addWaypointFlags (edict_t *pPlayer, edict_t *pEdict, int *iFlags, int *iArea, float *fMaxDistance )
+void CDODMod :: addWaypointFlags (edict_t *pPlayer, edict_t *pEdict, int *iFlags, int *iArea, float *fMaxDistance)
 {
-	if ( isBombMap()  )
+	if (isBombMap())
 	{
 		const int id = m_Flags.getBombID(pEdict);
 
@@ -862,7 +861,7 @@ void CDODMod :: addWaypointFlags (edict_t *pPlayer, edict_t *pEdict, int *iFlags
 		}
 	}
 	
-	if ( isFlagMap() )
+	if (isFlagMap())
 	{
 		const int id = m_Flags.getFlagID(pEdict);
 
@@ -872,7 +871,6 @@ void CDODMod :: addWaypointFlags (edict_t *pPlayer, edict_t *pEdict, int *iFlags
 			*iArea = id;
 		}
 	}
-
 }
 
 void CDODMod :: modFrame()
@@ -887,7 +885,7 @@ void CDODMod :: modFrame()
 }
 
 
-int CDODMod ::numClassOnTeam( int iTeam, int iClass )
+int CDODMod ::numClassOnTeam(const int iTeam, const int iClass)
 {
 	int num = 0;
 
@@ -908,7 +906,7 @@ int CDODMod ::numClassOnTeam( int iTeam, int iClass )
 	return num;
 }
 
-void CDODMod ::clientCommand( edict_t *pEntity, int argc, const char *pcmd, const char *arg1, const char *arg2 )
+void CDODMod ::clientCommand( edict_t *pEntity, const int argc, const char *pcmd, const char *arg1, const char *arg2 )
 {
 	if ( argc == 1 )
 	{
@@ -932,7 +930,7 @@ void CDODMod ::clientCommand( edict_t *pEntity, int argc, const char *pcmd, cons
 	}
 }
 
-bool CDODMod :: isBreakableRegistered ( edict_t *pBreakable, int iTeam )
+bool CDODMod :: isBreakableRegistered ( edict_t *pBreakable, const int iTeam )
 {
 	static CWaypoint *pWpt;
 
@@ -954,7 +952,7 @@ bool CDODMod :: isBreakableRegistered ( edict_t *pBreakable, int iTeam )
 	return false;
 }
 
-void CDODMod :: getTeamOnlyWaypointFlags ( int iTeam, int *iOn, int *iOff )
+void CDODMod :: getTeamOnlyWaypointFlags (const int iTeam, int *iOn, int *iOff)
 {
 	if ( iTeam == TEAM_ALLIES )
 	{

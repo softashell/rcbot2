@@ -48,7 +48,6 @@ void CHL1DMSrcBot :: setup ()
 	CBot::setup();
 }
 
-
 bool CHL1DMSrcBot :: startGame ()
 {
 	return true;
@@ -114,5 +113,4 @@ bool CHL1DMSrcBot :: isEnemy ( edict_t *pEdict,bool bCheckWeapons )
 void CHL1DMSrcBot :: modThink ()
 {
 	// find weapons and neat stuff
-
 }

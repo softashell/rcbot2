@@ -74,8 +74,8 @@ CBotCommandInline DebugBotCommand("bot", CMD_ACCESS_DEBUG, [](CClient *pClient, 
 		}
 		return COMMAND_ERROR;
 	}
-	
-	edict_t *pEnt = CBotGlobals::findPlayerByTruncName(args[0]);
+
+	const edict_t *pEnt = CBotGlobals::findPlayerByTruncName(args[0]);
 
 	if ( !pEnt )
 	{
@@ -170,7 +170,7 @@ CBotCommandInline BotGoto("bot_goto", CMD_ACCESS_DEBUG, [](CClient *pClient, con
 {
 	if ( pClient && pClient->getDebugBot()!= nullptr)
 	{
-		edict_t *pEdict = pClient->getDebugBot();
+		const edict_t *pEdict = pClient->getDebugBot();
 		const CBot *pBot = CBots::getBotPointer(pEdict);
 
 		if ( pBot->inUse() )
@@ -199,7 +199,7 @@ CBotCommandInline BotFlush("bot_flush", CMD_ACCESS_DEBUG, [](CClient *pClient, c
 {
 	if ( pClient && pClient->getDebugBot()!= nullptr)
 	{
-		edict_t *pEdict = pClient->getDebugBot();
+		const edict_t *pEdict = pClient->getDebugBot();
 		const CBot *pBot = CBots::getBotPointer(pEdict);
 
 		if ( pBot->inUse() )
@@ -228,7 +228,7 @@ CBotCommandInline BotTaskCommand("givetask", CMD_ACCESS_DEBUG, [](CClient *pClie
 
 	if ( pClient && pClient->getDebugBot()!= nullptr)
 	{
-		edict_t *pEdict = pClient->getDebugBot();
+		const edict_t *pEdict = pClient->getDebugBot();
 		CBot *pBot = CBots::getBotPointer(pEdict);
 
 		if ( pBot->inUse() )
@@ -374,7 +374,7 @@ CBotCommandInline DebugEdictsCommand("edicts", CMD_ACCESS_DEBUG, [](CClient *pCl
 	return COMMAND_ACCESSED;
 }, "usage \"edicts 1 or 0, 1 on, 0 off\" : shows allocated/freed edicts");
 
-CBotCommandInline PrintProps("printprops", CMD_ACCESS_DEBUG, [](CClient *pClient, const BotCommandArgs& args)
+CBotCommandInline PrintProps("printprops", CMD_ACCESS_DEBUG, [](const CClient *pClient, const BotCommandArgs& args)
 {
 	if ( pClient )
 	{
@@ -400,7 +400,7 @@ CBotCommandInline PrintProps("printprops", CMD_ACCESS_DEBUG, [](CClient *pClient
 	return COMMAND_ERROR;
 });
 
-CBotCommandInline SetProp("setprop", CMD_ACCESS_DEBUG, [](CClient *pClient, const BotCommandArgs& args)
+CBotCommandInline SetProp("setprop", CMD_ACCESS_DEBUG, [](const CClient *pClient, const BotCommandArgs& args)
 {
 	
 	
@@ -477,7 +477,7 @@ CBotCommandInline SetProp("setprop", CMD_ACCESS_DEBUG, [](CClient *pClient, cons
 	return COMMAND_ERROR;
 });
 
-CBotCommandInline GetProp("getprop", CMD_ACCESS_DEBUG, [](CClient *pClient, const BotCommandArgs& args)
+CBotCommandInline GetProp("getprop", CMD_ACCESS_DEBUG, [](const CClient *pClient, const BotCommandArgs& args)
 {
 	if ( pClient )
 	{
@@ -549,7 +549,7 @@ CBotCommandInline GetProp("getprop", CMD_ACCESS_DEBUG, [](CClient *pClient, cons
 	return COMMAND_ERROR;
 });
 
-CBotCommandInline FindClass("findclass", CMD_ACCESS_DEBUG, [](CClient *pClient, const BotCommandArgs& args)
+CBotCommandInline FindClass("findclass", CMD_ACCESS_DEBUG, [](const CClient *pClient, const BotCommandArgs& args)
 {
 	if ( pClient )
 	{
@@ -566,7 +566,7 @@ CBotCommandInline FindClass("findclass", CMD_ACCESS_DEBUG, [](CClient *pClient, 
 	return COMMAND_ERROR;
 });
 
-CBotCommandInline FindClassname("findclassname", CMD_ACCESS_DEBUG, [](CClient *pClient, const BotCommandArgs& args)
+CBotCommandInline FindClassname("findclassname", CMD_ACCESS_DEBUG, [](const CClient *pClient, const BotCommandArgs& args)
 {
 	if ( pClient )
 	{
@@ -626,7 +626,7 @@ typedef union
 static u_MEMSEARCH stored_offsets[MAX_MEM_SEARCH];
 static unsigned m_size;
 
-CBotCommandInline DebugMemoryScanCommand("memoryscan", CMD_ACCESS_DEBUG, [](CClient *pClient, const BotCommandArgs& args)
+CBotCommandInline DebugMemoryScanCommand("memoryscan", CMD_ACCESS_DEBUG, [](const CClient *pClient, const BotCommandArgs& args)
 {
 	//args[0] = classname
 	// args[1] = value
@@ -730,7 +730,7 @@ CBotCommandInline DebugMemoryScanCommand("memoryscan", CMD_ACCESS_DEBUG, [](CCli
 	return COMMAND_ACCESSED;
 }, "usage \"memoryscan <classname> <value> <type = 'bool/int/byte/float'> [store last = 1]\"");
 
-CBotCommandInline DebugMemoryCheckCommand("memorycheck", CMD_ACCESS_DEBUG, [](CClient *pClient, const BotCommandArgs&
+CBotCommandInline DebugMemoryCheckCommand("memorycheck", CMD_ACCESS_DEBUG, [](const CClient *pClient, const BotCommandArgs&
                                                                               args)
 {
 	// args[0] = classname
@@ -798,7 +798,7 @@ CBotCommandInline DebugMemoryCheckCommand("memorycheck", CMD_ACCESS_DEBUG, [](CC
 	return COMMAND_ACCESSED;
 }, "usage \"memorycheck <classname> <offset> <type>\"");
 
-CBotCommandInline DebugMstrOffsetSearch("mstr_offset_search", CMD_ACCESS_DEBUG, [](CClient *pClient,
+CBotCommandInline DebugMstrOffsetSearch("mstr_offset_search", CMD_ACCESS_DEBUG, [](const CClient *pClient,
                                         const BotCommandArgs& args)
 {
 	if (strcmp("cp_dustbowl", STRING(gpGlobals->mapname)) != 0)

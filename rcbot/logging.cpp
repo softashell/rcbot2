@@ -101,7 +101,7 @@ MessageColorizationMode GetMessageColorizationMode() {
 	return Colorize_None;
 }
 
-void CBotLogger::Log(LogLevel level, const char* fmt, ...) {
+void CBotLogger::Log(const LogLevel level, const char* fmt, ...) {
 	if (level > static_cast<LogLevel>(rcbot_loglevel.GetInt())) {
 		return;
 	}

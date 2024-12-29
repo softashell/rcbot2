@@ -67,7 +67,7 @@ void CSynergyMod::mapInit()
 bool CSynergyMod::IsEntityLocked(edict_t *pEntity)
 {
 	CBaseEntity *pBaseEntity = pEntity->GetUnknown()->GetBaseEntity();
-	datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pBaseEntity);
+	const datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pBaseEntity);
 	const int offset = UTIL_FindInDataMap(pDataMap, "m_bLocked");
 	if(offset == 0)
 	{
@@ -91,7 +91,7 @@ bool CSynergyMod::IsEntityLocked(edict_t *pEntity)
 bool CSynergyMod::IsCombineMinePlayerPlaced(edict_t *pMine)
 {
 	CBaseEntity *pBaseEntity = pMine->GetUnknown()->GetBaseEntity();
-	datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pBaseEntity);
+	const datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pBaseEntity);
 	const int offset = UTIL_FindInDataMap(pDataMap, "m_bPlacedByPlayer");
 	const int value = *reinterpret_cast<int*>(reinterpret_cast<char*>(pBaseEntity) + offset);
 	if(value == 1)
@@ -109,7 +109,7 @@ bool CSynergyMod::IsCombineMinePlayerPlaced(edict_t *pMine)
 bool CSynergyMod::IsCombineMineDisarmed(edict_t *pMine)
 {
 	CBaseEntity *pBaseEntity = pMine->GetUnknown()->GetBaseEntity();
-	datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pBaseEntity);
+	const datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pBaseEntity);
 	const int offset = UTIL_FindInDataMap(pDataMap, "m_bDisarmed");
 	const int value = *reinterpret_cast<int*>(reinterpret_cast<char*>(pBaseEntity) + offset);
 	if(value == 1)
@@ -127,7 +127,7 @@ bool CSynergyMod::IsCombineMineDisarmed(edict_t *pMine)
 bool CSynergyMod::IsCombineMineArmed(edict_t *pMine)
 {
 	CBaseEntity *pBaseEntity = pMine->GetUnknown()->GetBaseEntity();
-	datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pBaseEntity);
+	const datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pBaseEntity);
 	const int offset = UTIL_FindInDataMap(pDataMap, "m_iMineState");
 	const int value = *reinterpret_cast<int*>(reinterpret_cast<char*>(pBaseEntity) + offset);
 	if(value > 0)
@@ -145,7 +145,7 @@ bool CSynergyMod::IsCombineMineArmed(edict_t *pMine)
 bool CSynergyMod::IsCombineMineHeldByPhysgun(edict_t *pMine)
 {
 	CBaseEntity *pBaseEntity = pMine->GetUnknown()->GetBaseEntity();
-	datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pBaseEntity);
+	const datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pBaseEntity);
 	const int offset = UTIL_FindInDataMap(pDataMap, "m_bHeldByPhysgun");
 	const int value = *reinterpret_cast<int*>(reinterpret_cast<char*>(pBaseEntity) + offset);
 	if(value > 0)

@@ -88,7 +88,7 @@ class CWaypoint;
 class CWaypointType
 {
 public:
-	CWaypointType ( int iBit, const char *szName, const char *szDescription, WptColor vColour, int iModBits = BITS_MOD_ALL, int iImportance = 0 );
+	CWaypointType ( int iBit, const char *szName, const char *szDescription, const WptColor& vColour, int iModBits = BITS_MOD_ALL, int iImportance = 0 );
 
 	const char* getName() const { return m_szName; }
 	const char* getDescription() const { return m_szDescription; }
@@ -508,7 +508,7 @@ public:
 
 	static CWaypointVisibilityTable* getVisiblity() { return m_pVisibilityTable; }
 	static void setupVisibility();
-	static CWaypoint* getPinchPointFromWaypoint(const Vector& vPlayerOrigin, Vector vPinchOrigin);
+	static CWaypoint* getPinchPointFromWaypoint(const Vector& vPlayerOrigin, const Vector& vPinchOrigin);
 	static CWaypoint* getNestWaypoint(int iTeam, int iArea, bool bForceArea = false, CBot* pBot = nullptr);
 
 	static void updateWaypointPairs(std::vector<edict_wpt_pair_t>* pPairs, int iWptFlag, const char* szClassname);

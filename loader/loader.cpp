@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /**
  * vim: set ts=4 sw=4 tw=99 noet :
  * =============================================================================
@@ -99,7 +101,7 @@ public:
 		return fail_version;
 	}
 
-	bool Load(SourceMM::PluginId id, SourceMM::ISmmAPI *ismm, char *error, size_t maxlength, bool late) override
+	bool Load(SourceMM::PluginId id, SourceMM::ISmmAPI *ismm, char *error, const size_t maxlength, bool late) override
 	{
 		if (error != nullptr && maxlength != 0)
 		{
@@ -112,7 +114,7 @@ public:
 	char error_buffer[512];
 } s_FailPlugin;
 
-size_t UTIL_Format(char *buffer, size_t maxlength, const char *fmt, ...)
+size_t UTIL_Format(char *buffer, const size_t maxlength, const char *fmt, ...)
 {
 	va_list ap;
 
@@ -129,7 +131,7 @@ size_t UTIL_Format(char *buffer, size_t maxlength, const char *fmt, ...)
 	return len;
 }
 
-METAMOD_PLUGIN *_GetPluginPtr(const char *path, int fail_api)
+METAMOD_PLUGIN *_GetPluginPtr(const char *path, const int fail_api)
 {
 	METAMOD_FN_ORIG_LOAD fn;
 	METAMOD_PLUGIN *pl;

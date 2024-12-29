@@ -99,12 +99,12 @@ void CBotGAValues::mutate()
 	}
 }
 
-float CBotGAValues::get(int iIndex) const
+float CBotGAValues::get(const int iIndex) const
 {
 	return m_theValues[iIndex];
 }
 
-void CBotGAValues::set(int iIndex, float fVal)
+void CBotGAValues::set(const int iIndex, const float fVal)
 {
 	m_theValues[iIndex] = fVal;
 }

@@ -171,12 +171,12 @@ typedef enum : std::int16_t
 	GET_PROPDATA_MAX = 155
 } getpropdata_id;
 
-bool UTIL_FindSendPropInfo(ServerClass *pInfo, const char *szType, unsigned *offset);
+bool UTIL_FindSendPropInfo(const ServerClass *pInfo, const char *szType, unsigned *offset);
 ServerClass *UTIL_FindServerClass(const char *name);
 void UTIL_FindServerClassPrint(const char*name_cmd);
 void UTIL_FindServerClassnamePrint(const char *name_cmd);
 void UTIL_FindPropPrint(const char *prop_name);
-unsigned UTIL_FindInDataMap(datamap_t* pMap, const char* name);
+unsigned UTIL_FindInDataMap(const datamap_t* pMap, const char* name);
 datamap_t* CBaseEntity_GetDataDescMap(CBaseEntity* pEntity);
 datamap_t* VGetDataDescMap(CBaseEntity* pThisPtr, int offset);
 
@@ -192,7 +192,7 @@ public:
 		m_preoffset = 0;
 	}
 
-	CClassInterfaceValue (const char *key, const char *value, unsigned preoffset )
+	CClassInterfaceValue (const char *key, const char *value, const unsigned preoffset)
 	{
 		init(key,value,preoffset);
 	}
@@ -207,7 +207,7 @@ public:
 
 	CBaseHandle *getEntityHandle ( edict_t *edict );
 
-	bool getBool(void *edict, bool defaultvalue, bool bIsEdict = true)
+	bool getBool(void *edict, const bool defaultvalue, const bool bIsEdict = true)
 	{ 
 		getData(edict, bIsEdict);
 		
@@ -245,7 +245,7 @@ public:
 		return m_data; 
 	}
 
-	float getFloat ( edict_t *edict, float defaultvalue ) 
+	float getFloat ( edict_t *edict, const float defaultvalue ) 
 	{ 
 		getData(edict); 
 		
@@ -300,7 +300,7 @@ public:
 		return false;
 	}
 
-	int getInt(void *edict, int defaultvalue, bool bIsEdict = true)
+	int getInt(void *edict, const int defaultvalue, const bool bIsEdict = true)
 	{ 
 		getData(edict, bIsEdict);
 		
@@ -332,7 +332,7 @@ public:
 		return static_cast<byte*>(m_data); 
 	}
 
-	float getFloatFromInt ( edict_t *edict, float defaultvalue )
+	float getFloatFromInt ( edict_t *edict, const float defaultvalue )
 	{
 		getData(edict); 
 
@@ -374,7 +374,7 @@ public:
 	static const char *FindEntityNetClass(int start, const char *classname);
 	static edict_t *FindEntityByNetClass(int start, const char *classname);
 	static edict_t *FindEntityByNetClassNearest(const Vector& vstart, const char *classname);
-	static edict_t *FindEntityByClassnameNearest(const Vector& vstart, const char *classname, float fMinDist = 8192.0f, edict_t *pOwner = nullptr);
+	static edict_t *FindEntityByClassnameNearest(const Vector& vstart, const char *classname, float fMinDist = 8192.0f, const edict_t *pOwner = nullptr);
 
 	// TF2
 	static int getTF2Score (const edict_t* edict);
@@ -399,7 +399,7 @@ public:
 		pHandle->Set(pWeapon->GetNetworkable()->GetEntityHandle());
 	}
 
-	static void TF2_SetBuilderType(edict_t *pBuilder, int itype)
+	static void TF2_SetBuilderType(edict_t *pBuilder, const int itype)
 	{
 		int *pitype = g_GetProps[GETPROP_TF2_BUILDER_TYPE].getIntPointer(pBuilder);
 
@@ -412,7 +412,7 @@ public:
 		return g_GetProps[GETPROP_TF2_CHARGE_RESIST_TYPE].getInt(pMedigun, 0);
 	}
 
-	static void TF2_SetBuilderMode(edict_t *pBuilder, int imode)
+	static void TF2_SetBuilderMode(edict_t *pBuilder, const int imode)
 	{
 		int *pitype = g_GetProps[GETPROP_TF2_BUILDER_MODE].getIntPointer(pBuilder);
 
@@ -422,7 +422,7 @@ public:
 	//Jrob
 	static int getTF2DesiredClass(edict_t *edict) { return g_GetProps[GETPROP_TF2DESIREDCLASS].getInt(edict, 0); }
 
-	static void setTF2Class(edict_t *edict, int _class)
+	static void setTF2Class(edict_t *edict, const int _class)
 	{
 		int* p = g_GetProps[GETPROP_TF2DESIREDCLASS].getIntPointer(edict);
 		if (p != nullptr) *p = _class;
@@ -474,9 +474,9 @@ public:
 	static edict_t *getMedigunTarget ( edict_t *edict ) { return g_GetProps[GETPROP_TF2MEDIGUN_TARGETTING].getEntity(edict); }
 	static edict_t *getSentryEnemy ( edict_t *edict ) { return g_GetProps[GETPROP_SENTRY_ENEMY].getEntity(edict); }
 	static edict_t *getOwner ( edict_t *edict ) { return g_GetProps[GETPROP_ALL_ENTOWNER].getEntity(edict); }
-	static bool isMedigunTargetting ( edict_t *pgun, edict_t *ptarget) { return g_GetProps[GETPROP_TF2MEDIGUN_TARGETTING].getEntity(pgun) == ptarget; }
+	static bool isMedigunTargetting ( edict_t *pgun, const edict_t *ptarget) { return g_GetProps[GETPROP_TF2MEDIGUN_TARGETTING].getEntity(pgun) == ptarget; }
 	//static void setTickBase ( edict_t *edict, int tickbase ) { return ;
-	static int isTeleporterMode (edict_t *edict, eTeleMode mode ) { return g_GetProps[GETPROP_TF2TELEPORTERMODE].getInt(edict,-1) == static_cast<int>(mode); }
+	static int isTeleporterMode (edict_t *edict, const eTeleMode mode ) { return g_GetProps[GETPROP_TF2TELEPORTERMODE].getInt(edict,-1) == static_cast<int>(mode); }
 	static edict_t *getCurrentWeapon (edict_t *player) { return g_GetProps[GETPROP_CURRENTWEAPON].getEntity(player); }
 	static int getUberChargeLevel (edict_t *pWeapon) { return static_cast<int>(g_GetProps[GETPROP_TF2UBERCHARGE_LEVEL].getFloat(pWeapon, 0) * 100.0f); }
 	//static void test ();
@@ -514,7 +514,7 @@ public:
 	static int getDODBombTeam ( edict_t *pBombTarget ) { return g_GetProps[GETPROP_DOD_BOMB_TEAM].getInt(pBombTarget,0); }
 	static int *getWeaponClip1Pointer ( edict_t *pgun ) { return g_GetProps[GETPROP_WEAPONCLIP1].getIntPointer(pgun); }
 	static int *getWeaponClip2Pointer ( edict_t *pgun ) { return g_GetProps[GETPROP_WEAPONCLIP2].getIntPointer(pgun); }
-	static int getOffset(int id) { return g_GetProps[id].getOffset(); }
+	static int getOffset(const int id) { return g_GetProps[id].getOffset(); }
 	static void getWeaponClip ( edict_t *pgun, int *iClip1, int *iClip2 ) { *iClip1 = g_GetProps[GETPROP_WEAPONCLIP1].getInt(pgun,0); *iClip2 = g_GetProps[GETPROP_WEAPONCLIP2].getInt(pgun,0); }
 	static void getAmmoTypes ( edict_t *pgun, int *iAmmoType1, int *iAmmoType2 ) { *iAmmoType1 = g_GetProps[GETPROP_WEAPON_AMMOTYPE1].getInt(pgun,-1); *iAmmoType2 = g_GetProps[GETPROP_WEAPON_AMMOTYPE2].getInt(pgun,-1);}
 
@@ -590,7 +590,7 @@ public:
 	static bool isMachineGunDeployed (edict_t *weapon) { return g_GetProps[GETPROP_DOD_MACHINEGUN_DEPLOYED].getBool(weapon,false); }
 	static bool isRocketDeployed ( edict_t *weapon ) { return g_GetProps[GETPROP_DOD_ROCKET_DEPLOYED].getBool(weapon,false); }
 
-	static bool isMoveType ( edict_t *pent, int movetype )
+	static bool isMoveType ( edict_t *pent, const int movetype )
 	{
 		return (g_GetProps[GETPROP_MOVETYPE].getInt(pent,0) & 15) == movetype;
 	}
@@ -906,7 +906,7 @@ public:
 	**/
 	static int GetEntPropInt(CBaseEntity *pEntity, const char *prop)
 	{
-		datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
+		const datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
 		const int offset = UTIL_FindInDataMap(pDataMap, prop);
 		const int propvalue = *reinterpret_cast<int*>(reinterpret_cast<uint8_t*>(pEntity) + offset); // to-do: bit count?
 		return propvalue;
@@ -921,7 +921,7 @@ public:
 	**/
 	static float GetEntPropFloat(CBaseEntity *pEntity, const char *prop)
 	{
-		datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
+		const datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
 		const int offset = UTIL_FindInDataMap(pDataMap, prop);
 		const float propvalue = *reinterpret_cast<float*>(reinterpret_cast<uint8_t*>(pEntity) + offset);
 		return propvalue;
@@ -936,7 +936,7 @@ public:
 	**/
 	static edict_t *GetEntPropEdict(CBaseEntity *pEntity, const char *prop)
 	{
-		datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
+		const datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
 		const int offset = UTIL_FindInDataMap(pDataMap, prop);
 		edict_t *pEdict = *reinterpret_cast<edict_t**>(reinterpret_cast<uint8_t*>(pEntity) + offset);
 		if(!pEdict || pEdict->IsFree())
@@ -956,7 +956,7 @@ public:
 	**/
 	static Vector *GetEntPropVector(CBaseEntity *pEntity, const char *prop)
 	{
-		datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
+		const datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
 		const int offset = UTIL_FindInDataMap(pDataMap, prop);
 		Vector *propvalue = reinterpret_cast<Vector*>(reinterpret_cast<uint8_t*>(pEntity) + offset);
 		return propvalue;
@@ -970,7 +970,7 @@ public:
 	**/
 	static int GetEntityHealth(CBaseEntity* pEntity)
 	{
-		datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
+		const datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
 		const int offset = UTIL_FindInDataMap(pDataMap, "m_iHealth");
 		const int iHealth = *reinterpret_cast<int*>(reinterpret_cast<char*>(pEntity) + offset);
 		return iHealth;
@@ -983,7 +983,7 @@ public:
 	**/
 	static int GetEntityMaxHealth(CBaseEntity* pEntity)
 	{
-		datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
+		const datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
 		const int offset = UTIL_FindInDataMap(pDataMap, "m_iMaxHealth");
 		const int iMaxHealth = *reinterpret_cast<int*>(reinterpret_cast<char*>(pEntity) + offset);
 		return iMaxHealth;
@@ -996,7 +996,7 @@ public:
 	**/
 	static float GetEntityHealthPercent(CBaseEntity* pEntity)
 	{
-		datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
+		const datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
 		const int offset = UTIL_FindInDataMap(pDataMap, "m_iHealth");
 		//int offset2 = UTIL_FindInDataMap(pDataMap, "m_iMaxHealth"); //unused? [APG]RoboCop[CL]
 		const int iHealth = *reinterpret_cast<int*>(reinterpret_cast<char*>(pEntity) + offset);

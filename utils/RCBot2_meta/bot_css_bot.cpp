@@ -60,7 +60,7 @@
 
 extern IServerGameEnts *servergameents; // for accessing the server game entities
 
-void CCSSBot::init(bool bVarInit)
+void CCSSBot::init(const bool bVarInit)
 {
 	CBot::init(bVarInit);// require this
 
@@ -356,7 +356,7 @@ void CCSSBot::runBuy()
 /**
  * Update visible entities
  **/
-bool CCSSBot::setVisible(edict_t *pEntity, bool bVisible)
+bool CCSSBot::setVisible(edict_t *pEntity, const bool bVisible)
 {
 	static float fDist;
 
@@ -440,7 +440,7 @@ bool CCSSBot::IsSniper()
  * @param hold		Hold the attack button? (full-auto)
  * @return			No return
  **/
-void CCSSBot::primaryattackCS(bool hold)
+void CCSSBot::primaryattackCS(const bool hold)
 {
 	if(hold)
 	{
@@ -538,7 +538,7 @@ float CCSSBot::getNextAttackDelay()
 	return delay;
 }
 
-void CCSSBot::modAim(edict_t *pEntity, Vector &v_origin, Vector *v_desired_offset, Vector &v_size, float fDist, float fDist2D)
+void CCSSBot::modAim(edict_t *pEntity, Vector &v_origin, Vector *v_desired_offset, Vector &v_size, const float fDist, const float fDist2D)
 {
 	static bool aimforhead;
 	static CBotWeapon *pWp;
@@ -762,7 +762,7 @@ void CCSSBot::getTasks(unsigned iIgnore)
 	utils.freeMemory();
 }
 
-bool CCSSBot::executeAction(eBotAction iAction)
+bool CCSSBot::executeAction(const eBotAction iAction)
 {
 	switch (iAction)
 	{
@@ -1088,7 +1088,7 @@ bool CCSSBot::IsLeadingHostage()
 	return false;
 }
 
-void CCSSBot::touchedWpt(CWaypoint *pWaypoint, int iNextWaypoint, int iPrevWaypoint)
+void CCSSBot::touchedWpt(CWaypoint *pWaypoint, const int iNextWaypoint, const int iPrevWaypoint)
 {
 	if(iNextWaypoint != -1 && pWaypoint->hasFlag(CWaypointTypes::W_FL_DOOR)) // Use waypoint: Check for door
 	{
@@ -1121,7 +1121,7 @@ void CCSSBot::touchedWpt(CWaypoint *pWaypoint, int iNextWaypoint, int iPrevWaypo
 	CBot::touchedWpt(pWaypoint, iNextWaypoint, iPrevWaypoint);
 }
 
-bool CCSSBot::canGotoWaypoint(Vector vPrevWaypoint, CWaypoint *pWaypoint, CWaypoint *pPrev)
+bool CCSSBot::canGotoWaypoint(const Vector vPrevWaypoint, CWaypoint *pWaypoint, CWaypoint *pPrev)
 {
 	if (pWaypoint->hasFlag(CWaypointTypes::W_FL_NO_HOSTAGES) || pWaypoint->hasFlag(CWaypointTypes::W_FL_LADDER))
 	{

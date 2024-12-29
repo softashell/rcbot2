@@ -59,7 +59,7 @@ void CPropertyVarBase::Init(const char *propname, const PropType type, const int
 	if (!baseentity)
 	{
 		logger->Log(LogLevel::ERROR, "Initialization failed for PropertyVar \"%s\"! Entity of index %i is NULL!", propname, entity);
-#ifdef WIN32 // TO-DO: verify of runtime_error works fine under linux
+#ifdef WIN32 // TODO: verify of runtime_error works fine under linux
 		throw std::runtime_error("Initialization failed for PropertyVar!");
 #endif
 		//return;

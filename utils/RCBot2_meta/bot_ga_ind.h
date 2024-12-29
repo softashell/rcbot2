@@ -64,7 +64,7 @@ public:
 
 	void addRnd ();
 
-	void setup ( int iValues )
+	void setup (const int iValues)
 	{
 		for ( int i = 0; i < iValues; i ++ )
 			addRnd();

@@ -53,7 +53,7 @@ public:
 class CBotTF2EngineerInterrupt : public IBotTaskInterrupt
 {
 public:
-	CBotTF2EngineerInterrupt( CBot *pBot );
+	CBotTF2EngineerInterrupt(const CBot *pBot);
 
 	bool isInterrupted ( CBot *pBot, bool *bFailed, bool *bCompleted ) override;
 private:
@@ -71,7 +71,7 @@ public:
 class CBotTF2HurtInterrupt : public IBotTaskInterrupt
 {
 public:
-	CBotTF2HurtInterrupt ( CBot *pBot );
+	CBotTF2HurtInterrupt (const CBot *pBot);
 
 	bool isInterrupted ( CBot *pBot, bool *bFailed, bool *bCompleted ) override;
 private:

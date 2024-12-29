@@ -83,7 +83,7 @@ void CBotSquads::removeSquadMember (CBotSquad* pSquad, const edict_t* pMember)
 	}
 }
 
-edict_t *CBotSquad::getMember ( size_t iMember )
+edict_t *CBotSquad::getMember (const size_t iMember)
 {
 	// TODO: this is only used in CBotSquads::SquadJoin() -- inline the logic
 	if (iMember < 0 || iMember >= m_SquadMembers.size()) {
@@ -369,7 +369,7 @@ Vector CBotSquad :: GetFormationVector (const edict_t* pEdict)
 
 	if ( tr->fraction < 1.0f )
 	{
-		return vLeaderOrigin + vBase*tr->fraction*0.5f;
+		return vLeaderOrigin + vBase * tr->fraction * 0.5f;
 	}
 
 	return vLeaderOrigin+vBase;
@@ -417,7 +417,7 @@ size_t CBotSquad::numMembers () const
 
 void CBotSquad :: ReturnAllToFormation ()
 {
-	for (edict_t *member : m_SquadMembers) {
+	for (const edict_t *member : m_SquadMembers) {
 		CBot *pBot = CBots::getBotPointer(member);
 		if (pBot) {
 			pBot->removeCondition(CONDITION_PUSH);

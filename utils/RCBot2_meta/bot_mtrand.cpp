@@ -83,16 +83,16 @@ int MTRand_int32::p = 0;
 bool MTRand_int32::init = false;
 
 static unsigned long init[4] = {0x123, 0x234, 0x345, 0x456}, length = 4;
-MTRand_int32 irand(init,length);
+MTRand_int32 irand(init, length);
 static MTRand drand;
 
 double randomOne()
 {
 	//irand is seeded
-	return static_cast<double>(irand()) * (1. / 4294967296.);
+	return static_cast<double>(irand()) * (1.0 / 4294967296.0);
 }
 
-int randomInt ( int imin, int imax )
+int randomInt (const int imin, const int imax)
 {
 	// quicker
 	if (imin == imax)
@@ -101,7 +101,7 @@ int randomInt ( int imin, int imax )
 	//return (int)(imin + (int)(drand()*((float)(imax-imin)+0.99f)));
 }
 
-float randomFloat ( float fmin, float fmax )
+float randomFloat (const float fmin, const float fmax)
 {
 	return static_cast<float>(fmin + randomOne()*(fmax - fmin));
 }
@@ -115,7 +115,7 @@ void MTRand_int32::gen_state() { // generate new state vector
   p = 0; // reset position
 }
 
-void MTRand_int32::seed(unsigned long s) 
+void MTRand_int32::seed(const unsigned long s) 
 {  // init by 32 bit seed
   state[0] = s & 0xFFFFFFFFUL; // for > 32 bit machines
   for (int i = 1; i < n; ++i) 
@@ -129,7 +129,7 @@ void MTRand_int32::seed(unsigned long s)
   p = n; // force gen_state() to be called for next random number
 }
 
-void MTRand_int32::seed(const unsigned long* array, int size) const
+void MTRand_int32::seed(const unsigned long* array, const int size) const
 { // init by array
   seed(19650218UL);
   int i = 1, j = 0;

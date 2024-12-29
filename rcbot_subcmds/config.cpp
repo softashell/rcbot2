@@ -49,7 +49,7 @@ CBotCommandInline GameEventVersion("event_version", CMD_ACCESS_CONFIG, [](CClien
 	return COMMAND_ACCESSED;
 });
 
-CBotCommandInline MaxBotsCommand("max_bots", CMD_ACCESS_CONFIG | CMD_ACCESS_DEDICATED, [](CClient *pClient,
+CBotCommandInline MaxBotsCommand("max_bots", CMD_ACCESS_CONFIG | CMD_ACCESS_DEDICATED, [](const CClient *pClient,
                                  const BotCommandArgs& args)
 {
 	edict_t *pEntity = nullptr;
@@ -87,7 +87,7 @@ CBotCommandInline MaxBotsCommand("max_bots", CMD_ACCESS_CONFIG | CMD_ACCESS_DEDI
 	return COMMAND_ACCESSED;
 });
 
-CBotCommandInline MinBotsCommand("min_bots", CMD_ACCESS_CONFIG | CMD_ACCESS_DEDICATED, [](CClient *pClient,
+CBotCommandInline MinBotsCommand("min_bots", CMD_ACCESS_CONFIG | CMD_ACCESS_DEDICATED, [](const CClient *pClient,
                                  const BotCommandArgs& args)
 {
 	edict_t *pEntity = nullptr;

@@ -65,7 +65,7 @@ enum : std::uint8_t
  */
 class BotCommandArgs : public std::deque<const char*> {
 public:
-	const char* operator[](size_t at) const
+	const char* operator[](const size_t at) const
 	{
 		if (at >= this->size()) {
 			return nullptr;
@@ -88,7 +88,7 @@ public:
 	//CBotCommand(const char *command, int iAccessLevel = 0) :
 	//		m_iAccessLevel{iAccessLevel}, m_szCommand{command} {};
 
-	CBotCommand(const char* command, int iAccessLevel = 0, const char* help = nullptr) :
+	CBotCommand(const char* command, const int iAccessLevel = 0, const char* help = nullptr) :
 			m_iAccessLevel{iAccessLevel}, m_szCommand{command}, m_szHelp{help} {}
 
 	// check command name
@@ -99,7 +99,7 @@ public:
 	// affecting the original list
 	virtual eBotCommandResult execute(CClient* pClient, const BotCommandArgs& args);
 
-	bool hasAccess ( CClient *pClient ) const;
+	bool hasAccess (const CClient *pClient ) const;
 
 	virtual void printCommand ( edict_t *pPrintTo, int indent = 0);
 
@@ -118,7 +118,7 @@ protected:
 class CBotCommandInline : public CBotCommand
 {
 public:
-	CBotCommandInline(const char* cmd, int iAccessLevel, BotCommandCallback callback, const char* help = nullptr) : CBotCommand(cmd, iAccessLevel, help), m_Callback(std::move(
+	CBotCommandInline(const char* cmd, const int iAccessLevel, BotCommandCallback callback, const char* help = nullptr) : CBotCommand(cmd, iAccessLevel, help), m_Callback(std::move(
 		callback)) {}
 	
 	eBotCommandResult execute(CClient* pClient, const BotCommandArgs& args) override;
@@ -129,7 +129,7 @@ public:
 class CBotSubcommands : public CBotCommand
 {
 public:
-	CBotSubcommands(const char* cmd, int iAccessLevel, const std::vector<CBotCommand*>& subcommands) : CBotCommand(cmd, iAccessLevel, nullptr), m_theCommands{subcommands} {}
+	CBotSubcommands(const char* cmd, const int iAccessLevel, const std::vector<CBotCommand*>& subcommands) : CBotCommand(cmd, iAccessLevel, nullptr), m_theCommands{subcommands} {}
 	
 	eBotCommandResult execute(CClient* pClient, const BotCommandArgs& args) override;
 	

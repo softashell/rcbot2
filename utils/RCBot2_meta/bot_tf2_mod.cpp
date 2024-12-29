@@ -147,19 +147,19 @@ bool CTeamFortress2Mod::isMedievalMode()
 	return CClassInterface::TF2_IsMedievalMode(GetGameRules());
 }
 
-bool CTeamFortress2Mod::checkWaypointForTeam(CWaypoint* pWpt, int iTeam)
+bool CTeamFortress2Mod::checkWaypointForTeam(CWaypoint* pWpt, const int iTeam)
 {
 	// Returns true if team can go to waypoint
 	return m_bRoundOver || ((!pWpt->hasFlag(CWaypointTypes::W_FL_NOBLU) || iTeam != TF2_TEAM_BLUE) && (!pWpt->hasFlag(CWaypointTypes::W_FL_NORED) || iTeam != TF2_TEAM_RED));
 }
 
 
-bool CTeamFortress2Mod :: isWaypointAreaValid ( int iWptArea, int iWptFlags )
+bool CTeamFortress2Mod :: isWaypointAreaValid (const int iWptArea, const int iWptFlags)
 {
 	return CTeamFortress2Mod::m_ObjectiveResource.isWaypointAreaValid(iWptArea,iWptFlags);
 }
 ///////////////////////////
-bool CTeamFortress2Mod :: withinEndOfRound ( float fTime )	
+bool CTeamFortress2Mod :: withinEndOfRound (const float fTime)	
 {
 	if ( m_Timer.m_flTimerEndTime )
 		return gpGlobals->curtime > *m_Timer.m_flTimerEndTime - fTime;
@@ -168,7 +168,7 @@ bool CTeamFortress2Mod :: withinEndOfRound ( float fTime )
 }
 
 
-void CTeamFortress2Mod :: getTeamOnlyWaypointFlags ( int iTeam, int *iOn, int *iOff )
+void CTeamFortress2Mod :: getTeamOnlyWaypointFlags (const int iTeam, int *iOn, int *iOff)
 {
 	if ( iTeam == TF2_TEAM_BLUE )
 	{
@@ -325,7 +325,7 @@ void CTeamFortress2Mod :: mapInit ()
 	//CPoints::loadMapScript();
 }
 
-int CTeamFortress2Mod :: getTeleporterWaypoint ( edict_t *pTele )
+int CTeamFortress2Mod :: getTeleporterWaypoint (const edict_t *pTele)
 {
 	for (tf_tele_t& m_Teleporter : m_Teleporters)
 	{
@@ -399,7 +399,7 @@ int CTeamFortress2Mod::numPlayersOnTeam(int iTeam, bool bAliveOnly)
 	return 0;
 }
 
-int CTeamFortress2Mod ::numClassOnTeam( int iTeam, int iClass )
+int CTeamFortress2Mod ::numClassOnTeam(const int iTeam, const int iClass)
 {
 	int num = 0;
 
@@ -441,7 +441,7 @@ TF_Class CTeamFortress2Mod :: getSpyDisguise ( edict_t *pPlayer )
 	return static_cast<TF_Class>(iClass);
 }
 
-float CTeamFortress2Mod :: TF2_GetClassSpeed(int iClass) 
+float CTeamFortress2Mod :: TF2_GetClassSpeed(const int iClass) 
 { 
 switch (iClass) 
 { 
@@ -458,7 +458,7 @@ switch (iClass)
 return 0.0f; 
 } 
  
-float CTeamFortress2Mod :: TF2_GetPlayerSpeed(edict_t *pPlayer, TF_Class iClass ) 
+float CTeamFortress2Mod :: TF2_GetPlayerSpeed(edict_t *pPlayer, const TF_Class iClass) 
 { 
 	static float fSpeed;
 
@@ -501,7 +501,7 @@ int CTeamFortress2Mod :: getDispenserLevel ( edict_t *pDispenser )
 	//if ( pSentry && pSentry->
 }
 
-int CTeamFortress2Mod :: getEnemyTeam ( int iTeam )
+int CTeamFortress2Mod :: getEnemyTeam (const int iTeam)
 {
 	return iTeam == TF2_TEAM_BLUE?TF2_TEAM_RED:TF2_TEAM_BLUE;
 }
@@ -514,17 +514,17 @@ int CTeamFortress2Mod :: getEnemyTeam ( int iTeam )
 
 */
 
-bool CTeamFortress2Mod :: isDispenser ( edict_t *pEntity, int iTeam, bool checkcarrying )
+bool CTeamFortress2Mod :: isDispenser (edict_t *pEntity, const int iTeam, const bool checkcarrying)
 {
 	return (!iTeam || iTeam == getTeam(pEntity)) && std::strcmp(pEntity->GetClassName(),"obj_dispenser")==0 && (checkcarrying||!CClassInterface::isSentryGunBeingPlaced(pEntity));
 }
 
-bool CTeamFortress2Mod :: isFlag ( edict_t *pEntity, int iTeam )
+bool CTeamFortress2Mod :: isFlag (edict_t *pEntity, const int iTeam)
 {
 	return (!iTeam || getEnemyTeam(iTeam) == getTeam(pEntity)) && std::strcmp(pEntity->GetClassName(),"item_teamflag")==0;
 }
 
-bool CTeamFortress2Mod ::isBoss ( edict_t *pEntity, float *fFactor )
+bool CTeamFortress2Mod ::isBoss (edict_t *pEntity, float *fFactor)
 {
 	if ( m_bBossSummoned )
 	{
@@ -587,7 +587,7 @@ float CTeamFortress2Mod :: getTeleportTime (const edict_t* pOwner)
 	return m_Teleporters[ENTINDEX(pOwner)-1].m_fLastTeleported;
 }
 
-bool CTeamFortress2Mod :: isSentry ( edict_t *pEntity, int iTeam, bool checkcarrying )
+bool CTeamFortress2Mod :: isSentry (edict_t *pEntity, const int iTeam, const bool checkcarrying)
 {
 	return (!iTeam || iTeam == getTeam(pEntity)) && std::strcmp(pEntity->GetClassName(),"obj_sentrygun")==0 && (checkcarrying||!CClassInterface::isSentryGunBeingPlaced(pEntity));
 }
@@ -597,27 +597,27 @@ bool CTeamFortress2Mod::isTankBoss(const edict_t* pEntity)
 	return std::strcmp(pEntity->GetClassName(), "tank_boss") == 0;
 }
 
-bool CTeamFortress2Mod :: isTeleporter ( edict_t *pEntity, int iTeam, bool checkcarrying )
+bool CTeamFortress2Mod :: isTeleporter (edict_t *pEntity, const int iTeam, const bool checkcarrying)
 {
 	return (!iTeam || iTeam == getTeam(pEntity)) && std::strcmp(pEntity->GetClassName(),"obj_teleporter")==0 && (checkcarrying||!CClassInterface::isSentryGunBeingPlaced(pEntity));
 }
 
-bool CTeamFortress2Mod :: isTeleporterEntrance ( edict_t *pEntity, int iTeam, bool checkcarrying )
+bool CTeamFortress2Mod :: isTeleporterEntrance (edict_t *pEntity, const int iTeam, const bool checkcarrying)
 {
 	return isTeleporter(pEntity,iTeam) && CClassInterface::isTeleporterMode(pEntity,TELE_ENTRANCE) && (checkcarrying||!CClassInterface::isSentryGunBeingPlaced(pEntity));
 }
 
-bool CTeamFortress2Mod :: isTeleporterExit ( edict_t *pEntity, int iTeam, bool checkcarrying )
+bool CTeamFortress2Mod :: isTeleporterExit (edict_t *pEntity, const int iTeam, const bool checkcarrying)
 {
 	return isTeleporter(pEntity,iTeam) && CClassInterface::isTeleporterMode(pEntity,TELE_EXIT) && (checkcarrying||!CClassInterface::isSentryGunBeingPlaced(pEntity));
 }
 
-bool CTeamFortress2Mod :: isPipeBomb ( edict_t *pEntity, int iTeam)
+bool CTeamFortress2Mod :: isPipeBomb (edict_t *pEntity, const int iTeam)
 {
 	return (!iTeam || iTeam == getTeam(pEntity)) && std::strcmp(pEntity->GetClassName(),"tf_projectile_pipe_remote")==0;
 }
 
-bool CTeamFortress2Mod :: isHurtfulPipeGrenade ( edict_t *pEntity, edict_t *pPlayer, bool bCheckOwner )
+bool CTeamFortress2Mod :: isHurtfulPipeGrenade (edict_t *pEntity, edict_t *pPlayer, const bool bCheckOwner)
 {
 	if ( std::strcmp(pEntity->GetClassName(),"tf_projectile_pipe")==0 )
 	{
@@ -633,7 +633,7 @@ bool CTeamFortress2Mod :: isHurtfulPipeGrenade ( edict_t *pEntity, edict_t *pPla
 	return false;
 }
 
-bool CTeamFortress2Mod :: isRocket ( edict_t *pEntity, int iTeam )
+bool CTeamFortress2Mod :: isRocket (edict_t *pEntity, const int iTeam)
 {
 	return (!iTeam || iTeam == getTeam(pEntity)) && std::strcmp(pEntity->GetClassName(),"tf_projectile_rocket")==0;
 }
@@ -672,7 +672,7 @@ void CTeamFortress2Mod :: findMediGun ( edict_t *pPlayer )
 }
 
 // get the teleporter exit of an entrance
-edict_t *CTeamFortress2Mod :: getTeleporterExit ( edict_t *pTele )
+edict_t *CTeamFortress2Mod :: getTeleporterExit (const edict_t *pTele)
 {
 	edict_t *pExit;
 
@@ -695,10 +695,10 @@ edict_t *CTeamFortress2Mod :: getTeleporterExit ( edict_t *pTele )
 // check if the entity is a health kit
 bool CTeamFortress2Mod :: isHealthKit (const edict_t* pEntity)
 {
-	return std::strncmp(pEntity->GetClassName(),"item_healthkit",14)==0;
+	return std::strncmp(pEntity->GetClassName(),"item_healthkit",14) == 0;
 }
 
-bool CTeamFortress2Mod :: isAreaOwnedByTeam (int iArea, int iTeam)
+bool CTeamFortress2Mod :: isAreaOwnedByTeam (const int iArea, const int iTeam)
 {
 	if ( CTeamFortress2Mod::m_ObjectiveResource.isInitialised() )
 	{
@@ -709,7 +709,7 @@ bool CTeamFortress2Mod :: isAreaOwnedByTeam (int iArea, int iTeam)
 }
 
 // cehc kif the team can pick up a flag in SD mode (special delivery)
-bool CTeamFortress2Mod::canTeamPickupFlag_SD(int iTeam,bool bGetUnknown)
+bool CTeamFortress2Mod::canTeamPickupFlag_SD(const int iTeam, const bool bGetUnknown)
 {
 	if ( isArenaPointOpen() )
 	{
@@ -721,7 +721,7 @@ bool CTeamFortress2Mod::canTeamPickupFlag_SD(int iTeam,bool bGetUnknown)
 	return false;
 }
 // For MVM only
-bool CTeamFortress2Mod::getFlagLocation ( int iTeam, Vector *vec )
+bool CTeamFortress2Mod::getFlagLocation (const int iTeam, Vector *vec)
 {
 	if ( getDroppedFlagLocation(iTeam,vec) )
 	{
@@ -737,7 +737,7 @@ bool CTeamFortress2Mod::getFlagLocation ( int iTeam, Vector *vec )
 }
 
 // for special delivery mod and MVM
-void CTeamFortress2Mod::flagReturned(int iTeam)
+void CTeamFortress2Mod::flagReturned(const int iTeam)
 {
 	m_iFlagCarrierTeam = 0;
 	bFlagStateDefault = true;
@@ -752,7 +752,7 @@ void CTeamFortress2Mod::flagReturned(int iTeam)
 	}
 }
 
-void CTeamFortress2Mod:: flagPickedUp (int iTeam, edict_t *pPlayer)
+void CTeamFortress2Mod:: flagPickedUp (const int iTeam, edict_t *pPlayer)
 {
 	bFlagStateDefault = false;
 	if ( iTeam == TF2_TEAM_BLUE )
@@ -790,13 +790,13 @@ bool CTeamFortress2Mod::hasRoundStarted()
 	//return (engine->Time() > m_fRoundTime);
 }
 
-void CTeamFortress2Mod :: setPointOpenTime ( int time )
+void CTeamFortress2Mod :: setPointOpenTime (const int time)
 {
 	m_fArenaPointOpenTime = 0.0f;
 	m_fPointTime = static_cast<float>(time);
 }
 
-void CTeamFortress2Mod :: setSetupTime ( int time )
+void CTeamFortress2Mod :: setSetupTime (const int time)
 {
   m_fRoundTime = 0.0f;
   m_fSetupTime = static_cast<float>(time);
@@ -808,7 +808,7 @@ bool CTeamFortress2Mod :: isAmmo (const edict_t* pEntity)
 
 	szClassname = pEntity->GetClassName();
 
-	return std::strcmp(szClassname,"tf_ammo_pack")==0 || std::strncmp(szClassname,"item_ammopack",13)==0;
+	return std::strcmp(szClassname,"tf_ammo_pack") == 0 || std::strncmp(szClassname,"item_ammopack",13) == 0;
 }
 
 //TODO: Experimental [APG]RoboCop[CL]
@@ -817,9 +817,9 @@ int CTeamFortress2Mod::getArea()
 	return 0;
 }
 
-bool CTeamFortress2Mod :: isPayloadBomb ( edict_t *pEntity, int iTeam )
+bool CTeamFortress2Mod :: isPayloadBomb ( edict_t *pEntity, const int iTeam )
 {
-	return std::strncmp(pEntity->GetClassName(),"mapobj_cart_dispenser",21)==0 && CClassInterface::getTeam(pEntity)==iTeam;
+	return std::strncmp(pEntity->GetClassName(),"mapobj_cart_dispenser",21) == 0 && CClassInterface::getTeam(pEntity)==iTeam;
 }
 
 
@@ -844,7 +844,7 @@ void CTeamFortress2Mod::checkMVMTankBoss(edict_t *pEntity)
 	}
 }
 
-CWaypoint *CTeamFortress2Mod :: getBestWaypointMVM ( CBot *pBot, int iFlags )
+CWaypoint *CTeamFortress2Mod :: getBestWaypointMVM (const CBot *pBot, const int iFlags)
 {
 	Vector vFlagLocation;
 
@@ -879,7 +879,7 @@ CWaypoint *CTeamFortress2Mod :: getBestWaypointMVM ( CBot *pBot, int iFlags )
 }
 
 // check voice commands
-void CTeamFortress2Mod:: clientCommand ( edict_t *pEntity, int argc, const char *pcmd, const char *arg1, const char *arg2 )
+void CTeamFortress2Mod:: clientCommand ( edict_t *pEntity, const int argc, const char *pcmd, const char *arg1, const char *arg2 )
 {
 	if ( argc > 2 )
 	{
@@ -912,7 +912,7 @@ void CTeamFortress2Mod:: clientCommand ( edict_t *pEntity, int argc, const char 
 }
 
 // to fixed
-void CTeamFortress2Mod :: teleporterBuilt ( edict_t *pOwner, eEngiBuild type, edict_t *pBuilding )
+void CTeamFortress2Mod :: teleporterBuilt ( edict_t *pOwner, const eEngiBuild type, edict_t *pBuilding )
 {
 	if ( type != ENGI_TELE ) //(type != ENGI_ENTRANCE) && (type != ENGI_EXIT) )
 		return;
@@ -956,7 +956,7 @@ int CTeamFortress2Mod ::getHighestScore ()
 
 // check if there is another building near where I want to build
 // check quickly by using the storage of sentryguns etc in the mod class
-bool CTeamFortress2Mod::buildingNearby (int iTeam, const Vector& vOrigin)
+bool CTeamFortress2Mod::buildingNearby (const int iTeam, const Vector& vOrigin)
 {
 	for ( int i = 1; i <= gpGlobals->maxClients; i ++ )
 	{
@@ -1004,7 +1004,7 @@ bool CTeamFortress2Mod::buildingNearby (int iTeam, const Vector& vOrigin)
 }
 
 //get the building
-edict_t *CTeamFortress2Mod::getBuilding (eEngiBuild object, const edict_t* pOwner)
+edict_t *CTeamFortress2Mod::getBuilding (const eEngiBuild object, const edict_t* pOwner)
 {
 	static int i;
 	static tf_tele_t *tele; //tele not used [APG]RoboCop[CL]
@@ -1042,7 +1042,7 @@ edict_t *CTeamFortress2Mod::getBuilding (eEngiBuild object, const edict_t* pOwne
 }
 
 // get the owner of 
-edict_t *CTeamFortress2Mod ::getBuildingOwner (eEngiBuild object, short index)
+edict_t *CTeamFortress2Mod ::getBuildingOwner (const eEngiBuild object, const short index)
 {
 	switch ( object )
 	{
@@ -1089,7 +1089,7 @@ edict_t *CTeamFortress2Mod ::getBuildingOwner (eEngiBuild object, short index)
 	return nullptr;
 }
 
-edict_t *CTeamFortress2Mod :: nearestDispenser (const Vector& vOrigin, int team)
+edict_t *CTeamFortress2Mod :: nearestDispenser (const Vector& vOrigin, const int team)
 {
 	edict_t *pNearest = nullptr;
 	float fNearest = bot_use_disp_dist.GetFloat();
@@ -1117,13 +1117,13 @@ edict_t *CTeamFortress2Mod :: nearestDispenser (const Vector& vOrigin, int team)
 	return pNearest;
 }
 
-void CTeamFortress2Mod::sapperPlaced(const edict_t* pOwner, eEngiBuild type, edict_t* pSapper)
+void CTeamFortress2Mod::sapperPlaced(const edict_t* pOwner, const eEngiBuild type, edict_t* pSapper)
 {
 	static int index;
 	
 	index = ENTINDEX(pOwner) - 1;
 
-	if ( index>=0 && index<RCBOT_MAXPLAYERS )
+	if ( index >= 0 && index < RCBOT_MAXPLAYERS )
 	{
 		if ( type == ENGI_TELE )
 			m_Teleporters[index].sapper = MyEHandle(pSapper);
@@ -1134,7 +1134,7 @@ void CTeamFortress2Mod::sapperPlaced(const edict_t* pOwner, eEngiBuild type, edi
 	}
 }
 
-void CTeamFortress2Mod:: addWaypointFlags (edict_t *pPlayer, edict_t *pEdict, int *iFlags, int *iArea, float *fMaxDistance )
+void CTeamFortress2Mod:: addWaypointFlags (edict_t *pPlayer, edict_t *pEdict, int *iFlags, int *iArea, float *fMaxDistance)
 {
 	const string_t model = pEdict->GetIServerEntity()->GetModelName();
 
@@ -1168,7 +1168,7 @@ void CTeamFortress2Mod:: addWaypointFlags (edict_t *pPlayer, edict_t *pEdict, in
 	}
 }
 
-void CTeamFortress2Mod::sapperDestroyed(edict_t *pOwner,eEngiBuild type, edict_t *pSapper)
+void CTeamFortress2Mod::sapperDestroyed(edict_t *pOwner, const eEngiBuild type, const edict_t *pSapper)
 {
 	static short int index; 
 
@@ -1270,7 +1270,7 @@ void CTeamFortress2Mod::updatePointMaster()
 	}
 }
 
-edict_t *CTeamFortress2Mod :: getPayloadBomb ( int team )
+edict_t *CTeamFortress2Mod :: getPayloadBomb (const int team)
 {
 	if ( team == TF2_TEAM_BLUE )
 		return m_pPayLoadBombBlue;
@@ -1366,7 +1366,7 @@ void CTeamFortress2Mod :: roundReset ()
 	}
 }
 
-void CTeamFortress2Mod::sentryBuilt(const edict_t* pOwner, eEngiBuild type, edict_t* pBuilding)
+void CTeamFortress2Mod::sentryBuilt(const edict_t* pOwner, const eEngiBuild type, edict_t* pBuilding)
 {
 	static int index;
 
@@ -1385,7 +1385,7 @@ void CTeamFortress2Mod::sentryBuilt(const edict_t* pOwner, eEngiBuild type, edic
 	}
 }
 
-bool CTeamFortress2Mod::isSentryGun (edict_t *pEdict )
+bool CTeamFortress2Mod::isSentryGun (edict_t *pEdict)
 {
 	static short int i;
 	static tf_sentry_t *temp;
@@ -1403,7 +1403,7 @@ bool CTeamFortress2Mod::isSentryGun (edict_t *pEdict )
 	return false;
 }
 
-void CTeamFortress2Mod::dispenserBuilt(const edict_t* pOwner, eEngiBuild type, edict_t* pBuilding)
+void CTeamFortress2Mod::dispenserBuilt(const edict_t* pOwner, const eEngiBuild type, edict_t* pBuilding)
 {
 	static int index;
 
@@ -1476,7 +1476,7 @@ bool CTeamFortress2Mod::isCapping ( edict_t *pPlayer )//, int iCapIndex = -1 )
 		{				
 			if ( m_ObjectiveResource.isCPValid(i,iTeam,TF2_POINT_ATTACK) )
 			{
-				if ( (m_Cappers[i] & index) == index  )
+				if ( (m_Cappers[i] & index) == index )
 					return true;
 			}
 		}

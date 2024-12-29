@@ -28,7 +28,7 @@
  *    version.
  */
 
-CBotCommandInline ShowUsersCommand("show", CMD_ACCESS_USERS | CMD_ACCESS_DEDICATED, [](CClient *pClient,
+CBotCommandInline ShowUsersCommand("show", CMD_ACCESS_USERS | CMD_ACCESS_DEDICATED, [](const CClient *pClient,
                                    const BotCommandArgs& args)
 {
 	edict_t *pEntity = nullptr;

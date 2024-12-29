@@ -133,7 +133,7 @@ cell_t sm_RCBotIsClientBot(IPluginContext *pContext, const cell_t *params) {
 	return CBots::getBot(client - 1) != nullptr;
 }
 
-int* GetIntProperty(CBotProfile* profile, RCBotProfileVar profileVar) {
+int* GetIntProperty(CBotProfile* profile, const RCBotProfileVar profileVar) {
 	switch (profileVar) {
 		case RCBotProfile_iVisionTicks:
 			return &profile->m_iVisionTicks;
@@ -149,7 +149,7 @@ int* GetIntProperty(CBotProfile* profile, RCBotProfileVar profileVar) {
 	return nullptr;
 }
 
-float* GetFloatProperty(CBotProfile* profile, RCBotProfileVar profileVar) {
+float* GetFloatProperty(CBotProfile* profile, const RCBotProfileVar profileVar) {
 	switch (profileVar) {
 		case RCBotProfile_fBraveness:
 			return &profile->m_fBraveness;
