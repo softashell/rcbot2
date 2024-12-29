@@ -38,11 +38,6 @@
 #include <cstdio>
 #include <cstring>
 
-#pragma push_macro("clamp") //Fix for C++17 [APG]RoboCop[CL]
-#undef clamp
-#include <algorithm>
-#pragma pop_macro("clamp")
-
 #include "rcbot/logging.h"
 
  /*unsigned char *CWaypointVisibilityTable :: m_VisTable = NULL;

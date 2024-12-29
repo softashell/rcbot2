@@ -49,6 +49,8 @@
 #endif
 
 #include <sys/stat.h>
+
+#include <algorithm>
 #include <cmath>
 #include <cstring>
 #include <memory>

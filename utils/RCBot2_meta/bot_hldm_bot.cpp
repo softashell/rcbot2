@@ -74,11 +74,11 @@ void CHLDMBot :: killed ( edict_t *pVictim, char *weapon )
 {
     CBot::killed(pVictim, weapon);
 
-    // update belief around this waypoint
+	// update belief around this waypoint
     if (pVictim && CBotGlobals::entityIsValid(pVictim))
     {
         m_pNavigator->belief(CBotGlobals::entityOrigin(pVictim), getEyePosition(), bot_beliefmulti.GetFloat(), distanceFrom(pVictim), BELIEF_SAFETY);
-    }
+	}
 }
 
 // the bot was killed by pKiller
@@ -493,7 +493,7 @@ void CHLDMBot :: getTasks (unsigned iIgnore)
 
 		if ( fDistance > BLAST_RADIUS && fDistance < 1500 )
 		{
-			const CWeapon *pWeapon = CWeapons::getWeapon(HL2DM_WEAPON_FRAG);
+			CWeapon *pWeapon = CWeapons::getWeapon(HL2DM_WEAPON_FRAG);
 			const CBotWeapon *pBotWeapon = m_pWeapons->getWeapon(pWeapon);
 
 			ADD_UTILITY(BOT_UTIL_THROW_GRENADE, pBotWeapon && pBotWeapon->getAmmo(this) > 0,1.0f- getHealthPercent()*0.2f)

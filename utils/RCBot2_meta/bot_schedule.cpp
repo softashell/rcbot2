@@ -112,7 +112,7 @@ void CBotTF2DemoPipeEnemySched :: init()
 }
 ///////////////////
 
-CBotTF2DemoPipeTrapSched :: CBotTF2DemoPipeTrapSched (const eDemoTrapType type, const Vector& vStand, const Vector& vLoc, const Vector& vSpread, const bool bAutoDetonate, const int wptarea )
+CBotTF2DemoPipeTrapSched :: CBotTF2DemoPipeTrapSched (const eDemoTrapType type, const Vector& vStand, const Vector& vLoc, const Vector& vSpread, const bool bAutoDetonate, const int wptarea)
 {
 	addTask(new CFindPathTask(vStand));
 	addTask(new CBotTF2DemomanPipeTrap(type,vStand,vLoc,vSpread,bAutoDetonate,wptarea));

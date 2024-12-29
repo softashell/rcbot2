@@ -215,7 +215,7 @@ bool CSignatureFunction::getLibraryInfo(const void *libPtr, DynLibInfo &lib)
 	return true;
 }
 
-void *CSignatureFunction::findPattern(const void *libPtr, const char *pattern, size_t len)
+void *CSignatureFunction::findPattern(const void *libPtr, const char *pattern, const size_t len)
 {
 	DynLibInfo lib;
 
@@ -285,7 +285,7 @@ CGameRulesObject::CGameRulesObject(CRCBotKeyValueList &list, void *pAddrBase)
 #endif
 }
 
-CCreateGameRulesObject::CCreateGameRulesObject(CRCBotKeyValueList &list, void *pAddrBase)
+CCreateGameRulesObject::CCreateGameRulesObject(const CRCBotKeyValueList &list, const void *pAddrBase)
 {
 #ifdef _WIN32
 	findFunc(list, "create_gamerules_object_win", pAddrBase, R"(\x55\x8B\xEC\x8B\x0D\x2A\x2A\x2A\x2A\x85\xC9\x74\x07)");

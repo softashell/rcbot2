@@ -57,11 +57,11 @@ CPerceptron::CPerceptron(const unsigned short iInputs)
 	m_inputs = new ga_nn_value [iInputs];//.clear();
 	m_weights = new ga_nn_value[iInputs];
 	m_iInputs = iInputs;
-
+	
 	m_LearnRate = 0.4f;
 	// bias weight
 	m_Bias = -0.5;
-
+	
 	for (unsigned short int i = 0; i < m_iInputs; i++)
 		m_weights[i] = -0.3f + randomFloat(0.0f, 0.6f);
 }
@@ -134,7 +134,7 @@ void CPerceptron::train(const ga_nn_value expectedOutput)
 
 	// bias
 	m_Bias += m_LearnRate*(expectedOutput-m_output);
-
+	
 	for ( i = 0; i < m_iInputs; i ++ )
 	{
 		*w = *w + m_LearnRate*(expectedOutput-m_output)* *x;

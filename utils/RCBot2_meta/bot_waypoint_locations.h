@@ -85,7 +85,7 @@ public:
 		Init();
 	}
 
-	static unsigned char *resetFailedWaypoints (WaypointList *iIgnoreWpts);
+	static unsigned char *resetFailedWaypoints (const WaypointList *iIgnoreWpts);
 
 	static void Init()
 	{
@@ -112,14 +112,14 @@ public:
 									    int *iMinLoci, int *iMinLocj, int *iMinLock,
 									    int *iMaxLoci, int *iMaxLocj, int *iMaxLock );
 
-	static int GetCoverWaypoint (const Vector& vPlayerOrigin, const Vector& vCoverFrom, WaypointList *iIgnoreWpts, Vector *vGoalOrigin = nullptr, int iTeam = 0, float fMinDist = MIN_COVER_MOVE_DIST, float fMaxDist = HALF_MAX_MAP_SIZE );
+	static int GetCoverWaypoint (const Vector& vPlayerOrigin, const Vector& vCoverFrom, WaypointList *iIgnoreWpts, const Vector *vGoalOrigin = nullptr, int iTeam = 0, float fMinDist = MIN_COVER_MOVE_DIST, float fMaxDist = HALF_MAX_MAP_SIZE);
 
-	static void FindNearestCoverWaypointInBucket ( int i, int j, int k, const Vector &vOrigin, float *pfMinDist, int *piIndex, WaypointList *iIgnoreWpts, int iCoverFromWpt, Vector *vGoalOrigin = nullptr, int iTeam = 0, float fMinDist = MIN_COVER_MOVE_DIST );
+	static void FindNearestCoverWaypointInBucket (int i, int j, int k, const Vector &vOrigin, float *pfMinDist, int *piIndex, WaypointList *iIgnoreWpts, int iCoverFromWpt, const Vector *vGoalOrigin = nullptr, int iTeam = 0, float fMinDist = MIN_COVER_MOVE_DIST);
 
 	static void AddWptLocation ( int iIndex, const float *fOrigin );
 
 	static void FindNearestInBucket ( int i, int j, int k, const Vector &vOrigin, float *pfMinDist, int *piIndex,int iIgnoreWpt, bool bGetVisible = true, bool bGetUnreachable = false, bool bIsBot = false, WaypointList *iFailedWpts = nullptr, bool bNearestAimingOnly = false, int iTeam = 0, bool bCheckArea = false, bool bGetVisibleFromOther = false, const Vector& vOther = Vector(0,0,0), int iFlagsOnly = 0, edict_t *pPlayer = nullptr);
-	static void DrawWaypoints ( CClient *pClient, float fDist );
+	static void DrawWaypoints (const CClient *pClient, float fDist);
 	
 	static void DeleteWptLocation ( int iIndex, const float *fOrigin );
 	
@@ -136,7 +136,7 @@ public:
 
 	static void AutoPath ( edict_t *pPlayer, int iWpt );
 
-	static void AutoPathInBucket ( edict_t *pPlayer, int i, int j, int k, int iWpt );
+	static void AutoPathInBucket (edict_t *pPlayer, int i, int j, int k, int iWptFrom);
 	
 	static int NearestBlastWaypoint ( const Vector &vOrigin, const Vector &vSrc, float fNearestDist, int iIgnoreWpt, bool bGetVisible, bool bGetUnReachable, bool bIsBot, bool bNearestAimingOnly, int iTeam, bool bCheckArea, float fBlastRadius = BLAST_RADIUS );
 

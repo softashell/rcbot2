@@ -444,7 +444,7 @@ enum : std::uint8_t
 class CBotHL2DMUseCharger : public CBotTask
 {
 public:
-	CBotHL2DMUseCharger ( edict_t *pCharger, int type ) : m_pCharger(pCharger)
+	CBotHL2DMUseCharger (edict_t *pCharger, const int type) : m_pCharger(pCharger)
 	{
 		m_fTime = 0;
 		m_iType = type;
@@ -472,7 +472,7 @@ public:
 		m_bOverrideLook = false;
 	}
 
-	CBotHL2DMUseButton ( edict_t *pButton, bool bOverrideLook ) : m_pButton(pButton)
+	CBotHL2DMUseButton ( edict_t *pButton, const bool bOverrideLook ) : m_pButton(pButton)
 	{
 		m_fTime = 0.0f;
 		m_bOverrideLook = bOverrideLook;
@@ -640,7 +640,7 @@ class CBotDefendTask : public CBotTask
 {
 public:
 	CBotDefendTask(const Vector& vOrigin, const float fMaxTime = 0.0f, const int iInterrupt = CONDITION_SEE_CUR_ENEMY,
-	               bool bDefendOrigin = false, const Vector& vDefendOrigin = Vector(0, 0, 0),
+	               const bool bDefendOrigin = false, const Vector& vDefendOrigin = Vector(0, 0, 0),
 	               const eLookTask looktask = LOOK_SNIPE, const int iWaypointType = 0) : m_vOrigin(vOrigin), m_vDefendOrigin(vDefendOrigin)
 	{ 
 		m_fMaxTime = fMaxTime; 
@@ -948,7 +948,7 @@ private:
 class CBotTF2AttackPoint : public CBotTask
 {
 public:
-	CBotTF2AttackPoint ( int iArea, const Vector& vOrigin, float fRadius );
+	CBotTF2AttackPoint (int iArea, const Vector& vOrigin, float fRadius);
 	void execute (CBot *pBot,CBotSchedule *pSchedule) override;
 
 	void debugString ( char *string ) override;
@@ -977,7 +977,7 @@ private:
 class CBotTF2DefendPoint : public CBotTask
 {
 public:
-	CBotTF2DefendPoint ( int iArea, const Vector& vOrigin, float fRadius );
+	CBotTF2DefendPoint (int iArea, const Vector& vOrigin, float fRadius);
 	void execute (CBot *pBot,CBotSchedule *pSchedule) override;
 
 	void debugString ( char *string ) override;
@@ -1506,12 +1506,12 @@ public:
 class CBotWaitTask : public CBotTask
 {
 public:
-	CBotWaitTask(float waittime)
+	CBotWaitTask(const float waittime)
 	{
 		m_ftime = engine->Time() + waittime;
 		m_bAimSet = false;
 	}
-	CBotWaitTask(float waittime, const Vector& vAim) : m_vAim(vAim)
+	CBotWaitTask(const float waittime, const Vector& vAim) : m_vAim(vAim)
 	{
 		m_ftime = engine->Time() + waittime;
 		m_bAimSet = true;
@@ -1565,7 +1565,7 @@ private:
 class CBotSynUseCharger: public CBotTask
 {
 public:
-	CBotSynUseCharger(edict_t *pCharger, int type) : m_pCharger(pCharger)
+	CBotSynUseCharger(edict_t *pCharger, const int type) : m_pCharger(pCharger)
 	{
 		m_vPos = Vector(0,0,0);
 		m_iType = type;

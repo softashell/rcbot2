@@ -241,7 +241,7 @@ public:
 	{
 		int count = 0;
 
-		for ( int i = 0; i < m_iNumControlPoints; i ++ )
+		for (int i = 0; i < m_iNumControlPoints; i++)
 		{
 			if ( m_iOwner[i] == iTeam )
 				count++;
@@ -270,7 +270,7 @@ public:
 	{
 		int count = 0;
 
-		for ( int i = 0; i < m_iNumControlPoints; i ++ )
+		for (int i = 0; i < m_iNumControlPoints; i++)
 		{
 			if ( canDefendBomb(iTeam,i) )
 				count++;
@@ -283,7 +283,7 @@ public:
 	{
 		int count = 0;
 
-		for ( int i = 0; i < m_iNumControlPoints; i ++ )
+		for (int i = 0; i < m_iNumControlPoints; i++)
 		{
 			if ( canDefuseBomb(iTeam,i) )
 				count++;
@@ -296,7 +296,7 @@ public:
 	{
 		int count = 0;
 
-		for ( int i = 0; i < m_iNumControlPoints; i ++ )
+		for (int i = 0; i < m_iNumControlPoints; i++)
 		{
 			if ( canPlantBomb(iTeam,i) )
 				count += getNumBombsRequired(i);
@@ -320,11 +320,11 @@ public:
 			m_fBombPlantedTime[id] = 0;
 	}
 
-	int getNumBombsToPlant ( int iTeam) const
+	int getNumBombsToPlant ( int iTeam ) const
 	{
 		int count = 0;
 
-		for ( int i = 0; i < m_iNumControlPoints; i ++ )
+		for (int i = 0; i < m_iNumControlPoints; i++)
 		{
 			if ( canPlantBomb(iTeam,i) )
 				count += getNumBombsRemaining(i);
@@ -333,7 +333,7 @@ public:
 		return count;
 	}
 
-	bool ownsFlag ( edict_t *pFlag, int iTeam ) const { return ownsFlag(getFlagID(pFlag),iTeam); }
+	bool ownsFlag (const edict_t *pFlag, int iTeam) const { return ownsFlag(getFlagID(pFlag),iTeam); }
 
 	bool ownsFlag ( int iFlag, int iTeam ) const
 	{
@@ -347,7 +347,7 @@ public:
 	{
 		int count = 0;
 
-		for ( int i = 0; i < m_iNumControlPoints; i ++ )
+		for (int i = 0; i < m_iNumControlPoints; i++)
 		{
 			if ( m_iOwner[i] == iTeam )
 				count++;
@@ -356,7 +356,7 @@ public:
 		return count;
 	}
 
-	int numCappersRequired ( edict_t *pFlag, int iTeam ) const { return numCappersRequired(getFlagID(pFlag),iTeam); }
+	int numCappersRequired (const edict_t *pFlag, int iTeam) const { return numCappersRequired(getFlagID(pFlag),iTeam); }
 
 	int numCappersRequired ( int iFlag, int iTeam ) const
 	{
@@ -374,7 +374,7 @@ public:
 		return m_bBombPlanted[iId];
 	}
 
-	bool isBombPlanted ( edict_t *pBomb ) const
+	bool isBombPlanted (const edict_t *pBomb) const
 	{
 		return isBombPlanted(getBombID(pBomb));
 	}
@@ -467,9 +467,9 @@ public:
 		return nullptr;
 	}
 
-	int getFlagID ( edict_t *pent ) const
+	int getFlagID (const edict_t *pent) const
 	{
-		for ( int i = 0; i < m_iNumControlPoints; i ++ )
+		for (int i = 0; i < m_iNumControlPoints; i++)
 		{
 			if ( m_pFlags[i] == pent )
 				return i;
@@ -478,12 +478,12 @@ public:
 		return -1;
 	}
 
-	int getBombID ( edict_t *pent ) const
+	int getBombID (const edict_t *pent) const
 	{
 		if ( pent == nullptr)
 			return -1;
 
-		for ( int i = 0; i < m_iNumControlPoints; i ++ )
+		for (int i = 0; i < m_iNumControlPoints; i++)
 		{
 			if ( m_pBombs[i][0] == pent || m_pBombs[i][1] == pent )
 				return i;
@@ -1084,7 +1084,7 @@ public:
 		return nullptr;
 	}
 
-	static edict_t *getSentryOwner ( edict_t *pSentry )
+	static edict_t *getSentryOwner (const edict_t *pSentry)
 	{
 		//for ( short int i = 1; i <= gpGlobals->maxClients; i ++ )
 		for ( short int i = 0; i < RCBOT_MAXPLAYERS; i ++ )
@@ -1142,7 +1142,7 @@ public:
 		return false;
 	}
 
-	static bool isSentrySapped ( edict_t *pSentry )
+	static bool isSentrySapped (const edict_t *pSentry)
 	{
 		for (tf_sentry_t& m_SentryGun : m_SentryGuns)
 		{
@@ -1153,7 +1153,7 @@ public:
 		return false;
 	}
 
-	static bool isTeleporterSapped ( edict_t *pTele )
+	static bool isTeleporterSapped (const edict_t *pTele)
 	{
 		for (tf_tele_t& m_Teleporter : m_Teleporters)
 		{
@@ -1164,7 +1164,7 @@ public:
 		return false;
 	}
 
-	static bool isDispenserSapped ( edict_t *pDisp )
+	static bool isDispenserSapped (const edict_t *pDisp)
 	{
 		for (tf_disp_t& m_Dispenser : m_Dispensers)
 		{
@@ -1357,7 +1357,7 @@ public:
 
 	bool playerSpawned ( edict_t *pPlayer ) override;
 
-	static edict_t *getButtonAtWaypoint ( CWaypoint *pWaypoint )
+	static edict_t *getButtonAtWaypoint (const CWaypoint *pWaypoint)
 	{
 		for (edict_wpt_pair_t& m_LiftWaypoint : m_LiftWaypoints)
 		{

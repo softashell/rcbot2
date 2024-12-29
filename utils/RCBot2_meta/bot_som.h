@@ -42,7 +42,7 @@ public:
 
 	CSomNeuron ();
 
-	CSomNeuron ( unsigned short id, int iInp, int iX, int iY );
+	CSomNeuron (unsigned short iId, int iInp, int iX, int iY);
 
 	float getX() const
 	{
@@ -62,7 +62,7 @@ public:
 
 	void displayWeights () const;
 	
-	float neighbourDistance ( CSomNeuron *other ) const;
+	float neighbourDistance (const CSomNeuron *other) const;
 
 	void setClassID (const unsigned short iId) { m_iId = iId; }
 
@@ -88,11 +88,11 @@ public:
 
 	void updateAround (const std::vector<float>* inputs, CSomNeuron* bmu) const;
 
-	CSomNeuron *input ( std::vector < std::vector <float> > *inputs );
+	CSomNeuron *input (const std::vector < std::vector <float> > *inputs);
 
-	CSomNeuron *inputOne ( std::vector < float > *inputs );
+	CSomNeuron *inputOne (const std::vector < float > *inputs);
 
-	void input ( std::vector < std::vector <float> > *inputs, int epochs );
+	void input (std::vector < std::vector <float> > *inputs, int epochs);
 
 	void display () const;
 

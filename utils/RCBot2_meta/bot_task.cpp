@@ -38,6 +38,7 @@
 #include "bot_schedule.h"
 #include "bot_task.h"
 
+#include <algorithm>
 #include "bot_navigator.h"
 #include "bot_waypoint_locations.h"
 #include "bot_globals.h"
@@ -53,12 +54,9 @@
 #include "bot_waypoint_visibility.h"
 #include "bot_synergy.h"
 
-#include <algorithm> // For std::min
-#undef min           // Undefine macro if it exists
-#undef max           // Undefine macro if it exists
-
-#ifdef WIN32
-#define NOMINMAX // Prevent Windows headers from defining min and max
+//caxanga334: SDK 2013 contains macros for std::min and std::max which causes errors when compiling
+#if SOURCE_ENGINE == SE_SDK2013 || SOURCE_ENGINE == SE_BMS
+#include "valve_minmax_off.h"
 #endif
 
 // desx and desy must be normalized
@@ -233,7 +231,7 @@ void CBotTF2ShootLastEnemyPosition ::  execute (CBot *pBot,CBotSchedule *pSchedu
 {
 	const CBotWeapon *pWeapon = pBot->getCurrentWeapon();
 	CBotTF2 *pTF2Bot = static_cast<CBotTF2*>(pBot);
-	const CWeapon *pChange = nullptr;
+	CWeapon *pChange = nullptr;
 
 	if ( m_fTime == 0.0f )
 		m_fTime = engine->Time() + randomFloat(2.0f,4.5f);
@@ -305,7 +303,7 @@ void CBotTF2ShootLastEnemyPosition :: debugString ( char *string )
 
 /////////////
 
-CBotTF2WaitHealthTask :: CBotTF2WaitHealthTask (const Vector& vOrigin )
+CBotTF2WaitHealthTask :: CBotTF2WaitHealthTask (const Vector& vOrigin) : m_vOrigin(vOrigin)
 {
 	m_fWaitTime = 0.0f;
 }
@@ -353,7 +351,7 @@ void CBotTF2WaitHealthTask :: debugString ( char *string )
 }
 
 
-CBotTF2WaitFlagTask :: CBotTF2WaitFlagTask (const Vector& vOrigin, bool bFind)
+CBotTF2WaitFlagTask :: CBotTF2WaitFlagTask (const Vector& vOrigin, const bool bFind) : m_vOrigin(vOrigin)
 {
 	m_fWaitTime = 0.0f;
 	m_bFind = bFind;
@@ -612,7 +610,7 @@ void CDODWaitForBombTask :: debugString ( char *string )
 
 //////////
 
-CBotDODAttackPoint :: CBotDODAttackPoint ( int iFlagID, const Vector& vOrigin, float fRadius )
+CBotDODAttackPoint :: CBotDODAttackPoint (const int iFlagID, const Vector& vOrigin, const float fRadius) : m_vOrigin(vOrigin)
 {
 	m_bProne = false;
 	m_fAttackTime = 0.0f;
@@ -1287,7 +1285,7 @@ void CBotTFEngiTankSentry :: execute (CBot *pBot,CBotSchedule *pSchedule)
 ////////////////////////
 
 
-CBotTF2WaitAmmoTask :: CBotTF2WaitAmmoTask (const Vector& vOrigin)
+CBotTF2WaitAmmoTask :: CBotTF2WaitAmmoTask (const Vector& vOrigin) : m_vOrigin(vOrigin)
 {
 	m_fWaitTime = 0.0f;
 }
@@ -1381,7 +1379,7 @@ void CBotTaskEngiPickupBuilding :: debugString ( char *string )
 }
 
 /////////////////
-CBotTaskEngiPlaceBuilding :: CBotTaskEngiPlaceBuilding ( eEngiBuild iObject, const Vector& vOrigin )
+CBotTaskEngiPlaceBuilding :: CBotTaskEngiPlaceBuilding (const eEngiBuild iObject, const Vector& vOrigin) : m_vOrigin(vOrigin)
 {
 	m_fTime = 0.0f;
 	m_iState = 1; // BEGIN HERE , otherwise bot will try to destroy the building
@@ -1825,7 +1823,7 @@ void CBotTF2EngiLookAfter :: execute (CBot *pBot,CBotSchedule *pSchedule)
 }
 
 ////////////////////////
-CBotTFEngiBuildTask :: CBotTFEngiBuildTask (const eEngiBuild iObject, CWaypoint *pWaypoint )
+CBotTFEngiBuildTask :: CBotTFEngiBuildTask (const eEngiBuild iObject, CWaypoint *pWaypoint)
 {
 	m_iObject = iObject;
 	m_vOrigin = pWaypoint->getOrigin()+pWaypoint->applyRadius();
@@ -2204,6 +2202,8 @@ CBotTF2FindPipeWaypoint::CBotTF2FindPipeWaypoint(const Vector& vOrigin, const Ve
 	: m_iters(0),
 	m_i(0),
 	m_j(0), // Initialize m_pTarget to nullptr
+	m_vOrigin(vOrigin),
+	m_vTarget(vTarget),
 	m_iTargetWaypoint(static_cast<short>(CWaypointLocations::NearestWaypoint(m_vTarget, BLAST_RADIUS, -1, true, true))),
 	m_fNearesti(2048.0f),
 	m_fNearestj(4096.0f),
@@ -2822,7 +2822,7 @@ void CBotRemoveSapper :: execute (CBot *pBot,CBotSchedule *pSchedule)
 
 ////////////////////////////////////////////////////
 
-CBotTF2SnipeCrossBow::CBotTF2SnipeCrossBow(const Vector& vOrigin, const int iWpt)
+CBotTF2SnipeCrossBow::CBotTF2SnipeCrossBow(const Vector& vOrigin, const int iWpt) : m_vOrigin(vOrigin)
 {
 	const CWaypoint *pWaypoint = CWaypoints::getWaypoint(iWpt);
 	m_iHideWaypoint = 0;
@@ -3109,7 +3109,7 @@ void CBotTF2SnipeCrossBow::execute(CBot *pBot, CBotSchedule *pSchedule)
 	}
 }
 ///////////////////////////////////////////
-CBotTF2Snipe :: CBotTF2Snipe (const Vector& vOrigin, const int iWpt)
+CBotTF2Snipe :: CBotTF2Snipe (const Vector& vOrigin, const int iWpt) : m_vOrigin(vOrigin)
 {
 	m_iHideWaypoint = 0;
 	m_fHideTime = 0.0f;
@@ -5407,7 +5407,7 @@ void CBotDODSnipe :: execute (CBot *pBot,CBotSchedule *pSchedule)
 //////////////////////////
 
 CBotHL2DMSnipe::CBotHL2DMSnipe(CBotWeapon* pWeaponToUse, const Vector& vOrigin, const float fYaw, const bool bUseZ, const float z,
-                               const int iWaypointType)
+                               const int iWaypointType) : m_vOrigin(vOrigin)
 {
 	m_fEnemyTime = 0.0f;
 	m_fTime = 0.0f;

@@ -41,7 +41,7 @@
 class CEdictRecipient : public IRecipientFilter
 {
 public:
-	CEdictRecipient ( edict_t *pEdict, const bool bReliable )
+	CEdictRecipient (edict_t *pEdict, const bool bReliable)
 	{
 		m_pEdict = pEdict;
 		m_bReliable = bReliable;

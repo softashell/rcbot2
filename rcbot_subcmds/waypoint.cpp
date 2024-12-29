@@ -58,11 +58,12 @@ CBotCommandInline WaypointAddCommand("add", CMD_ACCESS_WAYPOINT, [](CClient *pCl
 });
 
 CBotCommandInline WaypointDeleteCommand("delete", CMD_ACCESS_WAYPOINT, [](CClient* pClient, const BotCommandArgs& args)
-{
+{	
 	if (!pClient)
 		return COMMAND_ERROR;
 
-	auto deleteWaypointsInRange = [&](const float radius) {
+	auto deleteWaypointsInRange = [&](const float radius)
+	{
 		int numdeleted = 0;
 		const Vector vOrigin = pClient->getOrigin();
 		WaypointList pWpt;
@@ -107,24 +108,24 @@ CBotCommandInline WaypointDeleteCommand("delete", CMD_ACCESS_WAYPOINT, [](CClien
 			return COMMAND_ERROR;
 		}
 	}
-	else
-	{
-		pClient->updateCurrentWaypoint();
-		if (CWaypoints::validWaypointIndex(pClient->currentWaypoint()))
-		{
-			CWaypoints::deleteWaypoint(pClient->currentWaypoint());
-			CBotGlobals::botMessage(pClient->getPlayer(), 0, "waypoint %d deleted", pClient->currentWaypoint());
-			pClient->updateCurrentWaypoint();
-			pClient->playSound("buttons/combine_button_locked");
-			pClient->giveMessage("Waypoint deleted");
-		}
 		else
 		{
-			CBotGlobals::botMessage(pClient->getPlayer(), 0, "no waypoint nearby to delete");
-			pClient->playSound("weapons/wpn_denyselect");
-			pClient->giveMessage("No Waypoint");
+			pClient->updateCurrentWaypoint();
+		if (CWaypoints::validWaypointIndex(pClient->currentWaypoint()))
+			{
+				CWaypoints::deleteWaypoint(pClient->currentWaypoint());
+				CBotGlobals::botMessage(pClient->getPlayer(), 0, "waypoint %d deleted", pClient->currentWaypoint());
+				pClient->updateCurrentWaypoint();
+				pClient->playSound("buttons/combine_button_locked");
+				pClient->giveMessage("Waypoint deleted");
+			}
+			else
+			{
+				CBotGlobals::botMessage(pClient->getPlayer(), 0, "no waypoint nearby to delete");
+				pClient->playSound("weapons/wpn_denyselect");
+				pClient->giveMessage("No Waypoint");
+			}
 		}
-	}
 
 	return COMMAND_ACCESSED;
 });

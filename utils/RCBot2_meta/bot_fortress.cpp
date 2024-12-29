@@ -30,12 +30,6 @@
  *    version.
  *
  */
-
-#pragma push_macro("clamp") //Fix for C++17 [APG]RoboCop[CL]
-#undef clamp
-#include <algorithm>
-#pragma pop_macro("clamp")
-
 #include "bot_plugin_meta.h"
 
 #include "bot.h"
@@ -64,6 +58,7 @@
 #include "bot_squads.h"
 //#include "bot_hooks.h"
 
+#include <algorithm>
 #include <array>
 #include <cmath>
 #include <cstring>
@@ -2740,10 +2735,10 @@ void CBotTF2 ::spyCloak()
 
 void CBotFortress::chooseClass()
 {
-	const int forcedClass = rcbot_force_class.GetInt();
-	if (forcedClass > 0 && forcedClass < 10)
+	const int _forcedClass = rcbot_force_class.GetInt();
+	if (_forcedClass > 0 && _forcedClass < 10)
 	{
-		switch (forcedClass)
+		switch (_forcedClass)
 		{
 		case 1:
 			m_iDesiredClass = TF_CLASS_SCOUT;
@@ -7073,7 +7068,7 @@ bool CBotTF2 :: handleAttack ( CBotWeapon *pWeapon, edict_t *pEnemy )
 	return true;
 }
 
-int CBotFortress :: getMetal () const
+int CBotFortress :: getMetal ()
 {
 	if ( m_iClass == TF_CLASS_ENGINEER )
 	{

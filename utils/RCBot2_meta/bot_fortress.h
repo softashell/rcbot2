@@ -441,7 +441,7 @@ public:
 
 	void checkDependantEntities() override;
 
-	int getMetal () const;
+	int getMetal ();
 
 	//virtual Vector getAimVector ( edict_t *pEntity ) { return CBot::getAimVector(pEntity); }
 

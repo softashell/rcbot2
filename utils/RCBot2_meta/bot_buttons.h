@@ -70,7 +70,7 @@ public:
 
 	void unTap () { m_bTapped = false; }
 
-	void hold ( float fFrom = 0.0f, float fFor = 1.0f, float fLetGoTime = 0.0f );
+	void hold (float fFrom = 0.0f, float fFor = 1.0f, float m_fLetGoTime = 0.0f);
 private:
 	int m_iButtonId;
 	float m_fTimeStart;
@@ -96,7 +96,7 @@ public:
 	}
 
 	void letGo (int iButtonId) const;
-	void holdButton ( int iButtonId, float fFrom = 0.0f, float fFor = 1.0f, float fLetGoTime = 0.0f ) const;
+	void holdButton (int iButtonId, float fFrom = 0.0f, float fFor = 1.0f, float m_fLetGoTime = 0.0f) const;
 
 	inline void add ( CBotButton *theButton );
 
@@ -105,7 +105,7 @@ public:
 
 	void tap ( int iButtonId ) const;
 
-	void letGoAllButtons ( bool bVal ) { m_bLetGoAll = bVal; }
+	void letGoAllButtons (const bool bVal) { m_bLetGoAll = bVal; }
 
 	int getBitMask () const;
 

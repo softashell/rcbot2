@@ -1,8 +1,3 @@
-#pragma push_macro("clamp") //Fix for C++17 [APG]RoboCop[CL]
-#undef clamp
-#include <algorithm>
-#pragma pop_macro("clamp")
-
 #include "engine_wrappers.h"
 
 #include "bot_wpt_dist.h"
@@ -79,7 +74,7 @@ void CWaypointDistances::save()
 	//}
 }
 
-float CWaypointDistances::getDistance(int iFrom, int iTo)
+float CWaypointDistances::getDistance(const int iFrom, const int iTo)
 {
 	if (m_Distances[iFrom][iTo] == -1)
 		return (CWaypoints::getWaypoint(iFrom)->getOrigin() - CWaypoints::getWaypoint(iTo)->getOrigin()).Length();

@@ -218,7 +218,7 @@ public:
 	}
 
 	// remove the first schedule in the queue matching this schedule identifier
-	void removeSchedule ( eBotSchedule iSchedule )
+	void removeSchedule (const eBotSchedule iSchedule)
 	{
 		for (std::deque<CBotSchedule*>::iterator it = m_Schedules.begin(); it != m_Schedules.end(); ) {
 			if ((*it)->isID(iSchedule)) {
@@ -380,7 +380,7 @@ public:
 class CBotDefendPointSched : public CBotSchedule
 {
 public:
-	CBotDefendPointSched (const Vector& vPoint, float fRadius, int iArea );
+	CBotDefendPointSched (const Vector& vPoint, float fRadius, int iArea);
 
 	void init () override;
 }; 

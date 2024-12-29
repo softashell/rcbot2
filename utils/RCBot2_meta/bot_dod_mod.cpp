@@ -45,14 +45,13 @@
 #include "bot_waypoint_locations.h"
 #include "bot_perceptron.h"
 
+#include <algorithm>
 #include <cstring>
 
-#pragma push_macro("clamp") //Fix for C++17 [APG]RoboCop[CL]
-#undef clamp
-#include <algorithm>
-#undef min           // Undefine macro if it exists
-#undef max           // Undefine macro if it exists
-#pragma pop_macro("clamp")
+ //Ignores the min/max macros in the windows headers
+#if SOURCE_ENGINE == SE_SDK2013 || SOURCE_ENGINE == SE_BMS
+#include "valve_minmax_off.h"
+#endif
 
 edict_t *CDODMod::m_pResourceEntity = nullptr;
 CDODFlags CDODMod::m_Flags;
@@ -147,7 +146,7 @@ void CDODMod::initMod()
 	tset.in(4.0f / 5); // E - enemy flag ratio
 	tset.in(1.0f / 5); // T - team flag ratio
 	tset.out(0.2f); // probability of attack (mostly defend)
-
+	
 	tset.addSet();
 	tset.in(1.0f / 5); // E - enemy flag ratio
 	tset.in(4.0f / 5); // T - team flag ratio
@@ -309,7 +308,7 @@ int CDODFlags::findNearestObjective (const Vector& vOrigin ) const
 	float fDistance;
 	int iNearest = -1;
 	
-	for ( int i = 0; i < m_iNumControlPoints; i ++ )
+	for (int i = 0; i < m_iNumControlPoints; i++)
 	{
 		if ( m_iWaypoint[i] != -1 )
 		{
@@ -335,7 +334,7 @@ bool CDODFlags::getRandomEnemyControlledFlag ( CBot *pBot, Vector *position, int
 
 	float fTotal = 0.0f;
 
-	for ( int i = 0; i < m_iNumControlPoints; i ++ )
+	for (int i = 0; i < m_iNumControlPoints; i++)
 	{
 		if ( m_iWaypoint[i] != -1 )
 		{
@@ -361,7 +360,7 @@ bool CDODFlags::getRandomEnemyControlledFlag ( CBot *pBot, Vector *position, int
 	const float fRand = randomFloat(0, fTotal);
 	fTotal = 0.0f;
 
-	for ( int i = 0; i < m_iNumControlPoints; i ++ )
+	for (int i = 0; i < m_iNumControlPoints; i++)
 	{
 		if ( m_iWaypoint[i] != -1 )
 		{
@@ -400,7 +399,7 @@ bool CDODFlags::getRandomBombToDefuse  ( Vector *position, int iTeam, edict_t **
 		*id = -1;
 
 	// more possibility to return bomb targets with no bomb already
-	for ( int i = 0; i < m_iNumControlPoints; i ++ )
+	for (int i = 0; i < m_iNumControlPoints; i++)
 	{
 		if ( m_iOwner[i] == iTeam && isBombPlanted(i) && !isBombBeingDefused(i) && m_pBombs[i][0] != nullptr)
 			for ( int j = 0; j < getNumBombsRequired(i); j ++ ) { iPossible.emplace_back(i); }
@@ -438,7 +437,7 @@ bool CDODFlags:: getRandomBombToDefend ( CBot *pBot, Vector *position, int iTeam
 		*id = -1;
 
 	// more possibility to return bomb targets with no bomb already
-	for ( int i = 0; i < m_iNumControlPoints; i ++ )
+	for (int i = 0; i < m_iNumControlPoints; i++)
 	{
 		if ( m_iOwner[i] != iTeam && isBombPlanted(i) && m_pBombs[i][0] != nullptr)
 			for ( int j = 0; j < getNumBombsRequired(i); j ++ ) { iPossible.emplace_back(i); }
@@ -477,7 +476,7 @@ bool CDODFlags:: getRandomBombToPlant ( CBot *pBot, Vector *position, int iTeam,
 
 	float fTotal = 0.0f;
 
-	for ( int i = 0; i < m_iNumControlPoints; i ++ )
+	for (int i = 0; i < m_iNumControlPoints; i++)
 	{
 		// if no waypoint -- can't go there
 		if ( m_iWaypoint[i] != -1 )
@@ -496,7 +495,7 @@ bool CDODFlags:: getRandomBombToPlant ( CBot *pBot, Vector *position, int iTeam,
 
 	fTotal = 0.0f;
 
-	for ( int i = 0; i < m_iNumControlPoints; i ++ )
+	for (int i = 0; i < m_iNumControlPoints; i++)
 	{
 		if (m_iWaypoint[i] != -1)
 		{
@@ -544,7 +543,7 @@ bool CDODFlags::getRandomTeamControlledFlag ( CBot *pBot, Vector *position, int 
 
 	float fTotal = 0.0f;
 
-	for ( int i = 0; i < m_iNumControlPoints; i ++ )
+	for (int i = 0; i < m_iNumControlPoints; i++)
 	{
 		if ( m_iWaypoint[i] != -1 )
 		{
@@ -564,7 +563,7 @@ bool CDODFlags::getRandomTeamControlledFlag ( CBot *pBot, Vector *position, int 
 	const float fRand = randomFloat(0, fTotal);
 	fTotal = 0.0f;
 
-	for ( int i = 0; i < m_iNumControlPoints; i ++ )
+	for (int i = 0; i < m_iNumControlPoints; i++)
 	{
 		if ( m_iWaypoint[i] != -1 )
 		{

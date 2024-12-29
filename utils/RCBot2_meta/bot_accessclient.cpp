@@ -43,7 +43,7 @@ std::vector<CAccessClient*> CAccessClients :: m_Clients;
 
 ///////////
 
-CAccessClient :: CAccessClient( const char *szSteamID, const int iAccessLevel )
+CAccessClient :: CAccessClient(const char *szSteamID, const int iAccessLevel)
 {
 	m_iAccessLevel = iAccessLevel;
 	m_szSteamID = CStrings::getString(szSteamID);
@@ -54,7 +54,7 @@ bool CAccessClient :: forBot () const
 	return isForSteamID("BOT");
 }
 
-bool CAccessClient :: isForSteamID ( const char *szSteamID ) const
+bool CAccessClient :: isForSteamID (const char *szSteamID) const
 {
 	logger->Log(LogLevel::DEBUG, "AccessClient: '%s','%s'", m_szSteamID, szSteamID);
 	return FStrEq(m_szSteamID,szSteamID);

@@ -38,12 +38,8 @@
 #include "bot_squads.h"
 #include "bot_getprop.h"
 
-#include <cstring>
-
-#pragma push_macro("clamp") //Fix for C++17 [APG]RoboCop[CL]
-#undef clamp
 #include <algorithm>
-#pragma pop_macro("clamp")
+#include <cstring>
 
 std::deque<CBotSquad*> CBotSquads::m_theSquads;
 
@@ -191,7 +187,7 @@ CBotSquad *CBotSquads::SquadJoin ( edict_t *pLeader, edict_t *pMember )
 	return theSquad;
 }
 
-CBotSquad *CBotSquads::FindSquadByLeader ( edict_t *pLeader )
+CBotSquad *CBotSquads::FindSquadByLeader (const edict_t *pLeader)
 {
 	for (CBotSquad *squad : m_theSquads) {
 		if (squad->IsLeader(pLeader)) {

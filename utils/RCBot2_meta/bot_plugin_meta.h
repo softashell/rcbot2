@@ -97,7 +97,7 @@ public:
 		char *reject,
 		int maxrejectlen);
 
-	static void HudTextMessage(edict_t *pEntity, const char *szMessage);
+	static void HudTextMessage(const edict_t *pEntity, const char *szMessage);
 	static void BroadcastTextMessage(const char *szMessage);
 
 #if SOURCE_ENGINE >= SE_ORANGEBOX

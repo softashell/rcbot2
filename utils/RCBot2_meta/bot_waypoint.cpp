@@ -57,16 +57,15 @@
 
 #include "rcbot/logging.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstring>
 #include <vector>    //bir3yk
 
-#pragma push_macro("clamp")
-#undef clamp
-#include <algorithm>
-#undef min           // Undefine macro if it exists
-#undef max           // Undefine macro if it exists
-#pragma pop_macro("clamp")
+ //caxanga334: SDK 2013 contains macros for std::min and std::max which causes errors when compiling
+#if SOURCE_ENGINE == SE_SDK2013 || SOURCE_ENGINE == SE_BMS
+#include "valve_minmax_off.h"
+#endif
 
 int CWaypoints::m_iNumWaypoints = 0;
 CWaypoint CWaypoints::m_theWaypoints[MAX_WAYPOINTS];

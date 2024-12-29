@@ -214,7 +214,8 @@ void CBot::runPlayerMove()
 	m_iSelectWeapon = 0;
 	m_iImpulse = 0;
 
-	if (CClients::clientsDebugging(BOT_DEBUG_BUTTONS)) {
+	if (CClients::clientsDebugging(BOT_DEBUG_BUTTONS))
+	{
 		char dbg[512];
 
 		snprintf(dbg, sizeof(dbg), "m_pButtons = %d/%x, Weapon Select = %d, impulse = %d", cmd.buttons, cmd.buttons, cmd.weaponselect, cmd.impulse);
@@ -1792,7 +1793,7 @@ void CBot ::debugBot(char *msg)
 	);
 }
 
-int CBot :: nearbyFriendlies (float fDistance)
+int CBot :: nearbyFriendlies (const float fDistance)
 {
 	int num = 0;
 	const int maxclients = CBotGlobals::maxClients();

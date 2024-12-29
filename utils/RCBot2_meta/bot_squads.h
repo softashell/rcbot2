@@ -125,7 +125,7 @@ public:
 		return m_pLeader.get();
 	}
 
-	void SetCombatType ( eCombatType iCombatType )
+	void SetCombatType (const eCombatType iCombatType)
 	{
 		const edict_t *pLeader = GetLeader();
 
@@ -173,12 +173,12 @@ public:
 
 	bool IsMember (const edict_t* pEdict);
 
-	bool isFormation (eSquadForm theFormation) const
+	bool isFormation (const eSquadForm theFormation) const
 	{
 		return m_theDesiredFormation == theFormation;
 	}
 
-	void ChangeFormation ( eSquadForm theNewFormation )
+	void ChangeFormation (const eSquadForm theNewFormation)
 	{
 		m_theDesiredFormation = theNewFormation;
 	}
@@ -188,7 +188,7 @@ public:
 		return m_fDesiredSpread;
 	}
 
-	void ChangeSpread ( float fNewSpread )
+	void ChangeSpread (const float fNewSpread)
 	{
 		m_fDesiredSpread = fNewSpread;
 	}
@@ -201,7 +201,7 @@ public:
 
 	bool isDefensive () const { return m_Tactics == TACTIC_DEFEND; }
 
-	void setTactic ( eTacticType iTactics ) { m_Tactics = iTactics; }
+	void setTactic (const eTacticType iTactics) { m_Tactics = iTactics; }
 
 	// Squad is waiting for another squad to Syncronize
 	bool isWaitingForOtherSquad () const
@@ -253,7 +253,7 @@ public:
 
 	static CBotSquad *SquadJoin ( edict_t *pLeader, edict_t *pMember );
 
-	static CBotSquad *FindSquadByLeader ( edict_t *pLeader );
+	static CBotSquad *FindSquadByLeader (const edict_t *pLeader );
 
 	static void RemoveSquad ( CBotSquad *pSquad );
 
