@@ -159,4 +159,5 @@ Additionally, `rcbot/logging.{h,cpp}` is released separately under the
 - TFBot_Maverick
 - apdonato
 - Sntr
-- mehdichallenger		
+- mehdichallenger
+- Mikou
