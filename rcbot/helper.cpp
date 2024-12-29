@@ -34,8 +34,6 @@
 #include <algorithm>
 #pragma pop_macro("clamp")
 
-#include <cmath>
-
 #include "helper.h"
 #include "IEngineTrace.h"
 #include "toolframework/itoolentity.h"
@@ -232,5 +230,5 @@ bool CBotHelper::PointWithinViewAngle(Vector const &vecSrcPosition, Vector const
 /// @return Width of the forward view cone as a dot product result
 float CBotHelper::GetForwardViewCone(const float angle)
 {
-	return std::cosf(DEG2RAD(angle) / 2.0f);
+	return cosf(DEG2RAD(angle) / 2.0f);
 }
