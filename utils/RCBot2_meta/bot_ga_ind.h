@@ -43,7 +43,7 @@ public:
 	void init ();
 
 	// crossover with other individual
-	void crossOver ( IIndividual *other ) override;
+	void crossOver(IIndividual* other) override;
 
 	// mutate some values
 	void mutate () override;
