@@ -34,6 +34,9 @@
 #include "bot_configfile.h"
 
 #include <cstring>
+#include <sstream>
+#include <vector>
+#include <array>
 
 #include "rcbot/logging.h"
 
@@ -44,161 +47,149 @@ float CBotConfigFile::m_fNextCommandTime = 0.0f;
 // 
 bot_util_t CRCBotTF2UtilFile::m_fUtils[UTIL_TYPE_MAX][BOT_UTIL_MAX][9];
 
-void CBotConfigFile :: load ()
+void CBotConfigFile::load()
 {
 	char filename[512];
 	char line[256];
 	//int len;
-	m_Commands.clear();
+    m_Commands.clear();
 
-	CBotGlobals::buildFileName(filename,"config",BOT_CONFIG_FOLDER,BOT_CONFIG_EXTENSION);
+    CBotGlobals::buildFileName(filename, "config", BOT_CONFIG_FOLDER, BOT_CONFIG_EXTENSION);
 
-	std::fstream fp = CBotGlobals::openFile(filename, std::fstream::in);
+    std::ifstream fp(filename);
 
-	if ( !fp )
-	{
-		logger->Log(LogLevel::WARN, "config file not found");
-		return;
-	}
+    if (!fp)
+    {
+        logger->Log(LogLevel::WARN, "Config file not found");
+        return;
+    }
 
 	while (fp.getline(line, 255))
-	{
+    {
 		if ( line[0] == '#' )
-			continue;
+            continue;
 
 		size_t len = std::strlen(line);
 
 		if (len && line[len-1] == '\n') {
 			line[--len] = '\0';
-		}
+        }
 
 		if (len && line[len-1] == '\r') {
 			line[--len] = '\0';
-		}
+        }
 
 		if(!len)
-			continue;
+            continue;
 
 		logger->Log(LogLevel::TRACE, "Config entry '%s' read", line);
 		m_Commands.emplace_back(CStrings::getString(line));
-	}
+    }
 }
 
-void CBotConfigFile :: doNextCommand ()
+void CBotConfigFile::doNextCommand()
 {
-	if ( m_fNextCommandTime < engine->Time() && m_iCmd < m_Commands.size() )
-	{
-		char cmd[64] = {};
+    if (m_fNextCommandTime < engine->Time() && m_iCmd < m_Commands.size())
+    {
+        char cmd[64] = {};
 		snprintf(cmd, sizeof cmd, "%s\n", m_Commands[m_iCmd]);
-		engine->ServerCommand(cmd);
+        engine->ServerCommand(cmd);
 
 		logger->Log(LogLevel::TRACE, "Bot Command '%s' executed", m_Commands[m_iCmd]);
-		m_iCmd ++;
-		m_fNextCommandTime = engine->Time() + 0.1f;
-	}
+		m_iCmd++;
+        m_fNextCommandTime = engine->Time() + 0.1f;
+    }
 }
 
-void CBotConfigFile :: executeCommands ()
+void CBotConfigFile::executeCommands()
 {
-	while ( m_iCmd < m_Commands.size() )
-	{
-		char cmd[64] = {};
+    while (m_iCmd < m_Commands.size())
+    {
+        char cmd[64] = {};
 		snprintf(cmd, sizeof cmd, "%s\n", m_Commands[m_iCmd]);
-		engine->ServerCommand(cmd);
+        engine->ServerCommand(cmd);
 
 		logger->Log(LogLevel::TRACE, "Bot Command '%s' executed", m_Commands[m_iCmd]);
-		m_iCmd ++;
-	}
+		m_iCmd++;
+    }
 
-	engine->ServerExecute();
+    engine->ServerExecute();
 }
 
-void CRCBotTF2UtilFile :: init()
+void CRCBotTF2UtilFile::init()
 {
-	for (bot_util_t (&m_fUtil)[112][9] : m_fUtils)
-	{
-		for (bot_util_t (&j)[9] : m_fUtil)
-		{
-			for (bot_util_t& k : j)
-			{
-				k.min = 0;
-				k.max = 0;
-			}
-		}
-	}
+    for (bot_util_t (&m_fUtil)[112][9] : m_fUtils)
+    {
+        for (bot_util_t (&j)[9] : m_fUtil)
+        {
+            for (bot_util_t& k : j)
+            {
+                k.min = 0;
+                k.max = 0;
+            }
+        }
+    }
 }
 
-void CRCBotTF2UtilFile :: addUtilPerturbation (const eBotAction iAction, const eTF2UtilType iUtil, float fUtility[9][2])
+void CRCBotTF2UtilFile::addUtilPerturbation(const eBotAction iAction, const eTF2UtilType iUtil, float fUtility[9][2])
 {
-	for ( short unsigned i = 0; i < 9; i ++ )
-	{
-		m_fUtils[iUtil][iAction][i].min = fUtility[i][0];
-		m_fUtils[iUtil][iAction][i].max = fUtility[i][1];
-	}
+    for (short unsigned i = 0; i < 9; i++)
+    {
+        m_fUtils[iUtil][iAction][i].min = fUtility[i][0];
+        m_fUtils[iUtil][iAction][i].max = fUtility[i][1];
+    }
 }
 
-void CRCBotTF2UtilFile :: loadConfig()
+void CRCBotTF2UtilFile::loadConfig()
 {
-	init();
+    init();
 
-	for ( eTF2UtilType iFile = BOT_ATT_UTIL; iFile < UTIL_TYPE_MAX; iFile = static_cast<eTF2UtilType>(static_cast<int>(iFile) + 1) )
-	{
+    for (eTF2UtilType iFile = BOT_ATT_UTIL; iFile < UTIL_TYPE_MAX; iFile = static_cast<eTF2UtilType>(static_cast<int>(iFile) + 1))
+    {
 		char szFilename[64];
 		char szFullFilename[512];
 		if ( iFile == BOT_ATT_UTIL )
-		{
+        {
 			snprintf(szFilename, sizeof(szFilename), "attack_util.csv");
-		}
-		else
-		{
+        }
+        else
+        {
 			snprintf(szFilename, sizeof(szFilename), "normal_util.csv");
-		}
+        }
 
-		CBotGlobals::buildFileName(szFullFilename,szFilename,BOT_CONFIG_FOLDER);
-		std::fstream fp = CBotGlobals::openFile(szFullFilename, std::fstream::in);
+        CBotGlobals::buildFileName(szFullFilename, szFilename, BOT_CONFIG_FOLDER);
 
-		if ( fp )
-		{
-			char line[256];
-			eBotAction iUtil = static_cast<eBotAction>(0);
+		if (std::ifstream fp(szFullFilename); fp)
+        {
+            std::string line;
+            eBotAction iUtil = static_cast<eBotAction>(0);
 
-			while (fp.getline(line, 255))
-			{
-				if ( line[0] == 'B' && line[1] == 'O' && 
-					 line[2] == 'T' && line[3] == '_') // OK
-				{
-					char utiltype[64];
-					float iClassList[TF_CLASS_MAX][2];
+            while (std::getline(fp, line))
+            {
+                if (line.substr(0, 4) == "BOT_") // OK
+                {
+                    std::array<float, 18> iClassList;
+                    std::string utiltype;
 
-					// Format:    U, 1, 2, 3, 4, 5, 6, 7, 8, 9
-					//                
-					//               s  s  s  d  m  h  p  s  e
-					//               c  n  o  e  e  w  y  p  n
-					//               o  i  l  m  d  g  r  y  g
-					// 
-					
-					if ( std::sscanf(line,"%[^,],%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\r\n",utiltype,
-						&iClassList[0][0],&iClassList[0][1],
-						&iClassList[1][0],&iClassList[1][1],
-						&iClassList[2][0],&iClassList[2][1],
-						&iClassList[3][0],&iClassList[3][1],
-						&iClassList[4][0],&iClassList[4][1],
-						&iClassList[5][0],&iClassList[5][1],
-						&iClassList[6][0],&iClassList[6][1],
-						&iClassList[7][0],&iClassList[7][1],
-						&iClassList[8][0],&iClassList[8][1]) )
-					{
-						//TODO: should be `iAction, iUtil, fUtility`? [APG]RoboCop[CL]
-						addUtilPerturbation(iUtil,iFile,iClassList);
+                    std::istringstream ss(line);
+                    std::getline(ss, utiltype, ',');
 
-						iUtil = static_cast<eBotAction>(static_cast<int>(iUtil) + 1);
+                    for (float& val : iClassList)
+                    {
+                        std::string temp;
+                        std::getline(ss, temp, ',');
+                        val = std::stof(temp);
+                    }
 
-						if ( iUtil >= BOT_UTIL_MAX )
-							break;
+                    //TODO: should be `iAction, iUtil, fUtility`? [APG]RoboCop[CL]
+                    addUtilPerturbation(iUtil, iFile, reinterpret_cast<float(*)[2]>(iClassList.data()));
 
-					}
-				}
-			}
-		}
-	}
+                    iUtil = static_cast<eBotAction>(static_cast<int>(iUtil) + 1);
+
+                    if (iUtil >= BOT_UTIL_MAX)
+                        break;
+                }
+            }
+        }
+    }
 }

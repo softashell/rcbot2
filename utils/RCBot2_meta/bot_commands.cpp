@@ -46,7 +46,7 @@
 
 #include "bot_tf2_points.h"
 
-extern IVDebugOverlay *debugoverlay;
+extern IVDebugOverlay* debugoverlay;
 
 // include our subcommands
 #include "rcbot_subcmds/config.cpp"
@@ -64,33 +64,32 @@ eBotCommandResult CBotCommandInline::execute(CClient* pClient, const BotCommandA
 	return m_Callback(pClient, args);
 }
 
-CBotCommandInline ControlCommand("control", CMD_ACCESS_BOT | CMD_ACCESS_DEDICATED, [](const CClient *pClient,
-                                 const BotCommandArgs& args)
-{
-	edict_t *pEntity = nullptr;
-
-	if ( pClient )
-		pEntity = pClient->getPlayer();
-	if ( args[0] && *args[0] )
+CBotCommandInline ControlCommand("control", CMD_ACCESS_BOT | CMD_ACCESS_DEDICATED, [](const CClient* pClient,
+	const BotCommandArgs& args)
 	{
+		edict_t* pEntity = nullptr;
 
-		if ( CBots::controlBot(args[0],args[0],args[2],args[3]) )
-			CBotGlobals::botMessage(pEntity,0,"bot added");
-		else
-			CBotGlobals::botMessage(pEntity,0,"error: couldn't control bot '%s'",args[0]);
+		if (pClient)
+			pEntity = pClient->getPlayer();
+		if (args[0] && *args[0])
+		{
+			if (CBots::controlBot(args[0], args[0], args[2], args[3]))
+				CBotGlobals::botMessage(pEntity, 0, "bot added");
+			else
+				CBotGlobals::botMessage(pEntity, 0, "error: couldn't control bot '%s'", args[0]);
 
-		return COMMAND_ACCESSED;
+			return COMMAND_ACCESSED;
 
-	}
-	return COMMAND_ERROR;
-});
+		}
+		return COMMAND_ERROR;
+	});
 
-CBotCommandInline AddBotCommand("addbot", CMD_ACCESS_BOT | CMD_ACCESS_DEDICATED, [](const CClient *pClient,
-                                const BotCommandArgs& args)
-{	
+CBotCommandInline AddBotCommand("addbot", CMD_ACCESS_BOT | CMD_ACCESS_DEDICATED, [](const CClient* pClient,
+	const BotCommandArgs& args)
+{
 //	bool bOkay = false;
 
-	edict_t *pEntity = nullptr;
+	edict_t* pEntity = nullptr;
 
 	if (pClient)
 		pEntity = pClient->getPlayer();
@@ -120,12 +119,12 @@ CBotCommandInline AddBotCommand("addbot", CMD_ACCESS_BOT | CMD_ACCESS_DEDICATED,
 	//	CBotGlobals::botMessage(pEntity,0,"error: sv_cheats must be 1 to add bots");
 
 	return COMMAND_ACCESSED;
-});
+	});
 
-CBotCommandInline KickBotCommand("kickbot", CMD_ACCESS_BOT | CMD_ACCESS_DEDICATED, [](CClient *pClient,
-                                 const BotCommandArgs& args)
+CBotCommandInline KickBotCommand("kickbot", CMD_ACCESS_BOT | CMD_ACCESS_DEDICATED, [](CClient* pClient,
+	const BotCommandArgs& args)
 {
-	if ( !args[0] || !*args[0] )
+	if (!args[0] || !*args[0])
 	{
 		//remove random bot
 		CBots::kickRandomBot();
@@ -136,20 +135,20 @@ CBotCommandInline KickBotCommand("kickbot", CMD_ACCESS_BOT | CMD_ACCESS_DEDICATE
 
 		CBots::kickRandomBotOnTeam(team);
 	}
-	
+
 	return COMMAND_ACCESSED;
 }, R"(usage "kickbot" or "kickbot <team>" : kicks random bot or bot on team: <team>)");
 
-bool CBotCommand :: hasAccess (const CClient *pClient) const
+bool CBotCommand::hasAccess(const CClient* pClient) const
 {
 	// check access level excluding dedicated server flag
 	const int iClientAccessLevel = this->m_iAccessLevel & ~CMD_ACCESS_DEDICATED;
 	return (iClientAccessLevel & pClient->accessLevel()) == iClientAccessLevel;
 }
 
-bool CBotCommand :: isCommand ( const char *szCommand ) const
+bool CBotCommand::isCommand(const char* szCommand) const
 {
-	return FStrEq(szCommand,m_szCommand);
+	return FStrEq(szCommand, m_szCommand);
 }
 
 eBotCommandResult CBotCommand::execute(CClient* pClient, const BotCommandArgs& args) {
@@ -186,37 +185,32 @@ eBotCommandResult CBotSubcommands::execute(CClient* pClient, const BotCommandArg
 	return COMMAND_NOT_FOUND;
 }
 
-void CBotSubcommands::printCommand(edict_t *pPrintTo, const int indent)
+void CBotSubcommands::printCommand(edict_t* pPrintTo, const int indent)
 {
-	if ( indent )
+	if (indent)
 	{
 		constexpr int maxIndent = 64;
-		char szIndent[maxIndent];
+		char szIndent[maxIndent] = {};
 
-		int i;
-
-		for ( i = 0; (i < (indent*2)) && (i < maxIndent-1); i ++ )
+		for (int i = 0; (i < (indent * 2)) && (i < maxIndent - 1); i++)
 			szIndent[i] = ' ';
 
-		szIndent[maxIndent-1] = 0;
-		szIndent[i]=0;
-
-		CBotGlobals::botMessage(pPrintTo,0,"%s[%s]",szIndent,m_szCommand);
+		CBotGlobals::botMessage(pPrintTo, 0, "%s[%s]", szIndent, m_szCommand);
 	}
 	else
-		CBotGlobals::botMessage(pPrintTo,0,"[%s]",m_szCommand);
+		CBotGlobals::botMessage(pPrintTo, 0, "[%s]", m_szCommand);
 
 	for (CBotCommand* const& m_theCommand : m_theCommands)
 	{
-		m_theCommand->printCommand(pPrintTo,indent+1);
+		m_theCommand->printCommand(pPrintTo, indent + 1);
 	}
 }
 
-void CBotSubcommands::printHelp( edict_t *pPrintTo ) {
+void CBotSubcommands::printHelp(edict_t* pPrintTo) {
 	this->printCommand(pPrintTo);
 }
 
-CBotCommandInline PrintCommands("printcommands", CMD_ACCESS_DEDICATED, [](const CClient *pClient, const BotCommandArgs& args)
+CBotCommandInline PrintCommands("printcommands", CMD_ACCESS_DEDICATED, [](const CClient* pClient, const BotCommandArgs& args)
 {
 	if ( pClient != nullptr)
 	{
@@ -234,45 +228,45 @@ CBotCommandInline PrintCommands("printcommands", CMD_ACCESS_DEDICATED, [](const 
 
 ///////////////////////////////////////////
 
-void CBotCommand :: printCommand ( edict_t *pPrintTo, const int indent )
+void CBotCommand::printCommand(edict_t* pPrintTo, const int indent)
 {
-	if ( indent )
+	if (indent)
 	{
 		constexpr int maxIndent = 64;
 		char szIndent[maxIndent];
 		int i;
 
-		for ( i = 0; (i < (indent*2)) && (i < maxIndent-1); i ++ )
+		for (i = 0; (i < (indent * 2)) && (i < maxIndent - 1); i++)
 			szIndent[i] = ' ';
 
-		szIndent[maxIndent-1] = 0;
-		szIndent[i]=0;
+		szIndent[maxIndent - 1] = 0;
+		szIndent[i] = 0;
 
-		if ( !pPrintTo && !canbeUsedDedicated() )
-			CBotGlobals::botMessage(pPrintTo,0,"%s%s [can't use]",szIndent,m_szCommand);
+		if (!pPrintTo && !canbeUsedDedicated())
+			CBotGlobals::botMessage(pPrintTo, 0, "%s%s [can't use]", szIndent, m_szCommand);
 		else
-			CBotGlobals::botMessage(pPrintTo,0,"%s%s",szIndent,m_szCommand);
+			CBotGlobals::botMessage(pPrintTo, 0, "%s%s", szIndent, m_szCommand);
 	}
 	else
 	{
-		if ( !pPrintTo && !canbeUsedDedicated() )
-			CBotGlobals::botMessage(pPrintTo,0,"%s [can't use]",m_szCommand);
+		if (!pPrintTo && !canbeUsedDedicated())
+			CBotGlobals::botMessage(pPrintTo, 0, "%s [can't use]", m_szCommand);
 		else
-			CBotGlobals::botMessage(pPrintTo,0,m_szCommand);
+			CBotGlobals::botMessage(pPrintTo, 0, m_szCommand);
 	}
 }
 
-void CBotCommand :: printHelp ( edict_t *pPrintTo )
+void CBotCommand::printHelp(edict_t* pPrintTo)
 {
-	if ( m_szHelp )
-		CBotGlobals::botMessage(pPrintTo,0,m_szHelp);
+	if (m_szHelp)
+		CBotGlobals::botMessage(pPrintTo, 0, m_szHelp);
 	else
-		CBotGlobals::botMessage(pPrintTo,0,"Sorry, no help for this command (yet)");
+		CBotGlobals::botMessage(pPrintTo, 0, "Sorry, no help for this command (yet)");
 
-	return;
+	//return;
 }
 
-CBotCommandInline CTestCommand("test", 0, [](CClient *pClient, const BotCommandArgs& args)
+CBotCommandInline CTestCommand("test", 0, [](CClient* pClient, const BotCommandArgs& args)
 {
 	// for developers
 	// first argument is at args[0]
