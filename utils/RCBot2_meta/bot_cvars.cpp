@@ -1,10 +1,11 @@
-#include <cstring>
+#include <string>
 
 #include "icvar.h"
 //#include "iconvar.h"
 #include "convar.h"
 
 #include "bot_cvars.h"
+#include "bot_const.h"
 
 static ICvar* s_pCVar; //TODO: Unused? [APG]RoboCop[CL]
 
@@ -105,7 +106,7 @@ ConVar rcbot_show_welcome_msg("rcbot_show_welcome_msg", "1", 0, "Show welcome me
 ConVar rcbot_force_class("rcbot_force_class", "0", 0, "Force bots to choose specified class, kills alive bots on change (1 - 9, set to 0 for none)");
 
 // Synergy CVars
-ConVar rcbot_runplayercmd_syn("rcbot_runplayer_cmd_syn","424",0,"offset of the Synergy PlayerRunCommand function");
+ConVar rcbot_runplayercmd_syn("rcbot_runplayer_cmd_syn", "424", 0, "offset of the Synergy PlayerRunCommand function");
 ConVar rcbot_syn_use_search_range("rcbot_syn_use_search_range", "256", 0, "Sets the maximum button search range.", true, 150.0f, true, 1024.0f);
 
 // Counter-Strike:Source Cvars
@@ -122,25 +123,25 @@ ConVarRef mp_stalemate_meleeonly("mp_stalemate_meleeonly");
 ConVarRef mp_roundtime("mp_roundtime");
 ConVarRef mp_c4timer("mp_c4timer");
 
-void RCBOT2_Cvar_setup (ICvar *cvar) //'cvar' hides global declaration from /public/icvar.h [APG]RoboCop[CL]
+void RCBOT2_Cvar_setup(ICvar* cvar) //'cvar' hides global declaration from /public/icvar.h [APG]RoboCop[CL]
 {
-	if ( sv_tags.IsValid() )
-	{
-		char sv_tags_str[512];
+    if (cvar == nullptr)
+    {
+        return; // Handle null pointer gracefully
+    }
 
-		std::strcpy(sv_tags_str,sv_tags.GetString());
+    ConVar* svTagsVar = cvar->FindVar("sv_tags");
 
-		// fix
-		if ( std::strstr(sv_tags_str,"rcbot2") == nullptr)
-		{
+    if (svTagsVar == nullptr)
+    {
+        return; // Handle missing variable gracefully
+    }
 
-			if ( sv_tags_str[0] == 0 )
-				std::strcat(sv_tags_str,"rcbot2");
-			else
-				std::strcat(sv_tags_str,",rcbot2");
-
-			sv_tags.SetValue(sv_tags_str);
-
-		}
-	}
+    std::string sv_tags = svTagsVar->GetString();
+    if (sv_tags.find(BOT_TAG) == std::string::npos)
+    {
+        sv_tags += ",";
+        sv_tags += BOT_TAG;
+        svTagsVar->SetValue(sv_tags.c_str());
+    }
 }

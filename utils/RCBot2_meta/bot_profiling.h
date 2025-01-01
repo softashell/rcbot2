@@ -60,7 +60,7 @@ public:
 #ifndef __linux__
 	__int64 getOverall() const
 #else
-	inline long long getOverall()
+	inline long long getOverall() const
 #endif
 	{
 		return m_overall;

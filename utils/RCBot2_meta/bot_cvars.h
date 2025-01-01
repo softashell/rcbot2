@@ -113,6 +113,6 @@ extern ConVarRef mp_stalemate_enable;
 extern ConVarRef mp_roundtime;
 extern ConVarRef mp_c4timer;
 
-void RCBOT2_Cvar_setup (ICvar *cvar);
+void RCBOT2_Cvar_setup (ICvar* cvar);
 
 #endif

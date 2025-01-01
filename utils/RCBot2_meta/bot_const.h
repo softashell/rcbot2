@@ -33,11 +33,12 @@
 
 #include "shareddefs.h"
 #include <cstdint>
+#include <cstring>
 
 #ifndef __linux__
-#define BOT_WELCOME_MESSAGE "Welcome to RCBot by Cheeseh"
+constexpr char BOT_WELCOME_MESSAGE[] = "Welcome to RCBot by Cheeseh";
 #else
-#define BOT_WELCOME_MESSAGE "Welcome to RCBot by Cheeseh for Linux"
+constexpr char BOT_WELCOME_MESSAGE[] = "Welcome to RCBot by Cheeseh for Linux";
 #endif
 
 constexpr float BOT_DEFAULT_FOV = 80.0f;
@@ -50,7 +51,7 @@ constexpr float BOT_DEFAULT_FOV = 80.0f;
 //#define RANDOM_INT(min,max) (min + round(((float)rand()/RAND_MAX)*(float)(max-min)))
 //#define RANDOM_FLOAT(min,max) (min + ((float)rand()/RAND_MAX)*(float)(max-min))
 
-#define DEFAULT_BOT_NAME "RCBot"
+constexpr char DEFAULT_BOT_NAME[] = "RCBot";
 
 enum : std::uint8_t
 {
@@ -130,17 +131,18 @@ typedef enum : std::uint8_t
 
 extern const char *g_szLookTaskToString[LOOK_MAX];
 
-#define BOT_CONFIG_FOLDER "config"
-#define BOT_MOD_FILE "bot_mods"
-#define BOT_ACCESS_CLIENT_FILE "accessclients"
-#define BOT_PROFILE_FOLDER "profiles"
-#define BOT_WAYPOINT_FOLDER "waypoints"
-#define BOT_CONFIG_EXTENSION "ini"
+constexpr char BOT_CONFIG_FOLDER[] = "config";
+constexpr char BOT_MOD_FILE[] = "bot_mods";
+constexpr char BOT_ACCESS_CLIENT_FILE[] = "accessclients";
+constexpr char BOT_PROFILE_FOLDER[] = "profiles";
+constexpr char BOT_WAYPOINT_FOLDER[] = "waypoints";
+constexpr char BOT_CONFIG_EXTENSION[] = "ini";
 
-#define BOT_WAYPOINT_EXTENSION "rcw" // extension for waypoint files
-#define BOT_WAYPOINT_FILE_TYPE "RCBot2\0" // for waypoint file header
+constexpr char BOT_WAYPOINT_EXTENSION[] = "rcw"; // extension for waypoint files
+constexpr char BOT_WAYPOINT_FILE_TYPE[] = "RCBot2\0"; // for waypoint file header
 
-#define BOT_TAG "[RCBot] " // for printing messages
+constexpr char BOT_TAG[] = "[RCBot] "; // for printing messages
+
 /*
 // Engine player info, no game related infos here
 // If you change this, change the two byteswap defintions: 
@@ -200,7 +202,7 @@ enum : std::uint8_t
 #undef ENTINDEX
 #define ENTINDEX(pEdict) engine->IndexOfEdict(pEdict)
 
-#define BOT_FOLDER "rcbot2"
+constexpr char BOT_FOLDER[] = "rcbot2";
 
 typedef enum : std::uint8_t
 {
