@@ -60,6 +60,7 @@
 #include "bot_schedule.h"
 #include "bot_buttons.h"
 #include "bot_navigator.h"
+//#include "bot_black_mesa.h"
 #include "bot_css_bot.h"
 #include "bot_coop.h"
 #include "bot_zombie.h"

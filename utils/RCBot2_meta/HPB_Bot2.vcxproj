@@ -238,6 +238,7 @@
     <ClCompile Include="..\..\sm_ext\smsdk_config.cpp" />
     <ClCompile Include="bot.cpp" />
     <ClCompile Include="bot_accessclient.cpp" />
+    <ClCompile Include="bot_black_mesa.cpp" />
     <ClCompile Include="bot_buttons.cpp" />
     <ClCompile Include="bot_client.cpp" />
     <ClCompile Include="bot_commands.cpp" />
@@ -296,6 +297,7 @@
     <ClInclude Include="bot.h" />
     <ClInclude Include="bot_accessclient.h" />
     <ClInclude Include="bot_belief.h" />
+    <ClInclude Include="bot_black_mesa.h" />
     <ClInclude Include="bot_buttons.h" />
     <ClInclude Include="bot_client.h" />
     <ClInclude Include="bot_commands.h" />

@@ -38,6 +38,11 @@
 #include <string>
 #include <algorithm>
 
+//caxanga334: SDK 2013 contains macros for std::min and std::max which causes errors when compiling
+#if SOURCE_ENGINE == SE_SDK2013 || SOURCE_ENGINE == SE_BMS
+#include "valve_minmax_off.h"
+#endif
+
  // List of all timers
 CProfileTimer CProfileTimers::m_Timers[PROFILING_TIMERS] =
 {

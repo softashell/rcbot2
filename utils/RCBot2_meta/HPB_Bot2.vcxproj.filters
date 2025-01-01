@@ -215,6 +215,9 @@
     <ClCompile Include="..\..\rcbot_subcmds\util.cpp">
       <Filter>Source Files\rcbot_subcmds</Filter>
     </ClCompile>
+    <ClCompile Include="bot_black_mesa.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bot.h">
@@ -401,6 +404,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="logging.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bot_black_mesa.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

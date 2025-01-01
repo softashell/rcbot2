@@ -6,6 +6,7 @@ projectName = 'rcbot'
 sourceFiles = [
   "utils/RCBot2_meta/bot.cpp",
   "utils/RCBot2_meta/bot_accessclient.cpp",
+  #"utils/RCBot2_meta/bot_black_mesa.cpp",
   "utils/RCBot2_meta/bot_buttons.cpp",
   "utils/RCBot2_meta/bot_client.cpp",
   "utils/RCBot2_meta/bot_commands.cpp",
