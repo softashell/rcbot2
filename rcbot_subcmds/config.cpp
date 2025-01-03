@@ -39,94 +39,97 @@
 #include "valve_minmax_off.h"
 #endif
 
-CBotCommandInline GameEventVersion("event_version", CMD_ACCESS_CONFIG, [](CClient *pClient, const BotCommandArgs& args)
+constexpr int INVALID_BOT_COUNT = -1;
+
+CBotCommandInline GameEventVersion("event_version", CMD_ACCESS_CONFIG, [](CClient* pClient, const BotCommandArgs& args)
 {
-	if ( !args[0] || !*args[0] )
+	if (!args[0] || !*args[0])
 		return COMMAND_ERROR;
 
 	CBotGlobals::setEventVersion(std::atoi(args[0]));
-	
-	return COMMAND_ACCESSED;
-});
-
-CBotCommandInline MaxBotsCommand("max_bots", CMD_ACCESS_CONFIG | CMD_ACCESS_DEDICATED, [](const CClient *pClient,
-                                 const BotCommandArgs& args)
-{
-	edict_t *pEntity = nullptr;
-
-	if ( pClient )
-		pEntity = pClient->getPlayer();
-
-	if ( args[0] && *args[0] )
-	{
-		int max = std::atoi(args[0]);
-
-		bool err = false;
-		const int min_bots = CBots::getMinBots();
-
-		if ( max <= -1 )// skip check for disabling max bots (require <=)
-			max = -1;
-		else if ( (min_bots >= 0) && (max <= min_bots) )
-		{
-			CBotGlobals::botMessage(pEntity,0,"max_bots must be greater than min_bots (min_bots is currently : %d)",min_bots);
-			err = true;
-		}
-		max = std::min(max, CBotGlobals::maxClients());
-
-		if ( !err )
-		{
-			CBots :: setMaxBots(max);
-
-			CBotGlobals::botMessage(pEntity,0,"max_bots set to %d",max);
-		}
-		
-	}
-	else
-		CBotGlobals::botMessage(pEntity,0,"max_bots is currently %d",CBots::getMaxBots());
 
 	return COMMAND_ACCESSED;
 });
 
-CBotCommandInline MinBotsCommand("min_bots", CMD_ACCESS_CONFIG | CMD_ACCESS_DEDICATED, [](const CClient *pClient,
-                                 const BotCommandArgs& args)
+CBotCommandInline MaxBotsCommand("max_bots", CMD_ACCESS_CONFIG | CMD_ACCESS_DEDICATED, [](const CClient* pClient, const BotCommandArgs& args)
 {
-	edict_t *pEntity = nullptr;
+	edict_t* pEntity = nullptr;
 
-	if ( pClient )
+	if (pClient)
 		pEntity = pClient->getPlayer();
 
-	if ( args[0] && *args[0] )
+	if (args[0] && *args[0])
 	{
-		int min = std::atoi(args[0]);
-		const int max_bots = CBots::getMaxBots();
+		int maxBots = std::atoi(args[0]);
+		bool hasError = false;
+		const int minBots = CBots::getMinBots();
 
-		bool err = false;
-
-		min = std::min(min, CBotGlobals::maxClients());
-
-		if ( min <= -1 ) // skip check for disabling min bots (require <=)
-			min = -1;
-		else if ( (max_bots >= 0) && (min >= CBots::getMaxBots()) )
+		if (maxBots <= INVALID_BOT_COUNT) // skip check for disabling max bots (require <=)
 		{
-			CBotGlobals::botMessage(pEntity,0,"min_bots must be less than max_bots (max_bots is currently : %d)",max_bots);
-			err = true;
-		}	
-
-		if ( !err )
+			maxBots = INVALID_BOT_COUNT;
+		}
+		else if ((minBots >= 0) && (maxBots <= minBots))
 		{
-			CBots :: setMinBots(min);
+			CBotGlobals::botMessage(pEntity, 0, "max_bots must be greater than min_bots (min_bots is currently: %d)", minBots);
+			hasError = true;
+		}
+		maxBots = std::min(maxBots, CBotGlobals::maxClients());
 
-			CBotGlobals::botMessage(pEntity,0,"min_bots set to %d",min);
+		if (!hasError)
+		{
+			CBots::setMaxBots(maxBots);
+			CBotGlobals::botMessage(pEntity, 0, "max_bots set to %d", maxBots);
 		}
 	}
 	else
-		CBotGlobals::botMessage(pEntity,0,"min_bots is currently %d",CBots::getMinBots());
+	{
+		CBotGlobals::botMessage(pEntity, 0, "max_bots is currently %d", CBots::getMaxBots());
+	}
+
+	return COMMAND_ACCESSED;
+});
+
+CBotCommandInline MinBotsCommand("min_bots", CMD_ACCESS_CONFIG | CMD_ACCESS_DEDICATED, [](const CClient* pClient, const BotCommandArgs& args)
+{
+	edict_t* pEntity = nullptr;
+
+	if (pClient)
+		pEntity = pClient->getPlayer();
+
+	if (args[0] && *args[0])
+	{
+		int minBots = std::atoi(args[0]);
+		const int maxBots = CBots::getMaxBots();
+		bool hasError = false;
+
+		minBots = std::min(minBots, CBotGlobals::maxClients());
+
+		if (minBots <= INVALID_BOT_COUNT) // skip check for disabling min bots (require <=)
+		{
+			minBots = INVALID_BOT_COUNT;
+		}
+		else if ((maxBots >= 0) && (minBots >= maxBots))
+		{
+			CBotGlobals::botMessage(pEntity, 0, "min_bots must be less than max_bots (max_bots is currently: %d)", maxBots);
+			hasError = true;
+		}
+
+		if (!hasError)
+		{
+			CBots::setMinBots(minBots);
+			CBotGlobals::botMessage(pEntity, 0, "min_bots set to %d", minBots);
+		}
+	}
+	else
+	{
+		CBotGlobals::botMessage(pEntity, 0, "min_bots is currently %d", CBots::getMinBots());
+	}
 
 	return COMMAND_ACCESSED;
 });
 
 CBotSubcommands ConfigSubcommands("config", CMD_ACCESS_DEDICATED, {
-	&GameEventVersion,
-	&MaxBotsCommand,
-	&MinBotsCommand
+&GameEventVersion,
+&MaxBotsCommand,
+&MinBotsCommand
 });

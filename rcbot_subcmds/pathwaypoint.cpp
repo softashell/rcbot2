@@ -29,118 +29,121 @@
  *
  */
 
-CBotCommandInline PathWaypointOnCommand("on", CMD_ACCESS_WAYPOINT, [](CClient *pClient, const BotCommandArgs& args)
+CBotCommandInline PathWaypointOnCommand("on", CMD_ACCESS_WAYPOINT, [](CClient* pClient, const BotCommandArgs& args)
 {
+	if (!pClient) return COMMAND_ERROR;
 	pClient->setPathWaypoint(true);
 	pClient->giveMessage("Pathwaypoints visible");
 	return COMMAND_ACCESSED;
 });
 
-CBotCommandInline PathWaypointOffCommand("off", CMD_ACCESS_WAYPOINT, [](CClient *pClient, const BotCommandArgs& args)
+CBotCommandInline PathWaypointOffCommand("off", CMD_ACCESS_WAYPOINT, [](CClient* pClient, const BotCommandArgs& args)
 {
+	if (!pClient) return COMMAND_ERROR;
 	pClient->setPathWaypoint(false);
 	pClient->giveMessage("Pathwaypoints hidden");
 	return COMMAND_ACCESSED;
 });
 
-CBotCommandInline PathWaypointAutoOnCommand("enable", CMD_ACCESS_WAYPOINT, [](CClient *pClient, const BotCommandArgs&
-                                                                              args)
+CBotCommandInline PathWaypointAutoOnCommand("enable", CMD_ACCESS_WAYPOINT, [](CClient* pClient, const BotCommandArgs& args)
 {
-	if ( pClient )
-		pClient->setAutoPath(true);
+	if (!pClient) return COMMAND_ERROR;
+	pClient->setAutoPath(true);
 	return COMMAND_ACCESSED;
 });
 
-CBotCommandInline PathWaypointAutoOffCommand("disable", CMD_ACCESS_WAYPOINT, [](CClient *pClient, const BotCommandArgs&
-                                             args)
+CBotCommandInline PathWaypointAutoOffCommand("disable", CMD_ACCESS_WAYPOINT, [](CClient* pClient, const BotCommandArgs& args)
 {
-	if ( pClient )
-		pClient->setAutoPath(false);
+	if (!pClient) return COMMAND_ERROR;
+	pClient->setAutoPath(false);
 	return COMMAND_ACCESSED;
 });
 
-CBotCommandInline PathWaypointCreate1Command("create1", CMD_ACCESS_WAYPOINT, [](CClient *pClient, const BotCommandArgs&
-                                             args)
+CBotCommandInline PathWaypointCreate1Command("create1", CMD_ACCESS_WAYPOINT, [](CClient* pClient, const BotCommandArgs& args)
 {
-	if ( !pClient )
-		return COMMAND_ERROR;
+	if (!pClient) return COMMAND_ERROR;
 
 	pClient->updateCurrentWaypoint();
 
-	if ( pClient->currentWaypoint() == -1 )
+	if (pClient->currentWaypoint() == -1)
 	{
 		pClient->playSound("common/wpn_denyselect.wav");
 	}
 	else
 	{
 		pClient->setPathFrom(pClient->currentWaypoint());
-
 		pClient->playSound("common/wpn_hudoff.wav");
 	}
 
 	return COMMAND_ACCESSED;
 });
 
-CBotCommandInline PathWaypointCreate2Command("create2", CMD_ACCESS_WAYPOINT, [](CClient *pClient, const BotCommandArgs&
-                                             args)
+CBotCommandInline PathWaypointCreate2Command("create2", CMD_ACCESS_WAYPOINT, [](CClient* pClient, const BotCommandArgs& args)
 {
+	if (!pClient) return COMMAND_ERROR;
+
 	pClient->updateCurrentWaypoint();
 	pClient->setPathTo(pClient->currentWaypoint());
 
-	// valid?
-	if ( CWaypoint *pWpt = CWaypoints::getWaypoint(pClient->getPathFrom()) )
+	if (CWaypoint* pWpt = CWaypoints::getWaypoint(pClient->getPathFrom()))
 	{
 		pWpt->addPathTo(pClient->getPathTo());
 		pClient->playSound("buttons/button9");
 	}
 	else
+	{
 		pClient->playSound("common/wpn_denyselect");
+	}
 
 	return COMMAND_ACCESSED;
 });
 
-CBotCommandInline PathWaypointRemove1Command("remove1", CMD_ACCESS_WAYPOINT, [](CClient *pClient, const BotCommandArgs&
-                                             args)
+CBotCommandInline PathWaypointRemove1Command("remove1", CMD_ACCESS_WAYPOINT, [](CClient* pClient, const BotCommandArgs& args)
 {
+	if (!pClient) return COMMAND_ERROR;
+
 	pClient->updateCurrentWaypoint();
 
-	if ( pClient->currentWaypoint() != -1 )
+	if (pClient->currentWaypoint() != -1)
 	{
 		pClient->setPathFrom(pClient->currentWaypoint());
 		pClient->playSound("common/wpn_hudoff.wav");
 	}
 	else
-		pClient->playSound("common/wpn_moveselect.wav");
-
-	return COMMAND_ACCESSED;
-});
-
-CBotCommandInline PathWaypointRemove2Command("remove2", CMD_ACCESS_WAYPOINT, [](CClient *pClient, const BotCommandArgs&
-                                             args)
-{
-	pClient->updateCurrentWaypoint();
-	pClient->setPathTo(pClient->currentWaypoint());
-
-	CWaypoint *pWpt = CWaypoints::getWaypoint(pClient->getPathFrom());
-
-	// valid?
-	if ( !pWpt )
-		pClient->playSound("common/wpn_moveselect");
-	else
 	{
-		pClient->playSound("buttons/button9");
-
-		pWpt->removePathTo(pClient->getPathTo());
+		pClient->playSound("common/wpn_moveselect.wav");
 	}
 
 	return COMMAND_ACCESSED;
 });
 
-CBotCommandInline PathWaypointDeleteToCommand("deleteto", 0, [](CClient *pClient, const BotCommandArgs& args)
+CBotCommandInline PathWaypointRemove2Command("remove2", CMD_ACCESS_WAYPOINT, [](CClient* pClient, const BotCommandArgs& args)
 {
+	if (!pClient) return COMMAND_ERROR;
+
+	pClient->updateCurrentWaypoint();
+	pClient->setPathTo(pClient->currentWaypoint());
+
+	if (CWaypoint* pWpt = CWaypoints::getWaypoint(pClient->getPathFrom()))
+	{
+		pWpt->removePathTo(pClient->getPathTo());
+		pClient->playSound("buttons/button9");
+	}
+	else
+	{
+		pClient->playSound("common/wpn_moveselect");
+	}
+
+	return COMMAND_ACCESSED;
+});
+
+CBotCommandInline PathWaypointDeleteToCommand("deleteto", 0, [](CClient* pClient, const BotCommandArgs& args)
+{
+	if (!pClient) return COMMAND_ERROR;
+
 	pClient->updateCurrentWaypoint();
 
-	if ( CWaypoints::validWaypointIndex(pClient->currentWaypoint()) )
+	if (CWaypoints::validWaypointIndex(pClient->currentWaypoint()))
 	{
 		CWaypoints::deletePathsTo(pClient->currentWaypoint());
 	}
@@ -148,11 +151,13 @@ CBotCommandInline PathWaypointDeleteToCommand("deleteto", 0, [](CClient *pClient
 	return COMMAND_ACCESSED;
 });
 
-CBotCommandInline PathWaypointDeleteFromCommand("deletefrom", 0, [](CClient *pClient, const BotCommandArgs& args)
+CBotCommandInline PathWaypointDeleteFromCommand("deletefrom", 0, [](CClient* pClient, const BotCommandArgs& args)
 {
+	if (!pClient) return COMMAND_ERROR;
+
 	pClient->updateCurrentWaypoint();
 
-	if ( CWaypoints::validWaypointIndex(pClient->currentWaypoint()) )
+	if (CWaypoints::validWaypointIndex(pClient->currentWaypoint()))
 	{
 		CWaypoints::deletePathsFrom(pClient->currentWaypoint());
 	}
@@ -160,83 +165,97 @@ CBotCommandInline PathWaypointDeleteFromCommand("deletefrom", 0, [](CClient *pCl
 	return COMMAND_ACCESSED;
 });
 
-CBotCommandInline PathWaypointCreateFromToCommand("createfromto", CMD_ACCESS_WAYPOINT, [](CClient *pClient,
-                                                  const BotCommandArgs& args)
+CBotCommandInline PathWaypointCreateFromToCommand("createfromto", CMD_ACCESS_WAYPOINT, [](CClient* pClient, const BotCommandArgs& args)
 {
-	if ( pClient && args[0] && *args[0] && args[1] && *args[1] )
+	if (!pClient || !args[0] || !*args[0] || !args[1] || !*args[1])
 	{
-		CWaypoint *pWaypoint = CWaypoints::getWaypoint(std::atoi(args[0]));
+		CBotGlobals::botMessage(pClient ? pClient->getPlayer() : nullptr, 0, "missing args <id1> <id2>");
+		return COMMAND_ERROR;
+	}
 
-		if ( pWaypoint && pWaypoint->isUsed() )
+	int id1 = std::atoi(args[0]);
+	int id2 = std::atoi(args[1]);
+
+	if (CWaypoint* pWaypoint = CWaypoints::getWaypoint(id1))
+	{
+		if (pWaypoint->isUsed())
 		{
-			CWaypoint *pWaypoint2 = CWaypoints::getWaypoint(std::atoi(args[1]));
-
-			if ( pWaypoint2 && pWaypoint2->isUsed() )
+			if (CWaypoint* pWaypoint2 = CWaypoints::getWaypoint(id2))
 			{
-				pWaypoint->addPathTo(std::atoi(args[1]));
-				CBotGlobals::botMessage(pClient->getPlayer(),
-					0,"Added path from <%d> to <%d>",std::atoi(args[0]),std::atoi(args[1]));
+				if (pWaypoint2->isUsed())
+				{
+					pWaypoint->addPathTo(id2);
+					CBotGlobals::botMessage(pClient->getPlayer(), 0, "Added path from <%d> to <%d>", id1, id2);
 
-				pWaypoint->draw(pClient->getPlayer(),true,DRAWTYPE_DEBUGENGINE);
-				pWaypoint->info(pClient->getPlayer());
-				pWaypoint2->draw(pClient->getPlayer(),true,DRAWTYPE_DEBUGENGINE);
-				pWaypoint2->info(pClient->getPlayer());
+					pWaypoint->draw(pClient->getPlayer(), true, DRAWTYPE_DEBUGENGINE);
+					pWaypoint->info(pClient->getPlayer());
+					pWaypoint2->draw(pClient->getPlayer(), true, DRAWTYPE_DEBUGENGINE);
+					pWaypoint2->info(pClient->getPlayer());
 
-				pClient->playSound("buttons/button9");
+					pClient->playSound("buttons/button9");
 
-				return COMMAND_ACCESSED;
+					return COMMAND_ACCESSED;
+				}
+				CBotGlobals::botMessage(pClient->getPlayer(), 0, "Waypoint id <%d> not found", id2);
 			}
-			CBotGlobals::botMessage(pClient->getPlayer(),
-			                        0,"Waypoint id <%d> not found",std::atoi(args[1]));
 		}
 		else
-			CBotGlobals::botMessage(pClient->getPlayer(),
-				0,"Waypoint id <%d> not found",std::atoi(args[0]));
+		{
+			CBotGlobals::botMessage(pClient->getPlayer(), 0, "Waypoint id <%d> not found", id1);
+		}
 	}
 	else
-		CBotGlobals::botMessage(pClient->getPlayer(),
-				0,"missing args <id1> <id2>");
-	
+	{
+		CBotGlobals::botMessage(pClient->getPlayer(), 0, "Waypoint id <%d> not found", id1);
+	}
+
 	return COMMAND_ERROR;
 });
 
-CBotCommandInline PathWaypointRemoveFromToCommand("removefromto", CMD_ACCESS_WAYPOINT, [](CClient *pClient,
-                                                  const BotCommandArgs& args)
+CBotCommandInline PathWaypointRemoveFromToCommand("removefromto", CMD_ACCESS_WAYPOINT, [](CClient* pClient, const BotCommandArgs& args)
 {
-	if ( pClient && args[0] && *args[0] && args[1] && *args[1] )
+	if (!pClient || !args[0] || !*args[0] || !args[1] || !*args[1])
 	{
-		CWaypoint *pWaypoint = CWaypoints::getWaypoint(std::atoi(args[0]));
+		CBotGlobals::botMessage(pClient ? pClient->getPlayer() : nullptr, 0, "missing args <id1> <id2>");
+		return COMMAND_ERROR;
+	}
 
-		if ( pWaypoint && pWaypoint->isUsed() )
+	int id1 = std::atoi(args[0]);
+	int id2 = std::atoi(args[1]);
+
+	if (CWaypoint* pWaypoint = CWaypoints::getWaypoint(id1))
+	{
+		if (pWaypoint->isUsed())
 		{
-			CWaypoint *pWaypoint2 = CWaypoints::getWaypoint(std::atoi(args[1]));
-
-			if ( pWaypoint2 && pWaypoint2->isUsed() )
+			if (CWaypoint* pWaypoint2 = CWaypoints::getWaypoint(id2))
 			{
-				pWaypoint->removePathTo(std::atoi(args[1]));
-				CBotGlobals::botMessage(pClient->getPlayer(),
-					0,"Removed path from <%d> to <%d>",std::atoi(args[0]),std::atoi(args[1]));
+				if (pWaypoint2->isUsed())
+				{
+					pWaypoint->removePathTo(id2);
+					CBotGlobals::botMessage(pClient->getPlayer(), 0, "Removed path from <%d> to <%d>", id1, id2);
 
-				pWaypoint->draw(pClient->getPlayer(),true,DRAWTYPE_DEBUGENGINE);
-				pWaypoint->info(pClient->getPlayer());
-				pWaypoint2->draw(pClient->getPlayer(),true,DRAWTYPE_DEBUGENGINE);
-				pWaypoint2->info(pClient->getPlayer());
+					pWaypoint->draw(pClient->getPlayer(), true, DRAWTYPE_DEBUGENGINE);
+					pWaypoint->info(pClient->getPlayer());
+					pWaypoint2->draw(pClient->getPlayer(), true, DRAWTYPE_DEBUGENGINE);
+					pWaypoint2->info(pClient->getPlayer());
 
-				pClient->playSound("buttons/button24");
+					pClient->playSound("buttons/button24");
 
-				return COMMAND_ACCESSED;
+					return COMMAND_ACCESSED;
+				}
+				CBotGlobals::botMessage(pClient->getPlayer(), 0, "Waypoint id <%d> not found", id2);
 			}
-			CBotGlobals::botMessage(pClient->getPlayer(),
-			                        0,"Waypoint id <%d> not found",std::atoi(args[1]));
 		}
 		else
-			CBotGlobals::botMessage(pClient->getPlayer(),
-				0,"Waypoint id <%d> not found",std::atoi(args[0]));
+		{
+			CBotGlobals::botMessage(pClient->getPlayer(), 0, "Waypoint id <%d> not found", id1);
+		}
 	}
 	else
-		CBotGlobals::botMessage(pClient!= nullptr ? pClient->getPlayer() : nullptr,
-				0,"missing args <id1> <id2>");
-	
+	{
+		CBotGlobals::botMessage(pClient->getPlayer(), 0, "Waypoint id <%d> not found", id1);
+	}
+
 	return COMMAND_ERROR;
 });
 

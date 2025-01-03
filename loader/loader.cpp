@@ -289,8 +289,12 @@ DLL_EXPORT METAMOD_PLUGIN *CreateInterface_MMS(const MetamodVersionInfo *mvi, co
 		}
 	case SOURCE_ENGINE_BMS:
 		{
-			filename = FILENAME_1_6_BMS;
-			break;
+			const char* gamedir = mvi->GetGameDir();
+			if (strcmp(gamedir, "bms") == 0)
+			{
+				filename = FILENAME_1_6_BMS;
+				break;
+			}
 		}
 	case SOURCE_ENGINE_TF2:
 		{
