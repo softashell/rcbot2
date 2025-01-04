@@ -35,9 +35,13 @@
 #include "bot_globals.h"
 #include "bot_weapons.h"
 
-#include <algorithm>
 #include <cmath>
 #include <cstring>
+#include <cstdio>
+#include <string>
+#include <algorithm>
+
+#include "rcbot/logging.h"
 
 static const char* g_szDODWeapons[] =
 {
@@ -820,9 +824,9 @@ static const char* szWeaponFlags[] = {
 
 void CWeapons::loadWeapons(const char* szWeaponListName, const WeaponsData_t* pDefault)
 {
-	if (szWeaponListName != nullptr && szWeaponListName[0] != 0)
+	if (szWeaponListName != nullptr && szWeaponListName[0] != '\0')
 	{
-		KeyValues* kv = new KeyValues("Weapons");
+		KeyValues* kv = new KeyValues("Weapons"); //TODO: Visibility scope of the 'kv' pointer was exited without releasing the memory.
 		char szFilename[1024];
 
 		CBotGlobals::buildFileName(szFilename, "weapons", BOT_CONFIG_FOLDER, "ini", false);
@@ -831,62 +835,71 @@ void CWeapons::loadWeapons(const char* szWeaponListName, const WeaponsData_t* pD
 		{
 			if (kv->LoadFromFile(filesystem, szFilename, nullptr))
 			{
-				kv = kv->FindKey(szWeaponListName);
+				KeyValues* weaponListKey = kv->FindKey(szWeaponListName);
 
-				if (kv)
+				if (weaponListKey)
 				{
-					kv = kv->GetFirstSubKey();
+					KeyValues* subKey = weaponListKey->GetFirstSubKey();
 
-					if (false)
-						kv = kv->GetFirstTrueSubKey(); //Unreachable? [APG]RoboCop[CL]
-
-					while (kv != nullptr)
+					while (subKey != nullptr)
 					{
 						WeaponsData_t newWeapon;
 
 						std::memset(&newWeapon, 0, sizeof(WeaponsData_t));
 
-						const char* szKeyName = kv->GetName();
+						const char* szKeyName = subKey->GetName();
 
-						char lowered[64];
-
-						std::strncpy(lowered, szKeyName, 63);
-						lowered[63] = 0;
-
-						__strlow(lowered)
-
-						newWeapon.szWeaponName = CStrings::getString(lowered);
-						newWeapon.iId = kv->GetInt("id");
-						newWeapon.iSlot = kv->GetInt("slot");
-						newWeapon.minPrimDist = kv->GetFloat("minPrimDist");
-						newWeapon.maxPrimDist = kv->GetFloat("maxPrimDist");
-						newWeapon.m_fProjSpeed = kv->GetFloat("m_fProjSpeed");
-						newWeapon.m_iAmmoIndex = kv->GetInt("m_iAmmoIndex");
-						newWeapon.m_iPreference = kv->GetInt("m_iPreference");
-
-						KeyValues* flags = kv->FindKey("flags");
-
-						if (flags)
+						if (szKeyName)
 						{
-							int i = 0;
+							constexpr size_t BUFFER_SIZE = 64;
+							char lowered[BUFFER_SIZE];
 
-							while (szWeaponFlags[i][0] != '\0')
+							std::strncpy(lowered, szKeyName, BUFFER_SIZE - 1);
+							lowered[BUFFER_SIZE - 1] = '\0'; // Ensure null termination
+
+							// Convert to lowercase
+							std::transform(lowered, lowered + std::strlen(lowered), lowered, ::tolower);
+
+							newWeapon.szWeaponName = CStrings::getString(lowered);
+							newWeapon.iId = subKey->GetInt("id");
+							newWeapon.iSlot = subKey->GetInt("slot");
+							newWeapon.minPrimDist = subKey->GetFloat("minPrimDist");
+							newWeapon.maxPrimDist = subKey->GetFloat("maxPrimDist");
+							newWeapon.m_fProjSpeed = subKey->GetFloat("m_fProjSpeed");
+							newWeapon.m_iAmmoIndex = subKey->GetInt("m_iAmmoIndex");
+							newWeapon.m_iPreference = subKey->GetInt("m_iPreference");
+
+							KeyValues* flags = subKey->FindKey("flags");
+
+							if (flags)
 							{
-								if (flags->FindKey(szWeaponFlags[i]) && flags->GetInt(szWeaponFlags[i]) == 1)
-									newWeapon.m_iFlags |= 1 << i;
+								int i = 0;
 
-								i++;
+								while (szWeaponFlags[i][0] != '\0')
+								{
+									if (flags->FindKey(szWeaponFlags[i]) && flags->GetInt(szWeaponFlags[i]) == 1)
+										newWeapon.m_iFlags |= 1 << i;
+
+									i++;
+								}
 							}
+
+							addWeapon(new CWeapon(&newWeapon));
 						}
-
-						addWeapon(new CWeapon(&newWeapon));
-
-						kv = kv->GetNextTrueSubKey();
+						else
+						{
+							logger->Log(LogLevel::ERROR, "Error: szKeyName is null.\n");
+						}
+						subKey = subKey->GetNextTrueSubKey();
 					}
 				}
 			}
 
 			kv->deleteThis();
+		}
+		else
+		{
+			logger->Log(LogLevel::ERROR, "Error: Failed to allocate KeyValues.\n");
 		}
 	}
 

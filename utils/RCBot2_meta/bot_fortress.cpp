@@ -7477,32 +7477,43 @@ enum : std::int8_t
 	RCBOT_ISENEMY_FALSE = 0
 };
 
-bool CBotTF2 :: isEnemy ( edict_t *pEdict, const bool bCheckWeapons )
+bool CBotTF2::isEnemy(edict_t* pEdict, const bool bCheckWeapons)
 {
 	bool bIsPipeBomb = false, bIsRocket = false, bValid = false, bIsBoss = false,
 		bIsGrenade = false;
 
-	if ( !pEdict || !pEdict->GetUnknown() )
+	if (!pEdict || !pEdict->GetUnknown()) {
 		return false;
+	}
 
-	if ( !CBotGlobals::entityIsAlive(pEdict) )
+	if (!CBotGlobals::entityIsAlive(pEdict)) {
 		return false;
+	}
 
-	if ( rcbot_notarget.GetBool() && (ENTINDEX(pEdict) == 1) )
+	if (rcbot_notarget.GetBool() && (ENTINDEX(pEdict) == 1)) {
 		return false;
+	}
 
 	if ( CBotGlobals::isPlayer(pEdict) )
 	{
 		if ( CBotGlobals::getTeam(pEdict) != getTeam() )
 		{
 			//TODO: To prevent bots from shooting at ghost players - like in plr_hightower_event Hell Zone [APG]RoboCop[CL]
-			//if (CTF2Conditions::TF2_IsPlayerInCondition(engine->IndexOfEdict(pEdict), TFCond_UberchargedHidden))
-			//	// Don't attack MvM bots who are inside spawn.
-			//	return false;
+			/*if (pEdict != nullptr && CBotGlobals::entityIsValid(pEdict)) {
 
-			//if (CTF2Conditions::TF2_IsPlayerInCondition(engine->IndexOfEdict(pEdict), TFCond_HalloweenGhostMode))
-			//	// Don't attack Ghost Players
-			//	return false;
+				if (pEdict != nullptr && CBotGlobals::entityIsValid(pEdict)) {
+					const int edictIndex = engine->IndexOfEdict(pEdict);
+					if (CTF2Conditions::TF2_IsPlayerInCondition(edictIndex, TFCond_UberchargedHidden)) {
+						// Don't attack MvM bots who are inside spawn.
+						return false;
+					}
+
+					if (CTF2Conditions::TF2_IsPlayerInCondition(edictIndex, TFCond_HalloweenGhostMode)) {
+						// Don't attack Ghost Players
+						return false;
+					}
+				}
+			}*/
 			
 			if ( m_iClass == TF_CLASS_SPY )	
 			{

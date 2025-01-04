@@ -39,17 +39,17 @@
 
 class CClient;
 
-typedef enum : std::uint8_t
+typedef enum
 {
 	COMMAND_NOT_FOUND,     // command not found
 	COMMAND_ACCESSED,      // okay
-	COMMAND_ERROR,		   // accessed but error occurred
+	COMMAND_ERROR,         // accessed but error occurred
 	COMMAND_REQUIRE_ACCESS // dont have access to command
-}eBotCommandResult;
+} eBotCommandResult;
 
 #define NEED_ARG(x) if ( !(x) || !*(x) ) return COMMAND_ERROR;
 
-enum : std::uint8_t
+enum
 {
 	CMD_ACCESS_NONE = 0,
 	CMD_ACCESS_WAYPOINT = 1<<0,

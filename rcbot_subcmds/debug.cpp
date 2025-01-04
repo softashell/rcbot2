@@ -373,29 +373,31 @@ CBotCommandInline DebugEdictsCommand("edicts", CMD_ACCESS_DEBUG, [](CClient* pCl
 	return COMMAND_ACCESSED;
 }, "usage \"edicts 1 or 0, 1 on, 0 off\" : shows allocated/freed edicts");
 
-CBotCommandInline PrintProps("printprops", CMD_ACCESS_DEBUG, [](const CClient* pClient, const BotCommandArgs& args)
-{
-	if (pClient)
+CBotCommandInline PrintProps("printprops", CMD_ACCESS_DEBUG,
+	[](const CClient* pClient, const BotCommandArgs& args)
 	{
-		if (args[0] && *args[0])
+		if (pClient)
 		{
-			extern bool g_PrintProps;
-			unsigned m_offset;
-			g_PrintProps = true;
 
-			ServerClass* sc = UTIL_FindServerClass(args[0]);
+			if (args[0] && *args[0])
+			{
+				extern bool g_PrintProps;
+				unsigned m_offset;
+				g_PrintProps = true;
 
-			if (sc)
-				UTIL_FindSendPropInfo(sc, "", &m_offset);
+				ServerClass* sc = UTIL_FindServerClass(args[0]);
+
+				if (sc)
+					UTIL_FindSendPropInfo(sc, "", &m_offset);
 
 				g_PrintProps = false;
+			}
+
+			return COMMAND_ACCESSED;
 		}
 
-		return COMMAND_ACCESSED;
-	}
-
-	return COMMAND_ERROR;
-});
+		return COMMAND_ERROR;
+	});
 
 CBotCommandInline SetProp("setprop", CMD_ACCESS_DEBUG, [](const CClient* pClient, const BotCommandArgs& args)
 {
