@@ -38,6 +38,7 @@
 #include <cmath>
 #include <cstring>
 #include <cstdio>
+#include <memory>
 #include <string>
 #include <algorithm>
 
@@ -824,14 +825,21 @@ static const char* szWeaponFlags[] = {
 
 void CWeapons::loadWeapons(const char* szWeaponListName, const WeaponsData_t* pDefault)
 {
-	if (szWeaponListName != nullptr && szWeaponListName[0] != '\0')
+	if (szWeaponListName && szWeaponListName[0] != '\0')
 	{
-		KeyValues* kv = new KeyValues("Weapons"); //TODO: Visibility scope of the 'kv' pointer was exited without releasing the memory.
+		// Custom deleter for KeyValues
+		auto keyValuesDeleter = [](KeyValues* kv) {
+			if (kv) {
+				kv->deleteThis();
+			}
+			};
+
+		const std::unique_ptr<KeyValues, decltype(keyValuesDeleter)> kv(new KeyValues("Weapons"), keyValuesDeleter);
 		char szFilename[1024];
 
 		CBotGlobals::buildFileName(szFilename, "weapons", BOT_CONFIG_FOLDER, "ini", false);
 
-		if (kv) //TODO: Memory leak fix [APG]RoboCop[CL]
+		if (kv)
 		{
 			if (kv->LoadFromFile(filesystem, szFilename, nullptr))
 			{
@@ -839,9 +847,7 @@ void CWeapons::loadWeapons(const char* szWeaponListName, const WeaponsData_t* pD
 
 				if (weaponListKey)
 				{
-					KeyValues* subKey = weaponListKey->GetFirstSubKey();
-
-					while (subKey != nullptr)
+					for (KeyValues* subKey = weaponListKey->GetFirstSubKey(); subKey != nullptr; subKey = subKey->GetNextTrueSubKey())
 					{
 						WeaponsData_t newWeapon;
 
@@ -873,14 +879,12 @@ void CWeapons::loadWeapons(const char* szWeaponListName, const WeaponsData_t* pD
 
 							if (flags)
 							{
-								int i = 0;
-
-								while (szWeaponFlags[i][0] != '\0')
+								for (int i = 0; szWeaponFlags[i][0] != '\0'; ++i)
 								{
-									if (flags->FindKey(szWeaponFlags[i]) && flags->GetInt(szWeaponFlags[i]) == 1)
+									if (flags->GetInt(szWeaponFlags[i], 0) == 1)
+									{
 										newWeapon.m_iFlags |= 1 << i;
-
-									i++;
+									}
 								}
 							}
 
@@ -890,12 +894,9 @@ void CWeapons::loadWeapons(const char* szWeaponListName, const WeaponsData_t* pD
 						{
 							logger->Log(LogLevel::ERROR, "Error: szKeyName is null.\n");
 						}
-						subKey = subKey->GetNextTrueSubKey();
 					}
 				}
 			}
-
-			kv->deleteThis();
 		}
 		else
 		{
@@ -903,7 +904,7 @@ void CWeapons::loadWeapons(const char* szWeaponListName, const WeaponsData_t* pD
 		}
 	}
 
-	if (pDefault != nullptr)
+	if (pDefault)
 	{
 		// No weapons from INI file then add default
 		if (m_theWeapons.empty())
@@ -911,7 +912,7 @@ void CWeapons::loadWeapons(const char* szWeaponListName, const WeaponsData_t* pD
 			while (pDefault->szWeaponName[0] != '\0')
 			{
 				addWeapon(new CWeapon(pDefault));
-				pDefault++;
+				++pDefault;
 			}
 		}
 	}
