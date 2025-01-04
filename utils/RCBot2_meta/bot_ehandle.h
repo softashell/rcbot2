@@ -31,6 +31,8 @@
 #ifndef __RCBOT_EHANDLE_H__
 #define __RCBOT_EHANDLE_H__
 
+#include "edict.h"
+
  /**
   * This is bad and should be nuked.
   * The SDK's CBaseHandle should be used instead! -caxanga334

@@ -28,13 +28,12 @@
  *    version.
  *
  */
+#include "bot_ga_ind.h"
 #include "bot.h"
 #include "bot_mtrand.h"
 #include "bot_ga.h"
-#include "bot_ga_ind.h"
 
 #include <utility>
-#include "bot_mtrand.h"
 
 CBotGAValues::CBotGAValues()
 {

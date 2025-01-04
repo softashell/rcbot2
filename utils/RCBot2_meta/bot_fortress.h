@@ -750,7 +750,9 @@ protected:
 
 	// list of spies who I saw were attacked by my team-mates recently
 	// for use with spy checking
-	float m_fSpyList[RCBOT_MAXPLAYERS];
+	float m_fSpyAttackedList[RCBOT_MAXPLAYERS];
+	// List of spies I saw cloak in front of me
+	float m_fSpyLastUncloakedList[RCBOT_MAXPLAYERS];
 
 	int m_iTeam;
 

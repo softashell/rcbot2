@@ -2,6 +2,12 @@
 #define __RCBOT_TF2_POINTS_H__
 
 #include <cstring>
+#include <cstdint>
+
+#include "bot_ehandle.h"
+#include "edict.h"
+#include "ehandle.h"
+#include "shareddefs.h"
 #include "utlmap.h"
 
 class CTeamControlPoint;
@@ -59,8 +65,8 @@ public:
 
 	void reset ()
 	{
-		std::memset(this,0,sizeof(CTFObjectiveResource));
-		std::memset(m_iControlPointWpt,0xFF,sizeof(int)*MAX_CONTROL_POINTS);
+		memset(this,0,sizeof(CTFObjectiveResource));
+		memset(m_iControlPointWpt,0xFF,sizeof(int)*MAX_CONTROL_POINTS);
 		m_iMonitorPoint[0] = -1;
 		m_iMonitorPoint[1] = -1;
 	}
@@ -274,7 +280,7 @@ public:
 
 	void resetValidWaypointAreas() 
 	{ 
-		std::memset(m_ValidAreas,0,sizeof(bool)*MAX_CONTROL_POINTS); 
+		memset(m_ValidAreas,0,sizeof(bool)*MAX_CONTROL_POINTS); 
 	}
 	void updateValidWaypointAreas ()
 	{
@@ -300,7 +306,7 @@ class CTeamRoundTimer
 public:
 	CTeamRoundTimer()
 	{
-		std::memset(this,0,sizeof(CTeamRoundTimer));
+		memset(this,0,sizeof(CTeamRoundTimer));
 	}
 
 	float getSetupTime ()

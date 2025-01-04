@@ -31,8 +31,11 @@
 #ifndef __BOT_COMMANDS_H__
 #define __BOT_COMMANDS_H__
 
-#include <vector>
+#include "edict.h"
+#include <cstddef>
+#include <deque>
 #include <functional>
+#include <vector>
 
 class CClient;
 

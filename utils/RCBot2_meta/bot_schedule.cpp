@@ -31,14 +31,14 @@
  *
  */
 
-#include "bot.h"
 #include "bot_schedule.h"
-#include "bot_task.h"
+#include "bot.h"
 #include "bot_client.h"
-#include "bot_weapons.h"
-#include "bot_globals.h"
 #include "bot_getprop.h"
+#include "bot_globals.h"
+#include "bot_task.h"
 #include "bot_waypoint_locations.h"
+#include "bot_weapons.h"
 ////////////////////////////////////
 // these must match the SCHED IDs
 const char *szSchedules[SCHED_MAX+1] = 
@@ -435,16 +435,16 @@ CBotTauntSchedule :: CBotTauntSchedule ( edict_t *pPlayer, const float fYaw ) : 
 
 	AngleVectors(angles,&forward);
 
-	forward = forward/forward.Length();
+	//forward = forward/forward.Length();
 	const Vector vOrigin = CBotGlobals::entityOrigin(pPlayer);
 
 	const Vector vGoto = vOrigin + forward * fTauntDist;
 
 	CBotGlobals::fixFloatAngle(&m_fYaw);
 
-	addTask(new CFindPathTask(vOrigin));
-	addTask(new CMoveToTask(vOrigin));
-	addTask(new CTF2_TauntTask(vOrigin,vGoto,fTauntDist));
+	addTask(new CFindPathTask(vGoto));
+	addTask(new CMoveToTask(vGoto));
+	addTask(new CTF2_TauntTask(pPlayer, vGoto, 5.0f));
 }
 
 void CBotTauntSchedule :: init ()

@@ -1,11 +1,9 @@
 #ifndef __RCBOT_KEY_VAL__
 #define __RCBOT_KEY_VAL__
 
-enum : std::uint16_t
-{
-	RCBOT_MAX_KV_LEN = 256
-};
+constexpr int RCBOT_MAX_KV_LEN = 256;
 
+#include <fstream>
 #include <vector>
 
 class CRCBotKeyValue

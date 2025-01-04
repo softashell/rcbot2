@@ -1,6 +1,7 @@
 #ifndef __RCBOT_PROFILE_H__
 #define __RCBOT_PROFILE_H__
 
+#include <mem.h>
 #include <cstring>
 #include <vector>
 

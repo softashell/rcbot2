@@ -1,12 +1,12 @@
-#include "engine_wrappers.h"
+#include "bot_tf2_points.h"
 #include "bot.h"
 #include "bot_cvars.h"
-#include "bot_getprop.h"
 #include "bot_fortress.h"
-#include "bot_tf2_points.h"
-#include "bot_waypoint.h"
+#include "bot_getprop.h"
 #include "bot_globals.h"
+#include "bot_waypoint.h"
 #include "bot_waypoint_locations.h"
+#include "engine_wrappers.h"
 
 #include <cstring>
 

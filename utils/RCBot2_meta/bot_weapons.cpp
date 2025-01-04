@@ -31,9 +31,9 @@
 #include "engine_wrappers.h"
 
 #include "bot.h"
+#include "bot_getprop.h"
 #include "bot_globals.h"
 #include "bot_weapons.h"
-#include "bot_getprop.h"
 
 #include <algorithm>
 #include <cmath>

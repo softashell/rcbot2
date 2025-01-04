@@ -31,6 +31,7 @@
 #ifndef __BOT_BUTTONS_H__
 #define __BOT_BUTTONS_H__
 
+#include <mem.h>
 #include <vector>
 
 class CBotButton
@@ -38,7 +39,7 @@ class CBotButton
 public:
 	CBotButton (const int iId)
 	{
-		memset(this,0,sizeof(CBotButton));
+		std::memset(this,0,sizeof(CBotButton));
 		m_iButtonId = iId;
 		m_bTapped = false;		
 	}

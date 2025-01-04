@@ -30,25 +30,25 @@
  */
 #include "engine_wrappers.h"
 
-//#include "server_class.h"
+ // #include "server_class.h"
 
 #include "bot.h"
 #include "bot_cvars.h"
 
 #include "in_buttons.h"
 
-#include "bot_mods.h"
-#include "bot_globals.h"
-#include "bot_fortress.h"
-#include "bot_weapons.h"
 #include "bot_configfile.h"
+#include "bot_fortress.h"
 #include "bot_getprop.h"
+#include "bot_globals.h"
+#include "bot_mods.h"
 #include "bot_navigator.h"
+#include "bot_perceptron.h"
+#include "bot_sigscan.h"
+#include "bot_tf2_points.h"
 #include "bot_waypoint.h"
 #include "bot_waypoint_locations.h"
-#include "bot_perceptron.h"
-#include "bot_tf2_points.h"
-#include "bot_sigscan.h"
+#include "bot_weapons.h"
 
 #include <algorithm>
 #include <cstring>
@@ -1282,6 +1282,9 @@ edict_t *CTeamFortress2Mod :: getPayloadBomb (const int team)
 
 void CTeamFortress2Mod :: roundReset ()
 {
+	if (CTeamFortress2Mod::isMapType(TF_MAP_MVM) && g_pCVar->FindVar("tf_mvm_endless_force_on")->GetBool())
+		return;
+
 	if ( m_ObjectiveResource.m_ObjectiveResource.get() == nullptr)
 	{
 		m_ObjectiveResource.m_ObjectiveResource = CClassInterface::FindEntityByNetClass(gpGlobals->maxClients+1, "CTFObjectiveResource");

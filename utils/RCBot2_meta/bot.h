@@ -1046,6 +1046,10 @@ protected:
 	bool m_bIncreaseSensitivity; 
 	float m_fSpawnTime;
 	bool m_bWantToInvestigateSound;
+
+	float m_fEnemyAimLerp;
+	float m_fEnemyAimLerpTime;
+	Vector m_vEnemyAimLerpVelocity;
 };
 
 class CBots

@@ -1310,10 +1310,13 @@ private:
 class CTF2_TauntTask : public CBotTask
 {
 public:
-	CTF2_TauntTask (const Vector& vPlayer, const Vector& vOrigin, const float fDist) : m_vPlayer(vPlayer), m_vOrigin(vOrigin)
+	CTF2_TauntTask (edict_t* pPlayer, const Vector& vOrigin, const float fDist) : m_vOrigin(vOrigin)
 	{
+		m_pPlayer = pPlayer;
 		m_fDist = fDist;
 		m_fTime = 0.0f;
+		m_fTauntUntil = 0.0f;
+		m_fActionTime = 0.0f;
 	}
 
 	void init () override;
@@ -1321,10 +1324,12 @@ public:
 	void debugString ( char *string ) override;
 
 private:
-	Vector m_vPlayer;
+	MyEHandle m_pPlayer;
 	Vector m_vOrigin;
 	float m_fDist;
 	float m_fTime;
+	float m_fTauntUntil;
+	float m_fActionTime;
 };
 
 /////////////////////
@@ -1508,18 +1513,18 @@ class CBotWaitTask : public CBotTask
 public:
 	CBotWaitTask(const float waittime)
 	{
-		m_ftime = engine->Time() + waittime;
+		m_fTime = engine->Time() + waittime;
 		m_bAimSet = false;
 	}
 	CBotWaitTask(const float waittime, const Vector& vAim) : m_vAim(vAim)
 	{
-		m_ftime = engine->Time() + waittime;
+		m_fTime = engine->Time() + waittime;
 		m_bAimSet = true;
 	}
 	void execute ( CBot *pBot, CBotSchedule *pSchedule ) override;
 	void debugString (char *string) override;
 private:
-	float m_ftime;
+	float m_fTime;
 	bool m_bAimSet;
 	Vector m_vAim;
 };
@@ -1530,7 +1535,7 @@ public:
 	CBotSynDisarmMineTask(edict_t *pMine) : m_pMine(pMine)
 	{
 		m_fDist = 0.0f;
-		m_ftime = 0.0f;
+		m_fTime = 0.0f;
 		m_bTimeSet = false;
 	}
 	void execute ( CBot *pBot, CBotSchedule *pSchedule ) override;
@@ -1538,7 +1543,7 @@ public:
 private:
 	Vector m_vMinePos;
 	float m_fDist;
-	float m_ftime;
+	float m_fTime;
 	bool m_bTimeSet;
 	MyEHandle m_pMine;
 };

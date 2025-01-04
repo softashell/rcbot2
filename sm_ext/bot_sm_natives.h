@@ -1,5 +1,7 @@
 #pragma once
 
+#include <IExtensionSys.h>
+
 using namespace SourceMod;
 using namespace SourcePawn;
 

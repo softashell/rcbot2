@@ -10,8 +10,8 @@
 #include "bot_plugin_meta.h"
 
 using SourceMod::IExtension;
-using SourceMod::IShareSys;
 using SourceMod::IExtensionManager;
+using SourceMod::IShareSys;
 
 class RCBotSourceModExt : public SourceMod::IExtensionInterface
 {

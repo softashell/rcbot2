@@ -31,6 +31,8 @@
 #ifndef __DOD_RCBOT_H__
 #define __DOD_RCBOT_H__
 
+#include "bot.h"
+
 enum : std::uint8_t
 {
 	TEAM_ALLIES = 2,

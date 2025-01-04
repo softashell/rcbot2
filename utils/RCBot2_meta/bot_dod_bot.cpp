@@ -3078,12 +3078,11 @@ void CDODBot :: getTasks (unsigned iIgnore)
 		if ( inSquad() )
 		{
 			//caxanga334: SDK 2013 doesn't like to create a Vector from an int
-			//TODO: Proper fix
-			#if SOURCE_ENGINE == SE_SDK2013 || SOURCE_ENGINE == SE_BMS || SOURCE_ENGINE == SE_TF2
+			//#if SOURCE_ENGINE == SE_SDK2013 || SOURCE_ENGINE == SE_BMS || SOURCE_ENGINE == SE_TF2
 			iFlagID = CDODMod::m_Flags.findNearestObjective(Vector(static_cast<vec_t>(m_pSquad->GetFormationPosition(m_pEdict))));
-			#else
-			iFlagID = CDODMod::m_Flags.findNearestObjective(Vector(static_cast<vec_t>(m_pSquad->GetFormationPosition(m_pEdict))));
-			#endif
+			//#else
+			//iFlagID = CDODMod::m_Flags.findNearestObjective(Vector(static_cast<vec_t>(m_pSquad->GetFormationPosition(m_pEdict))));
+			//#endif
 			m_pNearestFlag = CDODMod::m_Flags.getFlagByID(iFlagID);
 
 			if ( hasSomeConditions(CONDITION_DEFENSIVE) )

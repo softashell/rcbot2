@@ -28,21 +28,21 @@
  *    version.
  *
  */
-#include "bot.h"
-#include "bot_cvars.h"
-#include "bot_client.h"
-#include "bot_strings.h"
 #include "bot_commands.h"
-#include "bot_globals.h"
+#include "bot.h"
 #include "bot_accessclient.h"
-#include "bot_schedule.h"
-#include "bot_waypoint.h" // for waypoint commands
-#include "bot_waypoint_locations.h" // for waypoint commands
-#include "ndebugoverlay.h"
-#include "bot_waypoint_visibility.h"
+#include "bot_client.h"
+#include "bot_cvars.h"
 #include "bot_getprop.h"
-#include "bot_weapons.h"
+#include "bot_globals.h"
 #include "bot_menu.h"
+#include "bot_schedule.h"
+#include "bot_strings.h"
+#include "bot_waypoint.h"           // for waypoint commands
+#include "bot_waypoint_locations.h" // for waypoint commands
+#include "bot_waypoint_visibility.h"
+#include "bot_weapons.h"
+#include "ndebugoverlay.h"
 
 #include "bot_tf2_points.h"
 

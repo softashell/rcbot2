@@ -3,6 +3,8 @@
 
 #include <engine_wrappers.h>
 
+#include "bot_const.h"
+
 typedef enum : std::uint8_t
 {
 	TELE_ENTRANCE = 0,

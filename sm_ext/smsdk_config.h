@@ -77,8 +77,8 @@ void SM_UnsetInterfaces();
  * There is no need to edit below.
  */
 
-#include <IShareSys.h>
 #include <IExtensionSys.h>
+#include <IShareSys.h>
 extern SourceMod::IExtension *myself;
 extern SourceMod::IExtensionManager *smexts;
 extern SourceMod::IShareSys *sharesys;

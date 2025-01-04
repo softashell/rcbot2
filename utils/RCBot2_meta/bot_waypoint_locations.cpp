@@ -32,13 +32,13 @@
 #include "bot.h"
 #include "bot_cvars.h"
 
-#include "bot_waypoint.h"
-#include "bot_waypoint_visibility.h"
-#include "bot_waypoint_locations.h"
 #include "bot_globals.h"
+#include "bot_waypoint.h"
+#include "bot_waypoint_locations.h"
+#include "bot_waypoint_visibility.h"
 
-#include <vector>    //bir3yk
 #include <algorithm>
+#include <vector>    //bir3yk
 #include <cmath>
 
 unsigned char CWaypointLocations :: g_iFailedWaypoints[CWaypoints::MAX_WAYPOINTS];

@@ -1,5 +1,5 @@
-#include "bot_sm_ext.h"
 #include "bot_sm_natives.h"
+#include "bot_sm_ext.h"
 
 #include "bot.h"
 #include "bot_profile.h"

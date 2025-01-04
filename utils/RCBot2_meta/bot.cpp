@@ -365,20 +365,18 @@ bool CBot :: createBotFromEdict(edict_t *pEdict, CBotProfile *pProfile)
 
 	engine->SetFakeClientConVarValue(pEdict,"cl_playermodel",szModel);
 	engine->SetFakeClientConVarValue(pEdict,"hud_fastswitch","1");
-	
-	// TODO find the right place for this
-	#if SOURCE_ENGINE == SE_TF2
+
+	/*#if SOURCE_ENGINE == SE_TF2
 	helpers->ClientCommand(pEdict, "jointeam auto");
 
 	//"heavy" should be "heavyweapons" in TF2?
 	//
-	//TODO: To allow the proper slot# values to be used,
 	//the class names should be changed to the slot names [APG]RoboCop[CL]
 	
-	/*char classNames[32][10] = {
-	"auto", "scout", "soldier", "pyro", "demoman", "heavy", "medic",
-	"engineer",	"sniper", "spy",
-	};*/
+	//char classNames[32][10] = {
+	//"auto", "scout", "soldier", "pyro", "demoman", "heavy", "medic",
+	//"engineer", "sniper", "spy",
+	//};
 	
 	char cmd[32]; // conflicts with bot.h `CBotCmd cmd`? [APG]RoboCop[CL]
 
@@ -394,7 +392,7 @@ bool CBot :: createBotFromEdict(edict_t *pEdict, CBotProfile *pProfile)
 	}
 	
 	helpers->ClientCommand(pEdict, cmd);
-	#endif
+	#endif*/
 	/////////////////////////////
 
 	return true;
@@ -1037,6 +1035,33 @@ void CBot :: think ()
 	m_iPrevHealth = m_pPlayerInfo->GetHealth();
 
 	m_bInitAlive = false;
+
+	if (!m_pEnemy || m_pEnemy != m_pOldEnemy)
+		m_fEnemyAimLerp = 0.0f;
+	else
+	{
+		Vector vEnemyAimLerpVelocity;
+		CClassInterface::getVelocity(m_pEnemy.get(), &vEnemyAimLerpVelocity);
+
+		const float fLerpTimeDelta = engine->Time() - m_fEnemyAimLerpTime;
+
+		// Reset multiplier if enemy's velocity has changed drastically
+		constexpr float fMaxDifference = 600.0f;
+		const float fMaxDifferenceAdjusted = fMaxDifference * fLerpTimeDelta;
+
+		m_fEnemyAimLerp = !vEnemyAimLerpVelocity.IsValid() || vEnemyAimLerpVelocity.Length() == 0.0f
+			|| (std::fabs(vEnemyAimLerpVelocity.x - m_vEnemyAimLerpVelocity.x)
+				+ std::fabs(vEnemyAimLerpVelocity.y - m_vEnemyAimLerpVelocity.y)
+				+ std::fabs(vEnemyAimLerpVelocity.z - m_vEnemyAimLerpVelocity.z))
+			* fLerpTimeDelta
+		> fMaxDifferenceAdjusted
+			? 0.0f
+			: std::min(std::max(0.0f, m_fEnemyAimLerp + fLerpTimeDelta), 1.0f);
+
+		m_vEnemyAimLerpVelocity = vEnemyAimLerpVelocity;
+	}
+
+	m_fEnemyAimLerpTime = engine->Time();
 }
 
 void CBot :: addVoiceCommand (const byte voiceCmd)
@@ -1453,6 +1478,10 @@ void CBot :: spawnInit ()
 
 	if ( m_pVisibles != nullptr)
 		m_pVisibles->reset();
+
+	m_fEnemyAimLerp = 0.0f;
+	m_fEnemyAimLerpTime = 0.0f;
+	m_vEnemyAimLerpVelocity = Vector(0.0f, 0.0f, 0.0f);
 }
 
 void CBot::setLastEnemy(edict_t *pEnemy)
@@ -2775,13 +2804,18 @@ void CBot :: letGoOfButton (const int button) const
 	m_pButtons->letGo(button);
 }
 
-void CBot :: changeAngles (const float fSpeed, const float* fIdeal, float* fCurrent, float* fUpdate)
+void CBot :: changeAngles (float fSpeed, const float* fIdeal, float* fCurrent, float* fUpdate)
 {
 	float current = *fCurrent;
 	const float ideal = *fIdeal;
 
 	if (bot_anglespeed.GetFloat() < 0.01f)
 		bot_anglespeed.SetValue(0.16f);
+
+	// Really not needed for bigger sensitivities
+	// Also this does not take the skill system into account
+	if (fSpeed < 15.0f)
+		fSpeed = Lerp(m_fEnemyAimLerp, fSpeed, 15.0f);
 
 	const float alphaspeed = fSpeed / 20;
 

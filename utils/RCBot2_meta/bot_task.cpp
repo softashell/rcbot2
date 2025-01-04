@@ -820,7 +820,7 @@ void CBotWaitTask::execute ( CBot *pBot, CBotSchedule *pSchedule )
 		pBot->setLookAtTask(LOOK_VECTOR);
 	}
 
-	if(engine->Time() >= m_ftime)
+	if(engine->Time() >= m_fTime)
 	{
 		complete();
 	}
@@ -828,7 +828,7 @@ void CBotWaitTask::execute ( CBot *pBot, CBotSchedule *pSchedule )
 
 void CBotWaitTask::debugString(char *string)
 {
-	std::sprintf(string,"CBotWaitTask (%.1f)",m_ftime - engine->Time());
+	std::sprintf(string,"CBotWaitTask (%.1f)",m_fTime - engine->Time());
 }
 
 ////////////////////////////
@@ -2328,32 +2328,114 @@ void CBotTF2FindPipeWaypoint :: execute (CBot *pBot,CBotSchedule *pSchedule)
 
 void CTF2_TauntTask :: init ()
 {
-	m_fTime = 0;
+	m_fTime = 0.0f;
+	m_fTauntUntil = 0.0f;
+	m_fActionTime = 0.0f;
 }
 
-void CTF2_TauntTask :: execute ( CBot *pBot, CBotSchedule *pSchedule )
+void CTF2_TauntTask::execute(CBot* pBot, CBotSchedule* pSchedule)
 {
-	if ( m_fTime == 0.0f )
-		m_fTime = engine->Time() + randomFloat(2.5f,5.0f);
-	else if ( m_fTime < engine->Time() )
+	if (!m_pPlayer)
 	{
+		// Stop taunting
+		/*CClassInterface::g_GetProps[GETPROP_TF2_CONDITIONS].getData(pBot->getEdict());
+		 *static_cast<int *>(CClassInterface::g_GetProps[GETPROP_TF2_CONDITIONS].m_data) &= ~(1 << 7);*/
+
 		fail();
 		return;
 	}
 
-	pBot->setLookVector(m_vPlayer);
-	pBot->setLookAtTask(LOOK_VECTOR);
+	const float fTime = engine->Time();
 
-	if ( pBot->distanceFrom(m_vOrigin) > m_fDist )
-		pBot->setMoveTo(m_vOrigin);
-	else
+	if (m_fTauntUntil == 0.0f)
 	{
-		if ( pBot->DotProductFromOrigin(m_vPlayer) > 0.95f )
+		if (m_fTime == 0.0f)
+			m_fTime = engine->Time() + randomFloat(2.5f, 5.0f);
+		else if (m_fTime < engine->Time())
 		{
-			static_cast<CBotTF2*>(pBot)->taunt(true);
-			complete();
+			fail();
+			return;
 		}
+
+		pBot->lookAtEdict(m_pPlayer.get());
+		pBot->setLookAtTask(LOOK_EDICT, 10.0f);
+
+		if (pBot->distanceFrom(m_vOrigin) > m_fDist)
+			pBot->setMoveTo(m_vOrigin);
+		else
+		{
+			CBotTF2* pTF2Bot = static_cast<CBotTF2*>(pBot);
+
+			if (pTF2Bot->getClass() == TF_CLASS_SPY)
+			{
+				if (pTF2Bot->isCloaked())
+				{
+					pTF2Bot->spyUnCloak();
+					return;
+				}
+
+				if (pTF2Bot->isDisguised())
+				{
+					pTF2Bot->spyDisguise(pTF2Bot->getTeam(), 8);
+					return;
+				}
+			}
+
+			pTF2Bot->taunt(true);
+
+			m_fTauntUntil = fTime + randomFloat(15.0f, 30.0f);
+		}
+
+		return;
 	}
+
+	const bool bIsTaunting = CClassInterface::getTF2Conditions(pBot->getEdict()) & (1 << 7);
+	Vector vPlayerOrigin = m_pPlayer.get()->GetCollideable()->GetCollisionOrigin();
+
+	// Don't do anything but follow target player as long as they are still taunting and bot isn't wandering off
+	if (bIsTaunting && (CClassInterface::getTF2Conditions(m_pPlayer.get()) & (1 << 7)) && vPlayerOrigin.IsValid()
+		&& pBot->distanceFrom(vPlayerOrigin) < m_fDist * 4.0f)
+	{
+		// In case taunt time has expired, extend it a bit as long as target player is still taunting
+		if (fTime > m_fTauntUntil)
+			m_fTauntUntil = fTime + randomFloat(2.0f, 10.0f);
+
+		// Do random actions in case the taunt permits it
+		/*if (fTime > m_fActionTime)
+		{
+			m_fActionTime = fTime + randomFloat(0.5f, 2.0f);
+
+			int iRand     = randomInt(0, 20);
+			if (iRand == 0)
+				pBot->primaryAttack(true);
+			else if (iRand == 1)
+				pBot->secondaryAttack(true);
+		}*/
+
+		// Chase player if the taunt allows movement
+		if (pBot->distanceFrom(vPlayerOrigin) > m_fDist * 2.0f)
+		{
+			vPlayerOrigin.x += randomFloat(-m_fDist * 2.0f, m_fDist * 2.0f);
+			vPlayerOrigin.y += randomFloat(-m_fDist * 2.0f, m_fDist * 2.0f);
+			pBot->setMoveTo(vPlayerOrigin);
+		}
+
+		return;
+	}
+
+	if (bIsTaunting)
+	{
+		if (fTime > m_fTauntUntil)
+		{
+			// Stop taunting
+			/*CClassInterface::g_GetProps[GETPROP_TF2_CONDITIONS].getData(pBot->getEdict());
+			 *static_cast<int *>(CClassInterface::g_GetProps[GETPROP_TF2_CONDITIONS].m_data) &= ~(1 << 7);*/
+		}
+
+		// return;
+	}
+
+	complete();
 }
 
 void CTF2_TauntTask :: debugString ( char *string )
@@ -5576,11 +5658,11 @@ void CBotSynDisarmMineTask::execute(CBot *pBot, CBotSchedule *pSchedule)
 		
 		if(!m_bTimeSet && CSynergyMod::IsCombineMineHeldByPhysgun(m_pMine.get()))
 		{
-			m_ftime = engine->Time() + 2.0f;
+			m_fTime = engine->Time() + 2.0f;
 			m_bTimeSet = true;
 		}
 
-		if(m_bTimeSet && m_ftime < engine->Time())
+		if(m_bTimeSet && m_fTime < engine->Time())
 		{
 			pBot->letGoOfButton(IN_ATTACK2);
 			pBot->tapButton(IN_ATTACK2); // Press M2 again to release

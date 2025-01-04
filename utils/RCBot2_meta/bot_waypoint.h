@@ -39,10 +39,10 @@ using WaypointList = std::vector<int>;
 
 #include "bot.h"
 #include "bot_client.h"
-#include "bot_wpt_color.h"
 #include "bot_mtrand.h"
+#include "bot_wpt_color.h"
 
-//#include "bot_navigator.h"
+// #include "bot_navigator.h"
 
 class CWaypointVisibilityTable;
 class CClient;

@@ -571,7 +571,7 @@ void CHLDMBot :: modThink ()
 		setMoveLookPriority(MOVELOOK_MODTHINK);
 	}
 
-	if ( m_fCurrentDanger >= 20.0f && CClassInterface::auxPower(m_pEdict) > 90.f && m_fSprintTime < engine->Time())
+	if ( m_fCurrentDanger >= 20.0f && CClassInterface::auxPower(m_pEdict) > 90.0f && m_fSprintTime < engine->Time())
 	{
 		m_pButtons->holdButton(IN_SPEED,0,1,0);
 	}
