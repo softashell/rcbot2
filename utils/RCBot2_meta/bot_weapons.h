@@ -296,11 +296,12 @@ enum
 	WEAP_FL_PROJECTILE = 1 << 19 // affected by gravity
 };
 
-extern WeaponsData_t TF2Weaps[];
-extern WeaponsData_t HL2DMWeaps[];
-extern WeaponsData_t DODWeaps[];
-extern WeaponsData_t SYNERGYWeaps[];
-extern WeaponsData_t CSSWeaps[];
+extern std::vector<WeaponsData_t> TF2Weaps;
+extern std::vector<WeaponsData_t> HL2DMWeaps;
+extern std::vector<WeaponsData_t> DODWeaps;
+extern std::vector<WeaponsData_t> BMSWeaps;
+extern std::vector<WeaponsData_t> SYNERGYWeaps;
+extern std::vector<WeaponsData_t> CSSWeaps;
 
 class CWeapon
 {

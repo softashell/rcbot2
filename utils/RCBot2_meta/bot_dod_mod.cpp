@@ -178,7 +178,7 @@ void CDODMod::initMod()
 	CBotGlobals::botMessage(nullptr, 0, "... done!");
 ///-------------------------------------------------
 
-	CWeapons::loadWeapons(m_szWeaponListName == nullptr ? "DOD" : m_szWeaponListName, DODWeaps);
+    CWeapons::loadWeapons(m_szWeaponListName == nullptr ? "DOD" : m_szWeaponListName, DODWeaps.data());
 	//CWeapons::loadWeapons("DOD", DODWeaps);
 	/*
 	for ( i = 0; i < DOD_WEAPON_MAX; i ++ )

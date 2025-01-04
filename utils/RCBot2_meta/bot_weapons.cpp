@@ -41,11 +41,12 @@
 #include <memory>
 #include <string>
 #include <algorithm>
+#include <array>
+#include <vector>
 
 #include "rcbot/logging.h"
 
-static const char* g_szDODWeapons[] =
-{
+constexpr std::array<const char*, 25> g_szDODWeapons = {
 	"weapon_amerknife",
 	"weapon_spade",
 	"weapon_colt",
@@ -73,8 +74,7 @@ static const char* g_szDODWeapons[] =
 	"weapon_basebomb"
 };
 
-static const char* g_szHL2DMWeapons[] =
-{
+constexpr std::array<const char*, 12> g_szHL2DMWeapons = {
 	"weapon_pistol",
 	"weapon_crowbar",
 	"weapon_357",
@@ -90,8 +90,7 @@ static const char* g_szHL2DMWeapons[] =
 };
 
 //TODO: Add Black Mesa weapons support [APG]RoboCop[CL]
-/*static const char* g_szBMSWeapons[] =
-{
+/*constexpr std::array<const char*, 15> g_szBMSWeapons = {
 	"weapon_357",
 	"weapon_assassin_glock",
 	"weapon_crossbow",
@@ -106,11 +105,10 @@ static const char* g_szHL2DMWeapons[] =
 	"weapon_shotgun",
 	"weapon_snark",
 	"weapon_tau",
-	"weapon_tripmine",
+	"weapon_tripmine"
 };*/
 
-static const char* g_szSYNWeapons[] =
-{
+constexpr std::array<const char*, 17> g_szSYNWeapons = {
 	"weapon_pistol", // 0
 	"weapon_crowbar",
 	"weapon_pipe",
@@ -130,8 +128,7 @@ static const char* g_szSYNWeapons[] =
 	"weapon_bugbait"
 };
 
-static const char* g_szCSWeapons[] =
-{
+constexpr std::array<const char*, 29> g_szCSWeapons = {
 	"weapon_knife", // 0
 	"weapon_usp",
 	"weapon_glock",
@@ -168,207 +165,198 @@ static const char* g_szCSWeapons[] =
   7, 5, 10, 11, 12, 12,
   21, 22, 13, 14, 17, 18*/
 
-WeaponsData_t DODWeaps[] =
-{
-	/*
-		slot, id , weapon name, flags, min dist, max dist, ammo index, preference
-		*/
-		{1,DOD_WEAPON_AMERKNIFE, g_szDODWeapons[0],	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,100,-1,1,0},
-		{1,DOD_WEAPON_SPADE, g_szDODWeapons[1],		WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,100,-1,1,0},
-		{2,DOD_WEAPON_COLT, g_szDODWeapons[2],		WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,800,1,2,0},
-		{2,DOD_WEAPON_P38, g_szDODWeapons[3],		WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,800,2,2,0},
-		{3,DOD_WEAPON_M1, g_szDODWeapons[4],		WEAP_FL_PRIM_ATTACK,0,1600,6,4,0},
-		{3,DOD_WEAPON_C96, g_szDODWeapons[5],		WEAP_FL_PRIM_ATTACK,0,1600,-1,4,0},
-		{3,DOD_WEAPON_GARAND, g_szDODWeapons[6],	WEAP_FL_PRIM_ATTACK | WEAP_FL_ZOOMABLE,0,1600,-1,3,0},
-		{3,DOD_WEAPON_K98, g_szDODWeapons[7],		WEAP_FL_PRIM_ATTACK | WEAP_FL_ZOOMABLE,0,1600,-1,3,0},
-		{3,DOD_WEAPON_THOMPSON, g_szDODWeapons[8],	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE_SEC_ATT,0,900,-1,3,0},
-		{3,DOD_WEAPON_MP40, g_szDODWeapons[9],		WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE_SEC_ATT,0,1600,-1,4,0},
-		{3,DOD_WEAPON_BAR, g_szDODWeapons[10],		WEAP_FL_PRIM_ATTACK,0,1600,-1,3,0},
-		{3,DOD_WEAPON_MP44, g_szDODWeapons[11],		WEAP_FL_PRIM_ATTACK,0,1600,-1,3,0},
-		{3,DOD_WEAPON_SPRING, g_szDODWeapons[12],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SCOPE | WEAP_FL_CANTFIRE_NORM | WEAP_FL_ZOOMABLE,0,3200,-1,3,0},
-		{3,DOD_WEAPON_K98_SCOPED, g_szDODWeapons[13],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SCOPE | WEAP_FL_CANTFIRE_NORM | WEAP_FL_ZOOMABLE,0,3200,-1,4,0},
-		{3,DOD_WEAPON_20CAL, g_szDODWeapons[14],		WEAP_FL_PRIM_ATTACK | WEAP_FL_DEPLOYABLE | WEAP_FL_HIGH_RECOIL,0,2000,-1,4,0},
-		{3,DOD_WEAPON_MG42, g_szDODWeapons[15],			WEAP_FL_PRIM_ATTACK | WEAP_FL_DEPLOYABLE | WEAP_FL_HIGH_RECOIL,0,2000,-1,4,0},
-		{3,DOD_WEAPON_BAZOOKA, g_szDODWeapons[16],		WEAP_FL_PROJECTILE | WEAP_FL_EXPLOSIVE | WEAP_FL_PRIM_ATTACK | WEAP_FL_CANTFIRE_NORM | WEAP_FL_DEPLOYABLE,500,3200,-1,5,1300},
-		{3,DOD_WEAPON_PSCHRECK, g_szDODWeapons[17],		WEAP_FL_PROJECTILE | WEAP_FL_EXPLOSIVE | WEAP_FL_PRIM_ATTACK | WEAP_FL_CANTFIRE_NORM | WEAP_FL_DEPLOYABLE,500,3200,-1,5,1300},
-		{3,DOD_WEAPON_RIFLEGREN_US, g_szDODWeapons[18],	WEAP_FL_EXPLOSIVE_SEC | WEAP_FL_PRIM_ATTACK,500,1800,-1,4,0},
-		{3,DOD_WEAPON_RIFLEGREN_GER, g_szDODWeapons[19],	WEAP_FL_EXPLOSIVE_SEC | WEAP_FL_PRIM_ATTACK,500,1800,-1,4,0},
-		{3,DOD_WEAPON_FRAG_US, g_szDODWeapons[20],		WEAP_FL_PROJECTILE | WEAP_FL_GRENADE | WEAP_FL_EXPLOSIVE | WEAP_FL_NONE,0,1200,-1,1,0},
-		{3,DOD_WEAPON_FRAG_GER, g_szDODWeapons[21],		WEAP_FL_PROJECTILE | WEAP_FL_GRENADE | WEAP_FL_EXPLOSIVE | WEAP_FL_NONE,0,1200,-1,1,0},
-		{3,DOD_WEAPON_SMOKE_US, g_szDODWeapons[22],		WEAP_FL_PROJECTILE | WEAP_FL_GRENADE,0,1200,-1,1,0},
-		{3,DOD_WEAPON_SMOKE_GER, g_szDODWeapons[23],	WEAP_FL_PROJECTILE | WEAP_FL_GRENADE,0,1200,-1,1,0},
-		{3,DOD_WEAPON_BOMB, g_szDODWeapons[24], WEAP_FL_NONE,0,0,-1,1,0},
-		{ 0, 0, "\0", 0, 0, 0, 0, 0, 0 }//signal last weapon
+std::vector<WeaponsData_t> DODWeaps = {
+
+	// slot, id , weapon name, flags, min dist, max dist, ammo index, preference
+	{1,DOD_WEAPON_AMERKNIFE, g_szDODWeapons[0],	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,100,-1,1,0},
+	{1,DOD_WEAPON_SPADE, g_szDODWeapons[1],		WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,100,-1,1,0},
+	{2,DOD_WEAPON_COLT, g_szDODWeapons[2],		WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,800,1,2,0},
+	{2,DOD_WEAPON_P38, g_szDODWeapons[3],		WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,800,2,2,0},
+	{3,DOD_WEAPON_M1, g_szDODWeapons[4],		WEAP_FL_PRIM_ATTACK,0,1600,6,4,0},
+	{3,DOD_WEAPON_C96, g_szDODWeapons[5],		WEAP_FL_PRIM_ATTACK,0,1600,-1,4,0},
+	{3,DOD_WEAPON_GARAND, g_szDODWeapons[6],	WEAP_FL_PRIM_ATTACK | WEAP_FL_ZOOMABLE,0,1600,-1,3,0},
+	{3,DOD_WEAPON_K98, g_szDODWeapons[7],		WEAP_FL_PRIM_ATTACK | WEAP_FL_ZOOMABLE,0,1600,-1,3,0},
+	{3,DOD_WEAPON_THOMPSON, g_szDODWeapons[8],	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE_SEC_ATT,0,900,-1,3,0},
+	{3,DOD_WEAPON_MP40, g_szDODWeapons[9],		WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE_SEC_ATT,0,1600,-1,4,0},
+	{3,DOD_WEAPON_BAR, g_szDODWeapons[10],		WEAP_FL_PRIM_ATTACK,0,1600,-1,3,0},
+	{3,DOD_WEAPON_MP44, g_szDODWeapons[11],		WEAP_FL_PRIM_ATTACK,0,1600,-1,3,0},
+	{3,DOD_WEAPON_SPRING, g_szDODWeapons[12],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SCOPE | WEAP_FL_CANTFIRE_NORM | WEAP_FL_ZOOMABLE,0,3200,-1,3,0},
+	{3,DOD_WEAPON_K98_SCOPED, g_szDODWeapons[13],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SCOPE | WEAP_FL_CANTFIRE_NORM | WEAP_FL_ZOOMABLE,0,3200,-1,4,0},
+	{3,DOD_WEAPON_20CAL, g_szDODWeapons[14],		WEAP_FL_PRIM_ATTACK | WEAP_FL_DEPLOYABLE | WEAP_FL_HIGH_RECOIL,0,2000,-1,4,0},
+	{3,DOD_WEAPON_MG42, g_szDODWeapons[15],			WEAP_FL_PRIM_ATTACK | WEAP_FL_DEPLOYABLE | WEAP_FL_HIGH_RECOIL,0,2000,-1,4,0},
+	{3,DOD_WEAPON_BAZOOKA, g_szDODWeapons[16],		WEAP_FL_PROJECTILE | WEAP_FL_EXPLOSIVE | WEAP_FL_PRIM_ATTACK | WEAP_FL_CANTFIRE_NORM | WEAP_FL_DEPLOYABLE,500,3200,-1,5,1300},
+	{3,DOD_WEAPON_PSCHRECK, g_szDODWeapons[17],		WEAP_FL_PROJECTILE | WEAP_FL_EXPLOSIVE | WEAP_FL_PRIM_ATTACK | WEAP_FL_CANTFIRE_NORM | WEAP_FL_DEPLOYABLE,500,3200,-1,5,1300},
+	{3,DOD_WEAPON_RIFLEGREN_US, g_szDODWeapons[18],	WEAP_FL_EXPLOSIVE_SEC | WEAP_FL_PRIM_ATTACK,500,1800,-1,4,0},
+	{3,DOD_WEAPON_RIFLEGREN_GER, g_szDODWeapons[19],	WEAP_FL_EXPLOSIVE_SEC | WEAP_FL_PRIM_ATTACK,500,1800,-1,4,0},
+	{3,DOD_WEAPON_FRAG_US, g_szDODWeapons[20],		WEAP_FL_PROJECTILE | WEAP_FL_GRENADE | WEAP_FL_EXPLOSIVE | WEAP_FL_NONE,0,1200,-1,1,0},
+	{3,DOD_WEAPON_FRAG_GER, g_szDODWeapons[21],		WEAP_FL_PROJECTILE | WEAP_FL_GRENADE | WEAP_FL_EXPLOSIVE | WEAP_FL_NONE,0,1200,-1,1,0},
+	{3,DOD_WEAPON_SMOKE_US, g_szDODWeapons[22],		WEAP_FL_PROJECTILE | WEAP_FL_GRENADE,0,1200,-1,1,0},
+	{3,DOD_WEAPON_SMOKE_GER, g_szDODWeapons[23],	WEAP_FL_PROJECTILE | WEAP_FL_GRENADE,0,1200,-1,1,0},
+	{3,DOD_WEAPON_BOMB, g_szDODWeapons[24], WEAP_FL_NONE,0,0,-1,1,0},
+	{ 0, 0, "\0", 0, 0, 0, 0, 0, 0 }//signal last weapon
 };
 
-WeaponsData_t HL2DMWeaps[] =
-{
-	/*
-		slot, id , weapon name, flags, min dist, max dist, ammo index, preference
-	*/
-		{2,HL2DM_WEAPON_PISTOL,		g_szHL2DMWeapons[0],	WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,1000,-1,1,0},
-		{1,HL2DM_WEAPON_CROWBAR,	g_szHL2DMWeapons[1],	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,128,-1,1,0},
-		{2,HL2DM_WEAPON_357,		g_szHL2DMWeapons[2],	WEAP_FL_PRIM_ATTACK,0,768,-1,2,0},
-		{3,HL2DM_WEAPON_SMG1,		g_szHL2DMWeapons[3],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SEC_ATTACK,0,1400,-1,2,0},
-		{2,HL2DM_WEAPON_AR2,		g_szHL2DMWeapons[4],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SEC_ATTACK,0,1400,-1,3,0},
-		{1,HL2DM_WEAPON_FRAG,		g_szHL2DMWeapons[5],	WEAP_FL_GRENADE | WEAP_FL_EXPLOSIVE,0,180,-1,1,0},
-		{2,HL2DM_WEAPON_STUNSTICK,	g_szHL2DMWeapons[6],	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,128,-1,1,0},
-		{3,HL2DM_WEAPON_CROSSBOW,	g_szHL2DMWeapons[7],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SCOPE | WEAP_FL_UNDERWATER,0,2000,-1,2,0},
-		{2,HL2DM_WEAPON_RPG,		g_szHL2DMWeapons[8],	WEAP_FL_PROJECTILE | WEAP_FL_EXPLOSIVE | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,400,2000,-1,3,1000.0f},
-		{1,HL2DM_WEAPON_SLAM,		g_szHL2DMWeapons[9],	WEAP_FL_EXPLOSIVE,0,180,-1,1,0},
-		{2,HL2DM_WEAPON_SHOTGUN,	g_szHL2DMWeapons[10],	WEAP_FL_PRIM_ATTACK,0,768,-1,2,0},
-		{1,HL2DM_WEAPON_PHYSCANNON,	g_szHL2DMWeapons[11],	WEAP_FL_GRAVGUN | WEAP_FL_PRIM_ATTACK,0,768,-1,4,0},
-		{ 0, 0, "\0", 0, 0, 0, 0, 0, 0 }//signal last weapon
+
+std::vector<WeaponsData_t> HL2DMWeaps = {
+
+	// slot, id , weapon name, flags, min dist, max dist, ammo index, preference
+	{2,HL2DM_WEAPON_PISTOL,		g_szHL2DMWeapons[0],	WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,1000,-1,1,0},
+	{1,HL2DM_WEAPON_CROWBAR,	g_szHL2DMWeapons[1],	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,128,-1,1,0},
+	{2,HL2DM_WEAPON_357,		g_szHL2DMWeapons[2],	WEAP_FL_PRIM_ATTACK,0,768,-1,2,0},
+	{3,HL2DM_WEAPON_SMG1,		g_szHL2DMWeapons[3],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SEC_ATTACK,0,1400,-1,2,0},
+	{2,HL2DM_WEAPON_AR2,		g_szHL2DMWeapons[4],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SEC_ATTACK,0,1400,-1,3,0},
+	{1,HL2DM_WEAPON_FRAG,		g_szHL2DMWeapons[5],	WEAP_FL_GRENADE | WEAP_FL_EXPLOSIVE,0,180,-1,1,0},
+	{2,HL2DM_WEAPON_STUNSTICK,	g_szHL2DMWeapons[6],	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,128,-1,1,0},
+	{3,HL2DM_WEAPON_CROSSBOW,	g_szHL2DMWeapons[7],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SCOPE | WEAP_FL_UNDERWATER,0,2000,-1,2,0},
+	{2,HL2DM_WEAPON_RPG,		g_szHL2DMWeapons[8],	WEAP_FL_PROJECTILE | WEAP_FL_EXPLOSIVE | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,400,2000,-1,3,1000.0f},
+	{1,HL2DM_WEAPON_SLAM,		g_szHL2DMWeapons[9],	WEAP_FL_EXPLOSIVE,0,180,-1,1,0},
+	{2,HL2DM_WEAPON_SHOTGUN,	g_szHL2DMWeapons[10],	WEAP_FL_PRIM_ATTACK,0,768,-1,2,0},
+	{1,HL2DM_WEAPON_PHYSCANNON,	g_szHL2DMWeapons[11],	WEAP_FL_GRAVGUN | WEAP_FL_PRIM_ATTACK,0,768,-1,4,0},
+	{ 0, 0, "\0", 0, 0, 0, 0, 0, 0 }//signal last weapon
 };
 
 //SENTRYGUN ID = 34
 //TODO: Add Black Mesa weapons support [APG]RoboCop[CL]
-/*WeaponsData_t BMSWeaps[] =
-{
-	//
-	//	slot, id , weapon name, flags, min dist, max dist, ammo index, preference
-	//
-		{2,BMS_WEAPON_GLOCK,		g_szBMSWeapons[0],	WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,1000,-1,1,0},
-		{1,BMS_WEAPON_CROWBAR,	g_szBMSWeapons[1],	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,128,-1,1,0},
-		{2,BMS_WEAPON_PYTHON,		g_szBMSWeapons[2],	WEAP_FL_PRIM_ATTACK,0,768,-1,2,0},
-		{3,BMS_WEAPON_MP5,		g_szBMSWeapons[3],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SEC_ATTACK,0,1400,-1,2,0},
-		//Chaingun?
-		{3,BMS_WEAPON_CROSSBOW,	g_szBMSWeapons[5],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SCOPE | WEAP_FL_UNDERWATER,0,2000,-1,2,0},
-		{3,BMS_WEAPON_SHOTGUN,	g_szBMSWeapons[6],	WEAP_FL_PRIM_ATTACK,0,768,-1,2,0},
-		{4,BMS_WEAPON_RPG,		g_szBMSWeapons[7],	WEAP_FL_PROJECTILE | WEAP_FL_EXPLOSIVE | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,400,2000,-1,3,1000.0f},
-		{4,BMS_WEAPON_TAU,		g_szBMSWeapons[8],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SEC_ATTACK,0,1400,-1,3,0},
-		{4,BMS_WEAPON_GLUON,		g_szBMSWeapons[9],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SEC_ATTACK,0,1400,-1,3,0},
-		//Hornetgun?
-		{5,BMS_WEAPON_HANDGRENADE,		g_szBMSWeapons[11],	WEAP_FL_GRENADE | WEAP_FL_EXPLOSIVE,0,180,-1,1,0},
-		//Tripmine?
-		{5,BMS_WEAPON_SATCHEL,		g_szBMSWeapons[13],	WEAP_FL_EXPLOSIVE,0,180,-1,1,0},
-		//Snark?
-		{ 0, 0, "\0", 0, 0, 0, 0, 0, 0 }//signal last weapon
+/*std::vector<WeaponsData_t> BMSWeaps = {
+
+	// slot, id , weapon name, flags, min dist, max dist, ammo index, preference
+	{2,BMS_WEAPON_GLOCK,		g_szBMSWeapons[0],	WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,1000,-1,1,0},
+	{1,BMS_WEAPON_CROWBAR,	g_szBMSWeapons[1],	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,128,-1,1,0},
+	{2,BMS_WEAPON_PYTHON,		g_szBMSWeapons[2],	WEAP_FL_PRIM_ATTACK,0,768,-1,2,0},
+	{3,BMS_WEAPON_MP5,		g_szBMSWeapons[3],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SEC_ATTACK,0,1400,-1,2,0},
+	//Chaingun?
+	{3,BMS_WEAPON_CROSSBOW,	g_szBMSWeapons[5],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SCOPE | WEAP_FL_UNDERWATER,0,2000,-1,2,0},
+	{3,BMS_WEAPON_SHOTGUN,	g_szBMSWeapons[6],	WEAP_FL_PRIM_ATTACK,0,768,-1,2,0},
+	{4,BMS_WEAPON_RPG,		g_szBMSWeapons[7],	WEAP_FL_PROJECTILE | WEAP_FL_EXPLOSIVE | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,400,2000,-1,3,1000.0f},
+	{4,BMS_WEAPON_TAU,		g_szBMSWeapons[8],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SEC_ATTACK,0,1400,-1,3,0},
+	{4,BMS_WEAPON_GLUON,		g_szBMSWeapons[9],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SEC_ATTACK,0,1400,-1,3,0},
+	//Hornetgun?
+	{5,BMS_WEAPON_HANDGRENADE,		g_szBMSWeapons[11],	WEAP_FL_GRENADE | WEAP_FL_EXPLOSIVE,0,180,-1,1,0},
+	//Tripmine?
+	{5,BMS_WEAPON_SATCHEL,		g_szBMSWeapons[13],	WEAP_FL_EXPLOSIVE,0,180,-1,1,0},
+	//Snark?
+	{ 0, 0, "\0", 0, 0, 0, 0, 0, 0 }//signal last weapon
 };*/
 
-WeaponsData_t TF2Weaps[] =
-{
-	//{"slot, id , weapon name, flags, min dist, max dist, ammo index, preference
+std::vector<WeaponsData_t> TF2Weaps = {
 
-		{TF2_SLOT_MELEE,TF2_WEAPON_BAT,		"tf_weapon_bat",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,180,0,1,0},
-		{TF2_SLOT_MELEE,TF2_WEAPON_BOTTLE,		"tf_weapon_bottle",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,180,0,1,0},
-		{TF2_SLOT_MELEE,TF2_WEAPON_FIREAXE,			"tf_weapon_fireaxe",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,180,0,1,0},
-		{TF2_SLOT_MELEE,TF2_WEAPON_CLUB,				"tf_weapon_club",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,180,0,1,0},
-		{TF2_SLOT_MELEE,TF2_WEAPON_KNIFE,				"tf_weapon_knife",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,220,0,2,0},
-		{TF2_SLOT_MELEE,TF2_WEAPON_FISTS,				"tf_weapon_fists",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,180,0,1,0},
-		{TF2_SLOT_MELEE,TF2_WEAPON_SHOVEL,				"tf_weapon_shovel",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,180,0,1,0},
-		{TF2_SLOT_MELEE,TF2_WEAPON_WRENCH,				"tf_weapon_wrench",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,180,3,1,0},
-		{TF2_SLOT_MELEE,TF2_WEAPON_BONESAW,			"tf_weapon_bonesaw",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,180,0,1,0},
-		{TF2_SLOT_PRMRY,TF2_WEAPON_SHOTGUN_PRIMARY,	"tf_weapon_shotgun_primary",	WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,800,1,2,0},
-		{TF2_SLOT_SCNDR,TF2_WEAPON_SHOTGUN_SOLDIER,	"tf_weapon_shotgun_soldier",	WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,500,2,2,0},
-		{TF2_SLOT_SCNDR,TF2_WEAPON_SHOTGUN_HWG,		"tf_weapon_shotgun_hwg",	WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,800,2,2,0},
-		{TF2_SLOT_SCNDR,TF2_WEAPON_SHOTGUN_PYRO,		"tf_weapon_shotgun_pyro",	WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,800,2,2,0},
-		{TF2_SLOT_PRMRY,TF2_WEAPON_SCATTERGUN,			"tf_weapon_scattergun",	WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,800,1,3,0},
-		{TF2_SLOT_PRMRY,TF2_WEAPON_SNIPERRIFLE,		"tf_weapon_sniperrifle",	WEAP_FL_SCOPE | WEAP_FL_PRIM_ATTACK,1000,4000,1,3,0},
-		{TF2_SLOT_PRMRY,TF2_WEAPON_MINIGUN,			"tf_weapon_minigun",	WEAP_FL_PRIM_ATTACK | WEAP_FL_HOLDATTACK,120,1800,1,3,0},
-		{TF2_SLOT_SCNDR,TF2_WEAPON_SMG,				"tf_weapon_smg",	WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,1000,2,2,0},
-		{TF2_SLOT_PRMRY,TF2_WEAPON_SYRINGEGUN,			"tf_weapon_syringegun_medic",	WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,1000,1,2,0},
-		{TF2_SLOT_PRMRY,TF2_WEAPON_ROCKETLAUNCHER,		"tf_weapon_rocketlauncher",	WEAP_FL_PRIM_ATTACK | WEAP_FL_EXPLOSIVE | WEAP_FL_UNDERWATER,BLAST_RADIUS,4096,1,3,TF2_ROCKETSPEED},
-		{TF2_SLOT_PRMRY,TF2_WEAPON_GRENADELAUNCHER,	"tf_weapon_grenadelauncher",	WEAP_FL_PROJECTILE | WEAP_FL_PRIM_ATTACK | WEAP_FL_EXPLOSIVE | WEAP_FL_UNDERWATER,100,1200,1,2,TF2_GRENADESPEED},
-		{TF2_SLOT_SCNDR,TF2_WEAPON_PIPEBOMBS,			"tf_weapon_pipebomblauncher",	WEAP_FL_NONE,0,1000,2,1,0},
-		{TF2_SLOT_PRMRY,TF2_WEAPON_FLAMETHROWER,		"tf_weapon_flamethrower",	WEAP_FL_DEFLECTROCKETS | WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_HOLDATTACK | WEAP_FL_SPECIAL,0,400,1,3,0},
-		{TF2_SLOT_SCNDR,TF2_WEAPON_PISTOL,				"tf_weapon_pistol",	WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,2000,2,1,0},
-		{TF2_SLOT_SCNDR,TF2_WEAPON_PISTOL_SCOUT,		"tf_weapon_pistol_scout",	WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,1800,2,2,0},
-		{TF2_SLOT_SCNDR,TF2_WEAPON_REVOLVER,			"tf_weapon_revolver",	WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,1400,2,1,0},
+	// slot, id , weapon name, flags, min dist, max dist, ammo index, preference
+	{TF2_SLOT_MELEE,TF2_WEAPON_BAT,		"tf_weapon_bat",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,180,0,1,0},
+	{TF2_SLOT_MELEE,TF2_WEAPON_BOTTLE,		"tf_weapon_bottle",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,180,0,1,0},
+	{TF2_SLOT_MELEE,TF2_WEAPON_FIREAXE,			"tf_weapon_fireaxe",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,180,0,1,0},
+	{TF2_SLOT_MELEE,TF2_WEAPON_CLUB,				"tf_weapon_club",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,180,0,1,0},
+	{TF2_SLOT_MELEE,TF2_WEAPON_KNIFE,				"tf_weapon_knife",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,220,0,2,0},
+	{TF2_SLOT_MELEE,TF2_WEAPON_FISTS,				"tf_weapon_fists",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,180,0,1,0},
+	{TF2_SLOT_MELEE,TF2_WEAPON_SHOVEL,				"tf_weapon_shovel",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,180,0,1,0},
+	{TF2_SLOT_MELEE,TF2_WEAPON_WRENCH,				"tf_weapon_wrench",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,180,3,1,0},
+	{TF2_SLOT_MELEE,TF2_WEAPON_BONESAW,			"tf_weapon_bonesaw",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,180,0,1,0},
+	{TF2_SLOT_PRMRY,TF2_WEAPON_SHOTGUN_PRIMARY,	"tf_weapon_shotgun_primary",	WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,800,1,2,0},
+	{TF2_SLOT_SCNDR,TF2_WEAPON_SHOTGUN_SOLDIER,	"tf_weapon_shotgun_soldier",	WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,500,2,2,0},
+	{TF2_SLOT_SCNDR,TF2_WEAPON_SHOTGUN_HWG,		"tf_weapon_shotgun_hwg",	WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,800,2,2,0},
+	{TF2_SLOT_SCNDR,TF2_WEAPON_SHOTGUN_PYRO,		"tf_weapon_shotgun_pyro",	WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,800,2,2,0},
+	{TF2_SLOT_PRMRY,TF2_WEAPON_SCATTERGUN,			"tf_weapon_scattergun",	WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,800,1,3,0},
+	{TF2_SLOT_PRMRY,TF2_WEAPON_SNIPERRIFLE,		"tf_weapon_sniperrifle",	WEAP_FL_SCOPE | WEAP_FL_PRIM_ATTACK,1000,4000,1,3,0},
+	{TF2_SLOT_PRMRY,TF2_WEAPON_MINIGUN,			"tf_weapon_minigun",	WEAP_FL_PRIM_ATTACK | WEAP_FL_HOLDATTACK,120,1800,1,3,0},
+	{TF2_SLOT_SCNDR,TF2_WEAPON_SMG,				"tf_weapon_smg",	WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,1000,2,2,0},
+	{TF2_SLOT_PRMRY,TF2_WEAPON_SYRINGEGUN,			"tf_weapon_syringegun_medic",	WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,1000,1,2,0},
+	{TF2_SLOT_PRMRY,TF2_WEAPON_ROCKETLAUNCHER,		"tf_weapon_rocketlauncher",	WEAP_FL_PRIM_ATTACK | WEAP_FL_EXPLOSIVE | WEAP_FL_UNDERWATER,BLAST_RADIUS,4096,1,3,TF2_ROCKETSPEED},
+	{TF2_SLOT_PRMRY,TF2_WEAPON_GRENADELAUNCHER,	"tf_weapon_grenadelauncher",	WEAP_FL_PROJECTILE | WEAP_FL_PRIM_ATTACK | WEAP_FL_EXPLOSIVE | WEAP_FL_UNDERWATER,100,1200,1,2,TF2_GRENADESPEED},
+	{TF2_SLOT_SCNDR,TF2_WEAPON_PIPEBOMBS,			"tf_weapon_pipebomblauncher",	WEAP_FL_NONE,0,1000,2,1,0},
+	{TF2_SLOT_PRMRY,TF2_WEAPON_FLAMETHROWER,		"tf_weapon_flamethrower",	WEAP_FL_DEFLECTROCKETS | WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_HOLDATTACK | WEAP_FL_SPECIAL,0,400,1,3,0},
+	{TF2_SLOT_SCNDR,TF2_WEAPON_PISTOL,				"tf_weapon_pistol",	WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,2000,2,1,0},
+	{TF2_SLOT_SCNDR,TF2_WEAPON_PISTOL_SCOUT,		"tf_weapon_pistol_scout",	WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,1800,2,2,0},
+	{TF2_SLOT_SCNDR,TF2_WEAPON_REVOLVER,			"tf_weapon_revolver",	WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,1400,2,1,0},
 
-		// Custom Weapons
+	// Custom Weapons
 
-		{TF2_SLOT_PRMRY, TF2_WEAPON_POMSON6000, "tf_weapon_drg_pomson", WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER, 0, 800, 1, 2, 0 },
-		//{TF2_SLOT_PDA,TF2_WEAPON_PDA_ENGI_BUILD,		"tf_weapon_pda_engineer_build",	WEAP_FL_NONE,0,100,0,1,0},
-		// this class is used with all classes that can use shotgun but the slot might be different
-		{TF2_SLOT_SCNDR, TF2_WEAPON_SHOTGUN, "tf_weapon_shotgun", WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER, 0, 500, 2, 2, 0 },
-		//{TF2_SLOT_OTHER,TF2_WEAPON_PDA_ENGI_DESTROY,	"tf_weapon_pda_engineer_destroy",	WEAP_FL_NONE,0,100,0,1,0},
-		//{TF2_SLOT_PDA, TF2_WEAPON_PDA_SPY, "tf_weapon_pda_spy", WEAP_FL_NONE, 0, 100, 0, 1, 0 },
-		{TF2_SLOT_PRMRY, TF2_WEAPON_FRONTIERJUSTICE, "tf_weapon_sentry_revenge", WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER, 0, 800, 1, 2, 0 },
-		{TF2_SLOT_PDA, TF2_WEAPON_BUILDER, "tf_weapon_builder", WEAP_FL_NONE, 0, 100, 0, 1, 0 },
-		{TF2_SLOT_SCNDR,TF2_WEAPON_MEDIGUN,			"tf_weapon_medigun",	WEAP_FL_NONE,0,100,0,1,0},
-		{TF2_SLOT_PDA, TF2_WEAPON_INVIS, "tf_weapon_invis", WEAP_FL_NONE, 0, 100, 0, 1, 0 },
-		{TF2_SLOT_SCNDR,TF2_WEAPON_BUFF_ITEM,	"tf_weapon_buff_item",	WEAP_FL_NONE,0,100,0,1,0},
-		{TF2_SLOT_SCNDR, TF2_WEAPON_FLAREGUN, "tf_weapon_flaregun", WEAP_FL_PRIM_ATTACK, 0, 1600, 2, 2, TF2_GRENADESPEED },
-		{TF2_SLOT_PDA, TF2_WEAPON_SENTRYGUN, "obj_sentrygun", 0, 0, 0, 0, 0, 0 },
-		{TF2_SLOT_MELEE,TF2_WEAPON_SAXXY,		"saxxy",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,150,0,1,0},
-		//Bat Wood AKA The Sandman
-		{TF2_SLOT_MELEE,TF2_WEAPON_BAT_WOOD,		"tf_weapon_bat_wood",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,180,0,1,0},
-		{TF2_SLOT_SCNDR,TF2_WEAPON_LUNCHBOX_DRINK,		"tf_weapon_lunchbox_drink",	WEAP_FL_NONE,0,180,0,1,0},
-		{TF2_SLOT_PRMRY, TF2_WEAPON_BOW, "tf_weapon_compound_bow", WEAP_FL_SCOPE | WEAP_FL_PRIM_ATTACK | WEAP_FL_PROJECTILE, 400, 2500, 1, 3, 1875},
-		{TF2_SLOT_SCNDR,TF2_WEAPON_JAR,		"tf_weapon_jar",	WEAP_FL_NONE,0,180,0,1,0},
-		{TF2_SLOT_MELEE,TF2_WEAPON_BAT_FISH,		"tf_weapon_bat_fish",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,180,0,1,0},
-		{TF2_SLOT_PRMRY,TF2_WEAPON_DIRECTHIT,		"tf_weapon_rocketlauncher_directhit",	WEAP_FL_PRIM_ATTACK | WEAP_FL_EXPLOSIVE | WEAP_FL_UNDERWATER,BLAST_RADIUS,4096,1,3,static_cast<float>(TF2_ROCKETSPEED) * 1.8f},
-		{TF2_SLOT_MELEE,TF2_WEAPON_SWORD,		"tf_weapon_sword",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,190,0,1,0},
-		{TF2_SLOT_MELEE,TF2_WEAPON_KATANA,		"tf_weapon_katana",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,210,0,1,0},
-		{TF2_SLOT_PRMRY, TF2_WEAPON_COWMANGLER, "tf_weapon_particle_cannon", WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER, 0, 1500, 1, 2, TF2_ROCKETSPEED },
-		{TF2_SLOT_PRMRY,TF2_WEAPON_CROSSBOW,		"tf_weapon_crossbow",	WEAP_FL_PRIM_ATTACK,600,2500,1,3,0},
-		{TF2_SLOT_MELEE,TF2_WEAPON_CLEAVER,		"tf_weapon_cleaver",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,150,0,1,0},
-		{TF2_SLOT_MELEE,TF2_WEAPON_BAT_GIFTWRAP,		"tf_weapon_bat_giftwrap",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,150,0,1,0},
-		{TF2_SLOT_SCNDR,TF2_WEAPON_RAYGUN,		"tf_weapon_raygun",	WEAP_FL_PRIM_ATTACK,100,2000,2,2,0},
-		{0, 0, "\0", 0, 0, 0, 0, 0, 0}//signal last weapon
+	{TF2_SLOT_PRMRY, TF2_WEAPON_POMSON6000, "tf_weapon_drg_pomson", WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER, 0, 800, 1, 2, 0 },
+	//{TF2_SLOT_PDA,TF2_WEAPON_PDA_ENGI_BUILD,		"tf_weapon_pda_engineer_build",	WEAP_FL_NONE,0,100,0,1,0},
+	// this class is used with all classes that can use shotgun but the slot might be different
+	{TF2_SLOT_SCNDR, TF2_WEAPON_SHOTGUN, "tf_weapon_shotgun", WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER, 0, 500, 2, 2, 0 },
+	//{TF2_SLOT_OTHER,TF2_WEAPON_PDA_ENGI_DESTROY,	"tf_weapon_pda_engineer_destroy",	WEAP_FL_NONE,0,100,0,1,0},
+	//{TF2_SLOT_PDA, TF2_WEAPON_PDA_SPY, "tf_weapon_pda_spy", WEAP_FL_NONE, 0, 100, 0, 1, 0 },
+	{TF2_SLOT_PRMRY, TF2_WEAPON_FRONTIERJUSTICE, "tf_weapon_sentry_revenge", WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER, 0, 800, 1, 2, 0 },
+	{TF2_SLOT_PDA, TF2_WEAPON_BUILDER, "tf_weapon_builder", WEAP_FL_NONE, 0, 100, 0, 1, 0 },
+	{TF2_SLOT_SCNDR,TF2_WEAPON_MEDIGUN,			"tf_weapon_medigun",	WEAP_FL_NONE,0,100,0,1,0},
+	{TF2_SLOT_PDA, TF2_WEAPON_INVIS, "tf_weapon_invis", WEAP_FL_NONE, 0, 100, 0, 1, 0 },
+	{TF2_SLOT_SCNDR,TF2_WEAPON_BUFF_ITEM,	"tf_weapon_buff_item",	WEAP_FL_NONE,0,100,0,1,0},
+	{TF2_SLOT_SCNDR, TF2_WEAPON_FLAREGUN, "tf_weapon_flaregun", WEAP_FL_PRIM_ATTACK, 0, 1600, 2, 2, TF2_GRENADESPEED },
+	{TF2_SLOT_PDA, TF2_WEAPON_SENTRYGUN, "obj_sentrygun", 0, 0, 0, 0, 0, 0 },
+	{TF2_SLOT_MELEE,TF2_WEAPON_SAXXY,		"saxxy",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,150,0,1,0},
+	//Bat Wood AKA The Sandman
+	{TF2_SLOT_MELEE,TF2_WEAPON_BAT_WOOD,		"tf_weapon_bat_wood",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,180,0,1,0},
+	{TF2_SLOT_SCNDR,TF2_WEAPON_LUNCHBOX_DRINK,		"tf_weapon_lunchbox_drink",	WEAP_FL_NONE,0,180,0,1,0},
+	{TF2_SLOT_PRMRY, TF2_WEAPON_BOW, "tf_weapon_compound_bow", WEAP_FL_SCOPE | WEAP_FL_PRIM_ATTACK | WEAP_FL_PROJECTILE, 400, 2500, 1, 3, 1875},
+	{TF2_SLOT_SCNDR,TF2_WEAPON_JAR,		"tf_weapon_jar",	WEAP_FL_NONE,0,180,0,1,0},
+	{TF2_SLOT_MELEE,TF2_WEAPON_BAT_FISH,		"tf_weapon_bat_fish",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,180,0,1,0},
+	{TF2_SLOT_PRMRY,TF2_WEAPON_DIRECTHIT,		"tf_weapon_rocketlauncher_directhit",	WEAP_FL_PRIM_ATTACK | WEAP_FL_EXPLOSIVE | WEAP_FL_UNDERWATER,BLAST_RADIUS,4096,1,3,static_cast<float>(TF2_ROCKETSPEED) * 1.8f},
+	{TF2_SLOT_MELEE,TF2_WEAPON_SWORD,		"tf_weapon_sword",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,190,0,1,0},
+	{TF2_SLOT_MELEE,TF2_WEAPON_KATANA,		"tf_weapon_katana",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,210,0,1,0},
+	{TF2_SLOT_PRMRY, TF2_WEAPON_COWMANGLER, "tf_weapon_particle_cannon", WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER, 0, 1500, 1, 2, TF2_ROCKETSPEED },
+	{TF2_SLOT_PRMRY,TF2_WEAPON_CROSSBOW,		"tf_weapon_crossbow",	WEAP_FL_PRIM_ATTACK,600,2500,1,3,0},
+	{TF2_SLOT_MELEE,TF2_WEAPON_CLEAVER,		"tf_weapon_cleaver",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,150,0,1,0},
+	{TF2_SLOT_MELEE,TF2_WEAPON_BAT_GIFTWRAP,		"tf_weapon_bat_giftwrap",	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,150,0,1,0},
+	{TF2_SLOT_SCNDR,TF2_WEAPON_RAYGUN,		"tf_weapon_raygun",	WEAP_FL_PRIM_ATTACK,100,2000,2,2,0},
+	{0, 0, "\0", 0, 0, 0, 0, 0, 0}//signal last weapon
 };
 
-WeaponsData_t SYNERGYWeaps[] =
-{
-	/*
-		slot, id , weapon name, flags, min dist, max dist, ammo index, preference
-	*/
-		{2,SYN_WEAPON_PISTOL,			g_szSYNWeapons[0],	WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,0,1000,-1,1,0},
-		{1,SYN_WEAPON_CROWBAR,			g_szSYNWeapons[1],	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,128,-1,1,0},
-		{1,SYN_WEAPON_LEADPIPE,			g_szSYNWeapons[2],	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,128,-1,1,0},
-		{2,SYN_WEAPON_357,				g_szSYNWeapons[3],	WEAP_FL_PRIM_ATTACK,0,768,-1,2,0},
-		{2,SYN_WEAPON_DESERTEAGLE,		g_szSYNWeapons[4],	WEAP_FL_PRIM_ATTACK,0,768,-1,2,0},
-		{3,SYN_WEAPON_SMG1,				g_szSYNWeapons[5],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SEC_ATTACK,0,1400,-1,2,0},
-		{3,SYN_WEAPON_MP5K,				g_szSYNWeapons[6],	WEAP_FL_PRIM_ATTACK,0,1400,-1,2,0},
-		{3,SYN_WEAPON_AR2,				g_szSYNWeapons[7],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SEC_ATTACK,0,1400,-1,3,0},
-		{5,SYN_WEAPON_FRAG,				g_szSYNWeapons[8],	WEAP_FL_GRENADE | WEAP_FL_EXPLOSIVE,0,180,-1,1,0},
-		{1,SYN_WEAPON_STUNSTICK,		g_szSYNWeapons[9],	WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER,0,128,-1,1,0},
-		{4,SYN_WEAPON_CROSSBOW,			g_szSYNWeapons[10],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SCOPE | WEAP_FL_UNDERWATER,0,2000,-1,2,0},
-		{5,SYN_WEAPON_RPG,				g_szSYNWeapons[11],	WEAP_FL_PROJECTILE | WEAP_FL_EXPLOSIVE | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER,400,2000,-1,3,1000.0f},
-		{5,SYN_WEAPON_SLAM,				g_szSYNWeapons[12],	WEAP_FL_EXPLOSIVE,0,180,-1,1,0},
-		{4,SYN_WEAPON_SHOTGUN,			g_szSYNWeapons[13],	WEAP_FL_PRIM_ATTACK,0,768,-1,2,0},
-		{6,SYN_WEAPON_PHYSCANNON,		g_szSYNWeapons[14],	WEAP_FL_GRAVGUN | WEAP_FL_PRIM_ATTACK,0,768,-1,4,0},
-		{4,SYN_WEAPON_MG1,				g_szSYNWeapons[15],	WEAP_FL_PRIM_ATTACK,0,1000,-1,3,0},
-		{6,SYN_WEAPON_BUGBAIT,			g_szSYNWeapons[16],	WEAP_FL_PRIM_ATTACK | WEAP_FL_PROJECTILE,0,300,-1,3,1000.0f},
-		{ 0, 0, "\0", 0, 0, 0, 0, 0, 0 }//signal last weapon
+
+std::vector<WeaponsData_t> SYNERGYWeaps = {
+
+	// slot, id , weapon name, flags, min dist, max dist, ammo index, preference
+	{2, SYN_WEAPON_PISTOL, g_szSYNWeapons[0], WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER, 0, 1000, -1, 1, 0},
+	{1, SYN_WEAPON_CROWBAR, g_szSYNWeapons[1], WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER, 0, 128, -1, 1, 0},
+	{1, SYN_WEAPON_LEADPIPE, g_szSYNWeapons[2], WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER, 0, 128, -1, 1, 0},
+	{2, SYN_WEAPON_357, g_szSYNWeapons[3], WEAP_FL_PRIM_ATTACK, 0, 768, -1, 2, 0},
+	{2, SYN_WEAPON_DESERTEAGLE, g_szSYNWeapons[4], WEAP_FL_PRIM_ATTACK, 0, 768, -1, 2, 0},
+	{3, SYN_WEAPON_SMG1, g_szSYNWeapons[5], WEAP_FL_PRIM_ATTACK | WEAP_FL_SEC_ATTACK, 0, 1400, -1, 2, 0},
+	{3, SYN_WEAPON_MP5K, g_szSYNWeapons[6], WEAP_FL_PRIM_ATTACK, 0, 1400, -1, 2, 0},
+	{3, SYN_WEAPON_AR2, g_szSYNWeapons[7], WEAP_FL_PRIM_ATTACK | WEAP_FL_SEC_ATTACK, 0, 1400, -1, 3, 0},
+	{5, SYN_WEAPON_FRAG, g_szSYNWeapons[8], WEAP_FL_GRENADE | WEAP_FL_EXPLOSIVE, 0, 180, -1, 1, 0},
+	{1, SYN_WEAPON_STUNSTICK, g_szSYNWeapons[9], WEAP_FL_PRIM_ATTACK | WEAP_FL_MELEE | WEAP_FL_UNDERWATER, 0, 128, -1, 1, 0},
+	{4, SYN_WEAPON_CROSSBOW, g_szSYNWeapons[10], WEAP_FL_PRIM_ATTACK | WEAP_FL_SCOPE | WEAP_FL_UNDERWATER, 0, 2000, -1, 2, 0},
+	{5, SYN_WEAPON_RPG, g_szSYNWeapons[11], WEAP_FL_PROJECTILE | WEAP_FL_EXPLOSIVE | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER, 400, 2000, -1, 3, 1000.0f},
+	{5, SYN_WEAPON_SLAM, g_szSYNWeapons[12], WEAP_FL_EXPLOSIVE, 0, 180, -1, 1, 0},
+	{4, SYN_WEAPON_SHOTGUN, g_szSYNWeapons[13], WEAP_FL_PRIM_ATTACK, 0, 768, -1, 2, 0},
+	{6, SYN_WEAPON_PHYSCANNON, g_szSYNWeapons[14], WEAP_FL_GRAVGUN | WEAP_FL_PRIM_ATTACK, 0, 768, -1, 4, 0},
+	{4, SYN_WEAPON_MG1, g_szSYNWeapons[15], WEAP_FL_PRIM_ATTACK, 0, 1000, -1, 3, 0},
+	{6, SYN_WEAPON_BUGBAIT, g_szSYNWeapons[16], WEAP_FL_PRIM_ATTACK | WEAP_FL_PROJECTILE, 0, 300, -1, 3, 1000.0f},
+	{0, 0, "\0", 0, 0, 0, 0, 0, 0} // signal last weapon
 };
 
-WeaponsData_t CSSWeaps[] =
-{
-	/*
-		slot, id , weapon name, flags, min dist, max dist, ammo index, preference, projectile speed
-	*/
-		{2,CS_WEAPON_KNIFE,				g_szCSWeapons[0],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SEC_ATTACK | WEAP_FL_UNDERWATER | WEAP_FL_MELEE | WEAP_FL_MELEE_SEC_ATT,0,128,-1,1,0},
-		{1,CS_WEAPON_USP,				g_szCSWeapons[1],	WEAP_FL_PRIM_ATTACK,0,3072,-1,2,0},
-		{1,CS_WEAPON_GLOCK,				g_szCSWeapons[2],	WEAP_FL_PRIM_ATTACK,0,3072,-1,2,0},
-		{1,CS_WEAPON_228C,				g_szCSWeapons[3],	WEAP_FL_PRIM_ATTACK,0,3072,-1,2,0},
-		{1,CS_WEAPON_FIVESEVEN,			g_szCSWeapons[4],	WEAP_FL_PRIM_ATTACK,0,3072,-1,2,0},
-		{1,CS_WEAPON_ELITES,			g_szCSWeapons[5],	WEAP_FL_PRIM_ATTACK,0,3072,-1,2,0},
-		{1,CS_WEAPON_DEAGLE,			g_szCSWeapons[6],	WEAP_FL_PRIM_ATTACK,0,3072,-1,2,0},
-		{0,CS_WEAPON_SUPERSHOTGUN,		g_szCSWeapons[7],	WEAP_FL_PRIM_ATTACK,0,1024,-1,3,0},
-		{0,CS_WEAPON_AUTOSHOTGUN,		g_szCSWeapons[8],	WEAP_FL_PRIM_ATTACK,0,1024,-1,3,0},
-		{0,CS_WEAPON_TMP,				g_szCSWeapons[9],	WEAP_FL_PRIM_ATTACK,0,2048,-1,3,0},
-		{0,CS_WEAPON_MAC10,				g_szCSWeapons[10],	WEAP_FL_PRIM_ATTACK,0,2048,-1,3,0},
-		{0,CS_WEAPON_MP5,				g_szCSWeapons[11],	WEAP_FL_PRIM_ATTACK,0,2048,-1,3,0},
-		{0,CS_WEAPON_UMP45,				g_szCSWeapons[12],	WEAP_FL_PRIM_ATTACK,0,2048,-1,3,0},
-		{0,CS_WEAPON_P90,				g_szCSWeapons[13],	WEAP_FL_PRIM_ATTACK,0,2048,-1,3,0},
-		{0,CS_WEAPON_FAMAS,				g_szCSWeapons[14],	WEAP_FL_PRIM_ATTACK,0,4096,-1,3,0},
-		{0,CS_WEAPON_GALIL,				g_szCSWeapons[15],	WEAP_FL_PRIM_ATTACK,0,4096,-1,3,0},
-		{0,CS_WEAPON_AK47,				g_szCSWeapons[16],	WEAP_FL_PRIM_ATTACK,0,4096,-1,3,0},
-		{0,CS_WEAPON_M4A1,				g_szCSWeapons[17],	WEAP_FL_PRIM_ATTACK,0,4096,-1,3,0},
-		{0,CS_WEAPON_AUG,				g_szCSWeapons[18],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SCOPE | WEAP_FL_ZOOMABLE,0,4096,-1,3,0},
-		{0,CS_WEAPON_SG552,				g_szCSWeapons[19],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SCOPE | WEAP_FL_ZOOMABLE,0,4096,-1,3,0},
-		{0,CS_WEAPON_SCOUT,				g_szCSWeapons[20],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SCOPE | WEAP_FL_ZOOMABLE,512,4096,-1,3,0},
-		{0,CS_WEAPON_AWP,				g_szCSWeapons[21],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SCOPE | WEAP_FL_ZOOMABLE,512,4096,-1,3,0},
-		{0,CS_WEAPON_SG550,				g_szCSWeapons[22],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SCOPE | WEAP_FL_ZOOMABLE,512,4096,-1,3,0},
-		{0,CS_WEAPON_G3SG1,				g_szCSWeapons[23],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SCOPE | WEAP_FL_ZOOMABLE,512,4096,-1,3,0},
-		{0,CS_WEAPON_M249,				g_szCSWeapons[24],	WEAP_FL_PRIM_ATTACK,0,2048,-1,3,0},
-		{3,CS_WEAPON_HE_GRENADE,		g_szCSWeapons[25],	WEAP_FL_PRIM_ATTACK | WEAP_FL_PROJECTILE | WEAP_FL_EXPLOSIVE | WEAP_FL_GRENADE,0,2048,-1,1,0},
-		{3,CS_WEAPON_FLASH_GRENADE,		g_szCSWeapons[26],	WEAP_FL_PRIM_ATTACK | WEAP_FL_PROJECTILE | WEAP_FL_GRENADE,0,2048,-1,1,0},
-		{3,CS_WEAPON_SMOKE_GRENADE,		g_szCSWeapons[27],	WEAP_FL_PRIM_ATTACK | WEAP_FL_PROJECTILE | WEAP_FL_GRENADE,0,2048,-1,1,0},
-		{4,CS_WEAPON_C4,				g_szCSWeapons[28],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SPECIAL | WEAP_FL_HOLDATTACK,0,1024,-1,1,0},
-		{ 0, 0, "\0", 0, 0, 0, 0, 0, 0 }//signal last weapon
+std::vector<WeaponsData_t> CSSWeaps = {
+
+	// slot, id , weapon name, flags, min dist, max dist, ammo index, preference, projectile speed
+	{2,CS_WEAPON_KNIFE,				g_szCSWeapons[0],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SEC_ATTACK | WEAP_FL_UNDERWATER | WEAP_FL_MELEE | WEAP_FL_MELEE_SEC_ATT,0,128,-1,1,0},
+	{1,CS_WEAPON_USP,				g_szCSWeapons[1],	WEAP_FL_PRIM_ATTACK,0,3072,-1,2,0},
+	{1,CS_WEAPON_GLOCK,				g_szCSWeapons[2],	WEAP_FL_PRIM_ATTACK,0,3072,-1,2,0},
+	{1,CS_WEAPON_228C,				g_szCSWeapons[3],	WEAP_FL_PRIM_ATTACK,0,3072,-1,2,0},
+	{1,CS_WEAPON_FIVESEVEN,			g_szCSWeapons[4],	WEAP_FL_PRIM_ATTACK,0,3072,-1,2,0},
+	{1,CS_WEAPON_ELITES,			g_szCSWeapons[5],	WEAP_FL_PRIM_ATTACK,0,3072,-1,2,0},
+	{1,CS_WEAPON_DEAGLE,			g_szCSWeapons[6],	WEAP_FL_PRIM_ATTACK,0,3072,-1,2,0},
+	{0,CS_WEAPON_SUPERSHOTGUN,		g_szCSWeapons[7],	WEAP_FL_PRIM_ATTACK,0,1024,-1,3,0},
+	{0,CS_WEAPON_AUTOSHOTGUN,		g_szCSWeapons[8],	WEAP_FL_PRIM_ATTACK,0,1024,-1,3,0},
+	{0,CS_WEAPON_TMP,				g_szCSWeapons[9],	WEAP_FL_PRIM_ATTACK,0,2048,-1,3,0},
+	{0,CS_WEAPON_MAC10,				g_szCSWeapons[10],	WEAP_FL_PRIM_ATTACK,0,2048,-1,3,0},
+	{0,CS_WEAPON_MP5,				g_szCSWeapons[11],	WEAP_FL_PRIM_ATTACK,0,2048,-1,3,0},
+	{0,CS_WEAPON_UMP45,				g_szCSWeapons[12],	WEAP_FL_PRIM_ATTACK,0,2048,-1,3,0},
+	{0,CS_WEAPON_P90,				g_szCSWeapons[13],	WEAP_FL_PRIM_ATTACK,0,2048,-1,3,0},
+	{0,CS_WEAPON_FAMAS,				g_szCSWeapons[14],	WEAP_FL_PRIM_ATTACK,0,4096,-1,3,0},
+	{0,CS_WEAPON_GALIL,				g_szCSWeapons[15],	WEAP_FL_PRIM_ATTACK,0,4096,-1,3,0},
+	{0,CS_WEAPON_AK47,				g_szCSWeapons[16],	WEAP_FL_PRIM_ATTACK,0,4096,-1,3,0},
+	{0,CS_WEAPON_M4A1,				g_szCSWeapons[17],	WEAP_FL_PRIM_ATTACK,0,4096,-1,3,0},
+	{0,CS_WEAPON_AUG,				g_szCSWeapons[18],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SCOPE | WEAP_FL_ZOOMABLE,0,4096,-1,3,0},
+	{0,CS_WEAPON_SG552,				g_szCSWeapons[19],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SCOPE | WEAP_FL_ZOOMABLE,0,4096,-1,3,0},
+	{0,CS_WEAPON_SCOUT,				g_szCSWeapons[20],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SCOPE | WEAP_FL_ZOOMABLE,512,4096,-1,3,0},
+	{0,CS_WEAPON_AWP,				g_szCSWeapons[21],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SCOPE | WEAP_FL_ZOOMABLE,512,4096,-1,3,0},
+	{0,CS_WEAPON_SG550,				g_szCSWeapons[22],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SCOPE | WEAP_FL_ZOOMABLE,512,4096,-1,3,0},
+	{0,CS_WEAPON_G3SG1,				g_szCSWeapons[23],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SCOPE | WEAP_FL_ZOOMABLE,512,4096,-1,3,0},
+	{0,CS_WEAPON_M249,				g_szCSWeapons[24],	WEAP_FL_PRIM_ATTACK,0,2048,-1,3,0},
+	{3,CS_WEAPON_HE_GRENADE,		g_szCSWeapons[25],	WEAP_FL_PRIM_ATTACK | WEAP_FL_PROJECTILE | WEAP_FL_EXPLOSIVE | WEAP_FL_GRENADE,0,2048,-1,1,0},
+	{3,CS_WEAPON_FLASH_GRENADE,		g_szCSWeapons[26],	WEAP_FL_PRIM_ATTACK | WEAP_FL_PROJECTILE | WEAP_FL_GRENADE,0,2048,-1,1,0},
+	{3,CS_WEAPON_SMOKE_GRENADE,		g_szCSWeapons[27],	WEAP_FL_PRIM_ATTACK | WEAP_FL_PROJECTILE | WEAP_FL_GRENADE,0,2048,-1,1,0},
+	{4,CS_WEAPON_C4,				g_szCSWeapons[28],	WEAP_FL_PRIM_ATTACK | WEAP_FL_SPECIAL | WEAP_FL_HOLDATTACK,0,1024,-1,1,0},
+	{ 0, 0, "\0", 0, 0, 0, 0, 0, 0 }//signal last weapon
 };
 
 bool CBotWeapon::needToReload(const CBot* pBot) const
@@ -395,16 +383,15 @@ int CBotWeapon::getAmmo(const CBot* pBot, const int type) const
 	return 0;
 }
 
+// Example of using range-based for loop and nullptr
 bool CBotWeapons::hasExplosives() const
 {
-	for (const CBotWeapon& m_theWeapon : m_theWeapons)
+	for (const CBotWeapon& weapon : m_theWeapons)
 	{
-		const CBotWeapon* pWeapon = &m_theWeapon;
 		// find weapon info from weapon id
-		if (pWeapon->hasWeapon() && pWeapon->isExplosive())
+		if (weapon.hasWeapon() && weapon.isExplosive() && weapon.getAmmo(m_pBot) > 1)
 		{
-			if (pWeapon->getAmmo(m_pBot) > 1)
-				return true;
+			return true;
 		}
 	}
 
@@ -799,35 +786,42 @@ CBotWeapon* CBotWeapons::getCurrentWeaponInSlot(const int iSlot)
 	return nullptr;
 }
 
-static const char* szWeaponFlags[] = {
-	 "primary_attack" ,
-	 "secondary_attack" ,
-	 "explosive" ,
-	 "melee" ,
-	 "underwater" ,
-	 "hold_attack" ,
-	 "special" ,
-	 "can_kill_pipes" ,
-	 "can_deflect_rockets" ,
-	 "is_grav_gun" ,
-	 "has_explosive_secondary" ,
-	 "is_zoomable" ,
-	 "is_deployable_dods" ,
-	 "has_melee_secondary" ,
-	 "has_fire_select_mode_dods" ,
-	 "cant_be_fired_unzoomed_undeployed_dods" ,
-	 "is_grenade" ,
-	 "has_high_recoil_dods" ,
-	 "has_scope" ,
-	 "weapon_fires_projectile" ,
-	 "\0"
+constexpr std::array<const char*, 21> g_szWeaponFlags = {
+	"primary_attack",
+	"secondary_attack",
+	"explosive",
+	"melee",
+	"underwater",
+	"hold_attack",
+	"special",
+	"can_kill_pipes",
+	"can_deflect_rockets",
+	"is_grav_gun",
+	"has_explosive_secondary",
+	"is_zoomable",
+	"is_deployable_dods",
+	"has_melee_secondary",
+	"has_fire_select_mode_dods",
+	"cant_be_fired_unzoomed_undeployed_dods",
+	"is_grenade",
+	"has_high_recoil_dods",
+	"has_scope",
+	"weapon_fires_projectile",
+	"\0"
 };
 
-void CWeapons::loadWeapons(const char* szWeaponListName, const WeaponsData_t* pDefault)
-{
-	if (szWeaponListName && szWeaponListName[0] != '\0')
-	{
-		// Custom deleter for KeyValues
+std::unordered_map<std::string, int> createWeaponFlagMap() {
+	std::unordered_map<std::string, int> flagMap;
+	for (size_t i = 0; i < g_szWeaponFlags.size(); ++i) {
+		flagMap[g_szWeaponFlags[i]] = 1 << i;
+	}
+	return flagMap;
+}
+
+const std::unordered_map<std::string, int> g_weaponFlagMap = createWeaponFlagMap();
+
+void CWeapons::loadWeapons(const char* szWeaponListName, const WeaponsData_t* pDefault) {
+	if (szWeaponListName && szWeaponListName[0] != '\0') {
 		auto keyValuesDeleter = [](KeyValues* kv) {
 			if (kv) {
 				kv->deleteThis();
@@ -839,78 +833,53 @@ void CWeapons::loadWeapons(const char* szWeaponListName, const WeaponsData_t* pD
 
 		CBotGlobals::buildFileName(szFilename, "weapons", BOT_CONFIG_FOLDER, "ini", false);
 
-		if (kv)
-		{
-			if (kv->LoadFromFile(filesystem, szFilename, nullptr))
-			{
-				KeyValues* weaponListKey = kv->FindKey(szWeaponListName);
+		if (kv && kv->LoadFromFile(filesystem, szFilename, nullptr)) {
+			KeyValues* weaponListKey = kv->FindKey(szWeaponListName);
 
-				if (weaponListKey)
-				{
-					for (KeyValues* subKey = weaponListKey->GetFirstSubKey(); subKey != nullptr; subKey = subKey->GetNextTrueSubKey())
-					{
-						WeaponsData_t newWeapon;
+			if (weaponListKey) {
+				for (KeyValues* subKey = weaponListKey->GetFirstSubKey(); subKey != nullptr; subKey = subKey->GetNextTrueSubKey()) {
+					WeaponsData_t newWeapon;
+					std::memset(&newWeapon, 0, sizeof(WeaponsData_t));
 
-						std::memset(&newWeapon, 0, sizeof(WeaponsData_t));
+					const char* szKeyName = subKey->GetName();
+					if (szKeyName) {
+						std::string lowered(szKeyName);
+						std::transform(lowered.begin(), lowered.end(), lowered.begin(), ::tolower);
 
-						const char* szKeyName = subKey->GetName();
+						newWeapon.szWeaponName = CStrings::getString(lowered.c_str());
+						newWeapon.iId = subKey->GetInt("id");
+						newWeapon.iSlot = subKey->GetInt("slot");
+						newWeapon.minPrimDist = subKey->GetFloat("minPrimDist");
+						newWeapon.maxPrimDist = subKey->GetFloat("maxPrimDist");
+						newWeapon.m_fProjSpeed = subKey->GetFloat("m_fProjSpeed");
+						newWeapon.m_iAmmoIndex = subKey->GetInt("m_iAmmoIndex");
+						newWeapon.m_iPreference = subKey->GetInt("m_iPreference");
 
-						if (szKeyName)
-						{
-							constexpr size_t BUFFER_SIZE = 64;
-							char lowered[BUFFER_SIZE];
-
-							std::strncpy(lowered, szKeyName, BUFFER_SIZE - 1);
-							lowered[BUFFER_SIZE - 1] = '\0'; // Ensure null termination
-
-							// Convert to lowercase
-							std::transform(lowered, lowered + std::strlen(lowered), lowered, ::tolower);
-
-							newWeapon.szWeaponName = CStrings::getString(lowered);
-							newWeapon.iId = subKey->GetInt("id");
-							newWeapon.iSlot = subKey->GetInt("slot");
-							newWeapon.minPrimDist = subKey->GetFloat("minPrimDist");
-							newWeapon.maxPrimDist = subKey->GetFloat("maxPrimDist");
-							newWeapon.m_fProjSpeed = subKey->GetFloat("m_fProjSpeed");
-							newWeapon.m_iAmmoIndex = subKey->GetInt("m_iAmmoIndex");
-							newWeapon.m_iPreference = subKey->GetInt("m_iPreference");
-
-							KeyValues* flags = subKey->FindKey("flags");
-
-							if (flags)
-							{
-								for (int i = 0; szWeaponFlags[i][0] != '\0'; ++i)
-								{
-									if (flags->GetInt(szWeaponFlags[i], 0) == 1)
-									{
-										newWeapon.m_iFlags |= 1 << i;
-									}
+						KeyValues* flags = subKey->FindKey("flags");
+						if (flags) {
+							for (const auto& flag : g_weaponFlagMap) {
+								if (flags->GetInt(flag.first.c_str(), 0) == 1) {
+									newWeapon.m_iFlags |= flag.second;
 								}
 							}
+						}
 
-							addWeapon(new CWeapon(&newWeapon));
-						}
-						else
-						{
-							logger->Log(LogLevel::ERROR, "Error: szKeyName is null.\n");
-						}
+						addWeapon(new CWeapon(&newWeapon));
+					}
+					else {
+						logger->Log(LogLevel::ERROR, "Error: szKeyName is null.\n");
 					}
 				}
 			}
 		}
-		else
-		{
+		else {
 			logger->Log(LogLevel::ERROR, "Error: Failed to allocate KeyValues.\n");
 		}
 	}
 
-	if (pDefault)
-	{
-		// No weapons from INI file then add default
-		if (m_theWeapons.empty())
-		{
-			while (pDefault->szWeaponName[0] != '\0')
-			{
+	if (pDefault) {
+		if (m_theWeapons.empty()) {
+			while (pDefault->szWeaponName[0] != '\0') {
 				addWeapon(new CWeapon(pDefault));
 				++pDefault;
 			}

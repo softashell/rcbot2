@@ -68,7 +68,7 @@ std::vector<CBaseHandle> CCounterStrikeSourceMod::m_hHostages;
 
 void CCounterStrikeSourceMod::initMod()
 {
-    CWeapons::loadWeapons(m_szWeaponListName == nullptr ? "CSS" : m_szWeaponListName, CSSWeaps); // Load weapon list
+    CWeapons::loadWeapons(m_szWeaponListName == nullptr ? "CSS" : m_szWeaponListName, CSSWeaps.data()); // Load weapon list
     logger->Log(LogLevel::TRACE, "CCounterStrikeSourceMod::initMod()");
 }
 

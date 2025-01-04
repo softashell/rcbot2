@@ -360,7 +360,7 @@ bool CHalfLifeDeathmatchMod::playerSpawned(edict_t* pPlayer)
 
 void CHalfLifeDeathmatchMod::initMod()
 {
-	CWeapons::loadWeapons(m_szWeaponListName == nullptr ? "HL2DM" : m_szWeaponListName, HL2DMWeaps);
+	CWeapons::loadWeapons(m_szWeaponListName == nullptr ? "HL2DM" : m_szWeaponListName, HL2DMWeaps.data());
 
 	//	for ( i = 0; i < HL2DM_WEAPON_MAX; i ++ )
 	//	CWeapons::addWeapon(new CWeapon(HL2DMWeaps[i]));//.iSlot,HL2DMWeaps[i].szWeaponName,HL2DMWeaps[i].iId,HL2DMWeaps[i].m_iFlags,HL2DMWeaps[i].m_iAmmoIndex,HL2DMWeaps[i].minPrimDist,HL2DMWeaps[i].maxPrimDist,HL2DMWeaps[i].m_iPreference,HL2DMWeaps[i].m_fProjSpeed));

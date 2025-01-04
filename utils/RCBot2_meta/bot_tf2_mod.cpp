@@ -216,7 +216,7 @@ void CTeamFortress2Mod :: initMod ()
 //	unsigned i;
 	// Setup Weapons
 
-	CWeapons::loadWeapons(m_szWeaponListName == nullptr ? "TF2" : m_szWeaponListName, TF2Weaps);
+    CWeapons::loadWeapons(m_szWeaponListName == nullptr ? "TF2" : m_szWeaponListName, TF2Weaps.data());
 	//CWeapons::loadWeapons("TF2", TF2Weaps);
 	/*
 	i = 0;

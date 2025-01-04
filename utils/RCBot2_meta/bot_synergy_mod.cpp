@@ -50,7 +50,7 @@
 void CSynergyMod::initMod()
 {
 	//Load weapons
-	CWeapons::loadWeapons(m_szWeaponListName == nullptr ? "SYNERGY" : m_szWeaponListName, SYNERGYWeaps);
+	CWeapons::loadWeapons(m_szWeaponListName == nullptr ? "SYNERGY" : m_szWeaponListName, SYNERGYWeaps.data());
 }
 
 void CSynergyMod::mapInit()
