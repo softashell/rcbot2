@@ -98,10 +98,11 @@ Additionally, `rcbot/logging.{h,cpp}` is released separately under the
 - To prevent EngiBots from facing their SG Turrets the wrong way
 - To prevent bots from shooting at ghost players - like in plr_hightower_event Hell Zone
 - To allow bots to attack Skeleton Mobsters in pl_spineyard
-- To improve on how Medic and Spy bots to behave smarter and properly when interacting with SG Turrets and Healing/Ubering
-- Bots needs to understand how to play Kart games from sd_doomsday_event as they only wonder around those minigames
+- To improve on how Medic and Spy bots behave smarter and properly when interacting with SG Turrets and Healing/Ubering
+- Bots need to understand how to play Kart games from sd_doomsday_event as they only wonder around those minigames
 - CBotTF2::changeClass needs to be implemented to avoid bots punting when using ClassRestrictionsForBots.smx and `rcbot_change_classes 1`
-- And to add TF2C support along with Black Mesa Source, Counter-Strike: Source, Synergy and Dystopia
+- To add TF2C support along with Black Mesa Source, Counter-Strike: Source, Synergy and Dystopia
+- And to add proper AMD64/x64 support for RCBot2 TF2 and HL2DM
 
 ## Credits:-
 
