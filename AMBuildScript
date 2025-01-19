@@ -15,7 +15,7 @@ proj_c_flags = [
   '-Wno-implicit-const-int-float-conversion'
 ]
 proj_c_flags_opt = [
-  '-O3',
+  '-O2',
   '-pipe',
 ]
 proj_c_flags_dbg = [
@@ -262,7 +262,7 @@ class MMSConfig(object):
       if cxx.behavior == 'gcc':
         cxx.cflags += proj_c_flags_opt
       elif cxx.behavior == 'msvc': # /Ob3 needs to be after /Ox, enables aggressive function inling -caxanga334
-        cxx.cflags += ['/Ox', '/Zo', '/Ob3', '/GF']
+        cxx.cflags += ['/O2', '/Zo', '/Ob3', '/GF']
         cxx.linkflags += ['/OPT:ICF', '/OPT:REF']
 
     # Debugging
