@@ -51,15 +51,15 @@ CBotProfile :: CBotProfile (const CBotProfile &other)
 
 CBotProfile :: CBotProfile (
 		const char *szName, 
-		const char *szModel, 
-		int iTeam, 
-		int iVisionTicks, 
-		int iPathTicks, 
-		int iVisionTicksClients,
-		int iSensitivity,
-		float fBraveness,
-		float fAimSkill,
-		int iClass )
+		const char *szModel,
+		const int iTeam,
+		const int iVisionTicks,
+		const int iPathTicks,
+		const int iVisionTicksClients,
+		const int iSensitivity,
+		const float fBraveness,
+		const float fAimSkill,
+		const int iClass )
 { 
 	m_iVisionTicksClients = iVisionTicksClients;
 	m_iSensitivity = iSensitivity;
@@ -75,10 +75,10 @@ CBotProfile :: CBotProfile (
 
 void CBotProfiles :: deleteProfiles ()
 {
-	for ( unsigned int i = 0; i < m_Profiles.size(); i ++ )
+	for (CBotProfile*& m_Profile : m_Profiles)
 	{
-		delete m_Profiles[i];
-		m_Profiles[i] = nullptr;
+		delete m_Profile;
+		m_Profile = nullptr;
 	}
 
 	m_Profiles.clear();
@@ -98,27 +98,25 @@ void CBotProfiles :: setupProfiles ()
 		-1, // iTeam
 		CBotVisibles::DEFAULT_MAX_TICKS, // vis ticks
 		IBotNavigator::MAX_PATH_TICKS, // path ticks
-		2, // visrevs clients
-		8.0f, // sensitivity
-		0.5f, // braveness
-		0.5f, // aim skill
+		10, // visrevs clients
+		8, // sensitivity
+		0.7f, // braveness
+		0.85f, // aim skill
 		-1 // class
 		);	
 
 	// read profiles
-	unsigned int iId = 1;
+	unsigned iId = 1;
 	bool bDone = false;
 
 	while ( iId < 999 && !bDone )
 	{
 		char szId[4];
 		char filename[512];
-		std::sprintf(szId,"%d",iId);
+		snprintf(szId, sizeof(szId), "%d", iId);
 		CBotGlobals::buildFileName(filename,szId,BOT_PROFILE_FOLDER,BOT_CONFIG_EXTENSION);
 
-		std::fstream fp = CBotGlobals::openFile(filename, std::fstream::in);
-
-		if ( fp )
+		if ( std::fstream fp = CBotGlobals::openFile(filename, std::fstream::in) )
 		{
 			// copy defaults
 			CBotProfile read = *m_pDefaultProfile;
@@ -182,13 +180,14 @@ CBotProfile *CBotProfiles :: getRandomFreeProfile ()
 {
 	std::vector<CBotProfile*> freeProfiles;
 	
-	for ( unsigned int i = 0; i < m_Profiles.size(); i ++ )
+	for (CBotProfile*& m_Profile : m_Profiles)
 	{
-		if ( !CBots::findBotByProfile(m_Profiles[i]) )
-			freeProfiles.emplace_back(m_Profiles[i]);
+		if ( !CBots::findBotByProfile(m_Profile) )
+			freeProfiles.emplace_back(m_Profile);
 	}
 
 	if ( freeProfiles.empty() )
 		return nullptr;
-	return freeProfiles[ randomInt(0, freeProfiles.size() - 1) ];
+
+	return freeProfiles[randomInt(0, static_cast<int>(freeProfiles.size()) - 1)];
 }

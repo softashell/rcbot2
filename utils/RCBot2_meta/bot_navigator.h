@@ -40,10 +40,17 @@
 
 #include "bot_belief.h"
 
-class CNavMesh;
+class CNavMesh {
+public:
+	// other methods...
+	static void freeMemory()
+	{
+		// implementation of freeing memory
+	}
+};
 class CWaypointVisibilityTable;
 
-#define MAX_BELIEF 200.0f
+constexpr float MAX_BELIEF = 200.0f;
 
 class INavigatorNode
 {
@@ -56,6 +63,7 @@ protected:
 class IBotNavigator
 {
 public:
+	virtual ~IBotNavigator() = default;
 	virtual void init () = 0;
 
 	// returns true when working out route finishes, not if successful
@@ -126,7 +134,7 @@ public:
 
 	virtual int numPaths ( ) { return 0; }
 
-	virtual Vector getPath ( int pathid ) { return Vector(0,0,0); }
+	virtual Vector getPath ( int pathid ) { return {0,0,0}; }
 
 	virtual bool randomDangerPath (Vector *vec) { return false; }
 
@@ -137,7 +145,7 @@ public:
 	virtual bool wantToSaveBelief () { return false; }
 	float getGoalDistance () const { return m_fGoalDistance; }
 
-	static const int MAX_PATH_TICKS = 200;
+	static constexpr int MAX_PATH_TICKS = 200;
 
 protected:
 	Vector m_vGoal;
@@ -145,20 +153,23 @@ protected:
 	Vector m_vPreviousPoint;
 	Vector m_vDangerPoint;
 	bool m_bDangerPoint = false;
-	short int m_iBeliefTeam = 0;
+	int m_iBeliefTeam = 0;
 	bool m_bBeliefChanged = false;
 	bool m_bLoadBelief = false;
 };
 
-#define FL_ASTAR_CLOSED		1
-#define FL_ASTAR_PARENT		2
-#define FL_ASTAR_OPEN		4
-#define FL_HEURISTIC_SET	8
+enum : std::uint8_t
+{
+	FL_ASTAR_CLOSED = 1,
+	FL_ASTAR_PARENT = 2,
+	FL_ASTAR_OPEN = 4,
+	FL_HEURISTIC_SET = 8
+};
 
 class AStarNode
 {
 public:
-	AStarNode() { memset(this,0,sizeof(AStarNode)); }
+	AStarNode() { std::memset(this,0,sizeof(AStarNode)); }
 	///////////////////////////////////////////////////////
 	void close () { setFlag(FL_ASTAR_CLOSED); }
 	void unClose () { removeFlag(FL_ASTAR_CLOSED); }
@@ -167,14 +178,14 @@ public:
 	bool isClosed () const { return hasFlag(FL_ASTAR_CLOSED); }
 	void open () { setFlag(FL_ASTAR_OPEN); }
 	//////////////////////////////////////////////////////	
-	void setHeuristic ( float fHeuristic ) { m_fHeuristic = fHeuristic; setFlag(FL_HEURISTIC_SET); }
+	void setHeuristic (const float fHeuristic) { m_fHeuristic = fHeuristic; setFlag(FL_HEURISTIC_SET); }
 	bool heuristicSet () const { return hasFlag(FL_HEURISTIC_SET); }
 	float getHeuristic() const { return m_fHeuristic; }
 
 	////////////////////////////////////////////////////////
-	void setFlag(int iFlag) { m_iFlags |= iFlag; }
-	bool hasFlag ( int iFlag ) const { return (m_iFlags & iFlag) == iFlag; }
-	void removeFlag ( int iFlag ) { m_iFlags &= ~iFlag; }
+	void setFlag(const int iFlag) { m_iFlags |= iFlag; }
+	bool hasFlag (const int iFlag) const { return (m_iFlags & iFlag) == iFlag; }
+	void removeFlag (const int iFlag) { m_iFlags &= ~iFlag; }
 	/////////////////////////////////////////////////////////
 	int getParent () const
 	{
@@ -182,7 +193,7 @@ public:
 		return -1;
 	}
 
-	void setParent ( short int iParent ) 
+	void setParent (const int iParent) 
 	{ 
 		m_iParent = iParent; 
 
@@ -193,20 +204,20 @@ public:
 	}
 	////////////////////////////////////////////////////////
 	float getCost () const { return m_fCost; }
-	void setCost(float fCost) { m_fCost = fCost; }
+	void setCost(const float fCost) { m_fCost = fCost; }
 	////////////////////////////////////////////////////////
 	// for comparison
-	bool precedes ( AStarNode *other ) const
+	bool precedes (const AStarNode *other) const
 	{
 		return m_fCost+m_fHeuristic < other->getCost() + other->getHeuristic();
 	}
-	void setWaypoint ( int iWpt ) { m_iWaypoint = iWpt; }
+	void setWaypoint (const int iWpt) { m_iWaypoint = iWpt; }
 	int getWaypoint () const { return m_iWaypoint; }
 private:
 	float m_fCost;
 	float m_fHeuristic;
 	unsigned char m_iFlags;
-	short int m_iParent;
+	int m_iParent;
 	int m_iWaypoint;
 };
 // Insertion sorted list
@@ -317,7 +328,7 @@ struct AstarNodeCompare : binary_function<AStarNode*, AStarNode*, bool>
   // Other stuff...
   bool operator()(AStarNode* x, AStarNode* y) const 
   {
-    return y->betterCost(x);
+	return y->betterCost(x);
   }
 };
 
@@ -326,16 +337,16 @@ class AStarOpenList : public vector<AStarNode*>
   AstarNodeCompare comp;
 public:
   AStarOpenList(AstarNodeCompare cmp = AstarNodeCompare()) : comp(cmp) {
-    make_heap(begin(), end(), comp);
+	make_heap(begin(), end(), comp);
   }
   AStarNode* top() { return front(); }
   void push(AStarNode* x) {
-    emplace_back(x);
-    push_heap(begin(), end(), comp);
+	emplace_back(x);
+	push_heap(begin(), end(), comp);
   }
   void pop() {
-    pop_heap(begin(), end(), comp);
-    pop_back();
+	pop_heap(begin(), end(), comp);
+	pop_back();
   }  
 };*/
 
@@ -343,22 +354,25 @@ public:
 /*
 bool operator<( const AStarNode & A, const AStarNode & B )
 {
-    return A.betterCost(&B);
+	return A.betterCost(&B);
 }
 
 bool operator<( const AStarNode * A, const AStarNode * B )
 {
-    return A->betterCost(B);
+	return A->betterCost(B);
 }*/
 
-#define WPT_SEARCH_AVOID_SENTRIES 1
-#define WPT_SEARCH_AVOID_SNIPERS 2
-#define WPT_SEARCH_AVOID_TEAMMATE 4
+enum : std::uint8_t
+{
+	WPT_SEARCH_AVOID_SENTRIES = 1,
+	WPT_SEARCH_AVOID_SNIPERS = 2,
+	WPT_SEARCH_AVOID_TEAMMATE = 4
+};
 
 typedef struct
 {
-	short int iFrom;
-	short int iTo;
+	int iFrom;
+	int iTo;
 	bool bValid;
 	bool bSkipped;
 }failedpath_t;
@@ -366,7 +380,7 @@ typedef struct
 class CWaypointNavigator : public IBotNavigator
 {
 public:
-	CWaypointNavigator ( CBot *pBot ) 
+	CWaypointNavigator(CBot* pBot)
 	{
 		CWaypointNavigator::init();
 		m_pBot = pBot; 
@@ -375,7 +389,7 @@ public:
 		m_iBeliefTeam = -1;
 		m_bLoadBelief = true;
 		m_bBeliefChanged = false;
-		memset(&m_lastFailedPath,0,sizeof(failedpath_t));
+		std::memset(&m_lastFailedPath,0,sizeof(failedpath_t));
 	}
 
 	void init () override;
@@ -395,8 +409,8 @@ public:
 
 	void updatePosition () override;
 
-    float getBelief ( int index ) override
-    { if ( index >= 0 ) return m_fBelief[index]; return 0; }
+	float getBelief (const int index) override
+	{ if ( index >= 0 ) return m_fBelief[index]; return 0; }
 
 	void failMove () override;
 
@@ -430,9 +444,9 @@ public:
 
 	//virtual void goBack();
 	
-	void belief ( Vector origin, Vector vOther, float fBelief, float fStrength, BotBelief iType ) override;
+	void belief ( Vector origin, Vector vOther, float fBelief, float fStrength, BotBelief iType ) override; //TODO: not implemented? [APG]RoboCop[CL]
 
-	void beliefOne ( int iWptIndex, BotBelief iBeliefType, float fDist ) override;
+	void beliefOne ( int iWptIndex, BotBelief iBeliefType, float fDist ) override; //TODO: not implemented? [APG]RoboCop[CL]
 
 	// nearest cover position to vOrigin only
 	bool getCoverPosition ( Vector vCoverOrigin, Vector *vCover ) override;
@@ -507,7 +521,7 @@ public:
 	CNavMesh* m_theNavMesh; // Add a member variable for the NavMesh instance
 
 	CNavMeshNavigator();
-	~CNavMeshNavigator();
+	~CNavMeshNavigator() override;
 
 	void CalculateRoute(Vector startNodeID, Vector goalNodeID);
 
@@ -529,13 +543,13 @@ public:
 
 	void init () override;
 
-    void belief ( Vector origin, Vector facing, float fBelief, float fStrength, BotBelief iType ) override {} //bir3yk
+	void belief ( Vector origin, Vector facing, float fBelief, float fStrength, BotBelief iType ) override {} //bir3yk
 
 	//void rememberEnemyPosition ( Vector vOrigin );
 
 	//Vector getEnemyPositionPinchPoint ( Vector vOrigin );
 private:
-	CNavMesh * m_pNavMesh = nullptr;
+	CNavMesh * m_pNavMesh;
 };
 
 #endif

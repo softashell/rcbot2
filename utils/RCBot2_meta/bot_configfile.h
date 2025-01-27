@@ -37,7 +37,7 @@
 
 #include <vector>
 
-typedef enum
+typedef enum : std::uint8_t
 {
 	BOT_ATT_UTIL = 0,
 	BOT_NORM_UTIL,
@@ -53,6 +53,7 @@ typedef struct
 class CRCBotTF2UtilFile
 {
 public:
+	//TODO: should be `(eBotAction iUtil, eTF2UtilType iFile, float iClassList)? [APG]RoboCop[CL]
 	static void addUtilPerturbation (eBotAction iAction, eTF2UtilType iUtil, float fUtility[9][2]);
 
 	static void init ();
@@ -79,7 +80,7 @@ public:
 
 private:
 	static std::vector<char *> m_Commands;
-	static unsigned int m_iCmd; // current command (time delayed)
+	static unsigned m_iCmd; // current command (time delayed)
 	static float m_fNextCommandTime;
 };
 

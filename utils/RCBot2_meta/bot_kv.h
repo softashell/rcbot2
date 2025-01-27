@@ -1,14 +1,15 @@
 #ifndef __RCBOT_KEY_VAL__
 #define __RCBOT_KEY_VAL__
 
-#define RCBOT_MAX_KV_LEN 256
+constexpr int RCBOT_MAX_KV_LEN = 256;
 
+#include <fstream>
 #include <vector>
 
 class CRCBotKeyValue
 {
 public:
-	CRCBotKeyValue(const char *szKey, char *szValue);
+	CRCBotKeyValue(const char *szKey, const char *szValue);
 
 	char *getKey ()
 	{
@@ -32,13 +33,13 @@ public:
 
 	void parseFile(std::fstream& fp);
 
-	//unsigned int size ();
+	//unsigned size ();
 
-	//CRCBotKeyValue *getKV ( unsigned int iIndex );
+	//CRCBotKeyValue *getKV ( unsigned iIndex );
 
 	bool getInt ( const char *key, int *val ) const;
 
-	bool getString ( const char *key, char **val ) const;
+	bool getString ( const char *key, const char **val ) const;
 
 	bool getFloat ( const char *key, float *val ) const;
 

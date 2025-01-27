@@ -31,7 +31,7 @@
 #ifndef __RCBOT_BELIEF_H__
 #define __RCBOT_BELIEF_H__
 
-typedef enum
+typedef enum : std::uint8_t
 {
     BELIEF_NONE = 0,
 	BELIEF_DANGER = 1<<0,

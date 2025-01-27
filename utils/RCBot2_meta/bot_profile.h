@@ -1,6 +1,8 @@
 #ifndef __RCBOT_PROFILE_H__
 #define __RCBOT_PROFILE_H__
 
+#include <mem.h>
+#include <cstring>
 #include <vector>
 
 class CBotProfile
@@ -8,9 +10,9 @@ class CBotProfile
 public:
 	CBotProfile () 
 	{
-		memset(this,0,sizeof(CBotProfile));
+		std::memset(this,0,sizeof(CBotProfile));
 	}
-	CBotProfile (const CBotProfile &other );
+	CBotProfile (const CBotProfile &other);
 	// setup profile
 	CBotProfile (
 		const char *szName, 
@@ -25,8 +27,8 @@ public:
 		int iClass = 0 );
 
 	// bot's name
-	char *m_szName;
-	char *m_szModel;
+	const char *m_szName;
+	const char *m_szModel;
 	// bot's team
 	int m_iTeam;				// preferred player team
 	int m_iVisionTicks;			// speed of finding non players (npcs/teleporters etc)

@@ -32,14 +32,17 @@
 #define __BOT_GA_H__
 
 #include "bot_ga_nn_const.h"
+#include <memory>
 #include <vector>
 
 class IIndividual
 {
 public:
+	virtual ~IIndividual() = default;
+
 	// get fitness for this individual
 	ga_nn_value getFitness () const { return m_fFitness; }
-	void setFitness ( float fVal ) { m_fFitness = fVal; }
+	void setFitness (const float fVal) { m_fFitness = fVal; }
 
 	// crossover with other individual
 	virtual void crossOver ( IIndividual *other ) = 0;
@@ -63,8 +66,9 @@ public:
 	void freeMemory ();
 
 	void setGA ( CGA *ga ) { m_ga = ga; }
+
 	// size of population
-	unsigned int size () const { return m_theIndividuals.size(); }
+	unsigned size () const { return m_theIndividuals.size(); }
 
 	// get from population index
 	IIndividual *get ( int iIndex ) const;
@@ -81,7 +85,7 @@ public:
 	ga_nn_value averageFitness () const;
 
 	// get back individual
-	IIndividual *pick ();
+	std::unique_ptr<IIndividual> pick();
 
 private:
 	std::vector<IIndividual*> m_theIndividuals;
@@ -92,6 +96,7 @@ private:
 class ISelection
 {
 public:
+	virtual ~ISelection() = default;
 	virtual IIndividual *select ( CPopulation *population ) = 0;
 };
 
@@ -104,12 +109,12 @@ class CGA
 {
 public:
 
-	CGA (int iMaxPopSize=0)
+	CGA (const int iMaxPopSize=0)
 	{
 		init(iMaxPopSize);
 	}
 
-	void init (int iMaxPopSize=0)
+	void init (const int iMaxPopSize=0)
 	{
 		m_theSelectFunction = new CRouletteSelection();
 
@@ -139,9 +144,9 @@ public:
 	// can get an individual off new population
 	bool canPick () const;
 
-	IIndividual *pick ();
+	std::unique_ptr<IIndividual> pick();
 
-	unsigned int m_iMaxPopSize;
+	unsigned m_iMaxPopSize;
 	static const int g_iDefaultMaxPopSize;
 	static const float g_fCrossOverRate;
 	static const float g_fMutateRate;
@@ -152,7 +157,7 @@ private:
 	CPopulation m_thePopulation;
 	CPopulation m_theNewPopulation;
 
-	unsigned int m_iNumGenerations;
+	unsigned m_iNumGenerations;
 	float m_fPrevAvgFitness;
 
 	ISelection *m_theSelectFunction;

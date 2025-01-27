@@ -1,6 +1,13 @@
 #ifndef __RCBOT_TF2_POINTS_H__
 #define __RCBOT_TF2_POINTS_H__
 
+#include <cstring>
+#include <cstdint>
+
+#include "bot_ehandle.h"
+#include "edict.h"
+#include "ehandle.h"
+#include "shareddefs.h"
 #include "utlmap.h"
 
 class CTeamControlPoint;
@@ -26,13 +33,13 @@ class CTFGameRulesProxy
 {
 	MyEHandle m_Resource;
 
-	float m_flCapturePointEnableTime;
+	float m_flCapturePointEnableTime = 0.0f;
 };
 
 
 #define TEAM_ARRAY( index, team )		((index) + ((team) * MAX_CONTROL_POINTS))
 
-typedef enum ePointAttackDefend_s
+typedef enum ePointAttackDefend_s : std::uint8_t
 {
 	TF2_POINT_DEFEND = 0,
 	TF2_POINT_ATTACK
@@ -72,19 +79,19 @@ public:
 
 	void debugprint () const;
 	void updatePoints();
-	bool TeamCanCapPoint( int index, int team )
+	bool TeamCanCapPoint(const int index, const int team)
 	{
 		AssertValidIndex(index);
 		return m_bTeamCanCap[ TEAM_ARRAY( index, team ) ];
 	}
 
 	// Is the point visible in the objective display
-	bool	IsCPVisible( int index ) const
+	bool	IsCPVisible(const int index) const
 	{
 		return m_bCPIsVisible[index] == 1;
 	}
 
-	bool	IsCPBlocked( int index ) const
+	bool	IsCPBlocked(const int index) const
 	{
 		return m_bBlocked[index];
 	}
@@ -94,19 +101,19 @@ public:
 	int getControlPointArea ( edict_t *pPoint );
 
 	// Get the world location of this control point
-	Vector& GetCPPosition( int index ) const
+	Vector& GetCPPosition(const int index) const
 	{
 		return m_vCPPositions[index];
 	}
 
-	int getControlPointWaypoint ( int index ) const
+	int getControlPointWaypoint (const int index) const
 	{
 		return m_iControlPointWpt[index];
 	}
 
-	int NearestArea (const Vector& vOrigin ) const;
+	int NearestArea (const Vector& vOrigin) const;
 
-	int GetCappingTeam( int index ) const
+	int GetCappingTeam(const int index) const
 	{
 		if ( index >= *m_iNumControlPoints )
 			return TEAM_UNASSIGNED;
@@ -114,7 +121,7 @@ public:
 		return m_iCappingTeam[index];
 	}
 
-	int GetTeamInZone( int index ) const
+	int GetTeamInZone(const int index) const
 	{
 		if ( index >= *m_iNumControlPoints )
 			return TEAM_UNASSIGNED;
@@ -123,12 +130,12 @@ public:
 	}
 
 	// Icons
-	int GetCPCurrentOwnerIcon( int index, int iOwner ) const
+	int GetCPCurrentOwnerIcon(const int index, const int iOwner) const
 	{
 		return GetIconForTeam( index, iOwner );
 	}
 
-	int GetCPCappingIcon( int index ) const
+	int GetCPCappingIcon(const int index) const
 	{
 		const int iCapper = GetCappingTeam(index);
 
@@ -136,36 +143,36 @@ public:
 	}
 
 	// Icon for the specified team
-	int GetIconForTeam( int index, int team ) const
+	int GetIconForTeam(const int index, const int team) const
 	{		
 		return m_iTeamIcons[ TEAM_ARRAY(index,team) ];
 	}
 
 	// Overlay for the specified team
-	int GetOverlayForTeam( int index, int team ) const
+	int GetOverlayForTeam(const int index, const int team) const
 	{
 		return m_iTeamOverlays[ TEAM_ARRAY(index,team) ];
 	}
 
 	// Number of players in the area
-	int GetNumPlayersInArea( int index, int team ) const
+	int GetNumPlayersInArea(const int index, const int team) const
 	{
 		return m_iNumTeamMembers[ TEAM_ARRAY(index,team) ];
 	}
 	
 	// get the required cappers for the passed team
-	int GetRequiredCappers( int index, int team ) const
+	int GetRequiredCappers(const int index, const int team) const
 	{
 		return m_iTeamReqCappers[ TEAM_ARRAY(index,team) ];
 	}
 
 	// Base Icon for the specified team
-	int GetBaseIconForTeam( int team ) const
+	int GetBaseIconForTeam(const int team) const
 	{
 		return m_iTeamBaseIcons[ team ];
 	}
 
-	int GetBaseControlPointForTeam( int iTeam ) const
+	int GetBaseControlPointForTeam(const int iTeam) const
 	{ 
 		return m_iBaseControlPoints[iTeam]; 
 	}
@@ -178,7 +185,7 @@ public:
 		return *m_iNumControlPoints;
 	}
 
-	int GetPreviousPointForPoint( int index, int team, int iPrevIndex )
+	int GetPreviousPointForPoint(const int index, const int team, const int iPrevIndex)
 	{
 		AssertValidIndex(index);
 		Assert( iPrevIndex >= 0 && iPrevIndex < MAX_PREVIOUS_POINTS );
@@ -186,7 +193,7 @@ public:
 		return m_iPreviousPoints[ iIntIndex ];
 	}
 
-	int GetOwningTeam( int index ) const
+	int GetOwningTeam(const int index) const
 	{
 		if ( index >= *m_iNumControlPoints )
 			return TEAM_UNASSIGNED;
@@ -207,7 +214,7 @@ public:
 
 	// Mini-rounds data
 	bool PlayingMiniRounds() const { return *m_bPlayingMiniRounds; }
-	bool IsInMiniRound( int index ) const { return m_bInMiniRound[index]; }
+	bool IsInMiniRound(const int index) const { return m_bInMiniRound[index]; }
 	void updateCaptureTime(int index);
 	void setup ();
 	bool isInitialised() const { return m_bInitialised == true; }
@@ -279,14 +286,14 @@ public:
 	{
 		resetValidWaypointAreas();
 
-		for ( int i = 0; i < 2; i ++ )
+		for (const TF2PointProb_t (&m_ValidPoint)[2][8] : m_ValidPoints)
 		{
-			for ( int j = 0; j < 2; j ++ )
+			for (const TF2PointProb_t (&j)[8] : m_ValidPoint)
 			{
 				for ( int k = 0; k < MAX_CONTROL_POINTS; k ++ )
 				{
 					// OR
-					m_ValidAreas[k] = m_ValidAreas[k] || m_ValidPoints[i][j][k].bValid;
+					m_ValidAreas[k] = m_ValidAreas[k] || j[k].bValid;
 				}
 			}
 		}
@@ -339,7 +346,7 @@ class COutputEvent
 {
 	variant_t m_Value;
 	CEventAction *m_ActionList;
-	DECLARE_SIMPLE_DATADESC();
+	DECLARE_SIMPLE_DATADESC()
 };
 
 class CTeamControlPointMaster
@@ -419,9 +426,9 @@ public:
 			iszOverlay = NULL_STRING;
 			iPlayersRequired = 0;
 			iTimedPoints = 0;
-			for ( int i = 0; i < MAX_PREVIOUS_POINTS; i++ )
+			for (string_t& i : iszPreviousPoint)
 			{
-				iszPreviousPoint[i] = NULL_STRING;
+				i = NULL_STRING;
 			}
 			iTeamPoseParam = 0;
 		}

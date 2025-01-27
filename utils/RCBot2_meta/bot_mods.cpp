@@ -50,6 +50,10 @@
 
 #include "rcbot/logging.h"
 
+#ifdef _WIN32
+#define strcmpi _strcmpi
+#endif 
+
 std::vector<edict_wpt_pair_t> CHalfLifeDeathmatchMod::m_LiftWaypoints;
 
 void CBotMods::parseFile()
@@ -81,7 +85,7 @@ void CBotMods::parseFile()
 		if (buffer[0] == '#')
 			continue;
 
-		unsigned int len = std::strlen(buffer);
+		size_t len = std::strlen(buffer);
 
 		if (len == 0)
 			continue;
@@ -89,8 +93,8 @@ void CBotMods::parseFile()
 		if (buffer[len - 1] == '\n')
 			buffer[--len] = 0;
 
-		unsigned int i = 0;
-		unsigned int j = 0;
+		size_t i = 0;
+		size_t j = 0;
 
 		while (i < len && buffer[i] != '=')
 		{
@@ -127,7 +131,8 @@ void CBotMods::parseFile()
 
 			bottype = BOTTYPE_GENERIC;
 
-			modtype = MOD_CUSTOM;
+			//modtype = MOD_CUSTOM;
+			//TODO: Add Black Mesa Source support [APG]RoboCop[CL]
 
 			if (!strcmpi("CUSTOM", val))
 			{
@@ -250,7 +255,7 @@ void CBotMods::readMods()
 	m_Mods.emplace_back(new CSynergyMod());
 	m_Mods.emplace_back(new CDystopiaMod());
 #else
-	
+	//TODO: Add Black Mesa Source support [APG]RoboCop[CL]
 	m_Mods.emplace_back(new CFortressForeverMod());
 
 	m_Mods.emplace_back(new CHLDMSourceMod());
@@ -263,7 +268,7 @@ void CBotMods::readMods()
 
 //////////////////////////////////////////////////////////////////////////////
 
-void CBotMod::setup(const char* szModFolder, eModId iModId, eBotType iBotType, const char* szWeaponListName)
+void CBotMod::setup(const char* szModFolder, const eModId iModId, const eBotType iBotType, const char* szWeaponListName)
 {
 	m_szModFolder = CStrings::getString(szModFolder);
 	m_iModId = iModId;
@@ -300,11 +305,11 @@ std::vector<CBotMod*> CBotMods::m_Mods;
 
 void CBotMods::freeMemory()
 {
-	for (unsigned int i = 0; i < m_Mods.size(); i++)
+	for (CBotMod*& m_Mod : m_Mods)
 	{
-		m_Mods[i]->freeMemory();
-		delete m_Mods[i];
-		m_Mods[i] = nullptr;
+		m_Mod->freeMemory();
+		delete m_Mod;
+		m_Mod = nullptr;
 	}
 
 	m_Mods.clear();
@@ -312,13 +317,13 @@ void CBotMods::freeMemory()
 
 CBotMod* CBotMods::getMod(char* szModFolder)
 {
-	for (unsigned int i = 0; i < m_Mods.size(); i++)
+	for (CBotMod* const& m_Mod : m_Mods)
 	{
-		if (m_Mods[i]->isModFolder(szModFolder))
+		if (m_Mod->isModFolder(szModFolder))
 		{
-			logger->Log(LogLevel::INFO, "HL2 MOD ID %d (Game Folder = %s) FOUND", m_Mods[i]->getModId(), szModFolder);
+			logger->Log(LogLevel::INFO, "HL2 MOD ID %d (Game Folder = %s) FOUND", m_Mod->getModId(), szModFolder);
 
-			return m_Mods[i];
+			return m_Mod;
 		}
 	}
 
@@ -363,7 +368,7 @@ bool CHalfLifeDeathmatchMod::playerSpawned(edict_t* pPlayer)
 
 void CHalfLifeDeathmatchMod::initMod()
 {
-	CWeapons::loadWeapons(m_szWeaponListName == nullptr ? "HL2DM" : m_szWeaponListName, HL2DMWeaps);
+	CWeapons::loadWeapons(m_szWeaponListName == nullptr ? "HL2DM" : m_szWeaponListName, HL2DMWeaps.data());
 
 	//	for ( i = 0; i < HL2DM_WEAPON_MAX; i ++ )
 	//	CWeapons::addWeapon(new CWeapon(HL2DMWeaps[i]));//.iSlot,HL2DMWeaps[i].szWeaponName,HL2DMWeaps[i].iId,HL2DMWeaps[i].m_iFlags,HL2DMWeaps[i].m_iAmmoIndex,HL2DMWeaps[i].minPrimDist,HL2DMWeaps[i].maxPrimDist,HL2DMWeaps[i].m_iPreference,HL2DMWeaps[i].m_fProjSpeed));

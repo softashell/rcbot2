@@ -28,18 +28,30 @@
  *    version.
  */
 
-CBotCommandInline ShowUsersCommand("show", CMD_ACCESS_USERS | CMD_ACCESS_DEDICATED, [](CClient *pClient, const char *pcmd, const char *arg1, const char *arg2, const char *arg3, const char *arg4, const char *arg5)
-{
-	edict_t *pEntity = NULL;
+#include "bot_commands.h"
 
-	if ( pClient )
+#include "rcbot/logging.h"
+
+// Command to show users
+CBotCommandInline ShowUsersCommand("show", CMD_ACCESS_USERS | CMD_ACCESS_DEDICATED, [](const CClient* pClient,
+	const BotCommandArgs& args)
+{
+	edict_t* pEntity;
+
+	if (pClient) {
 		pEntity = pClient->getPlayer();
+	}
+	else {
+		logger->Log(LogLevel::ERROR, "Error: pClient is null");
+		return COMMAND_ERROR;
+	}
 
 	CAccessClients::showUsers(pEntity);
 
 	return COMMAND_ACCESSED;
 });
 
+// Subcommands for user-related commands
 CBotSubcommands UserSubcommands("users", CMD_ACCESS_DEDICATED, {
 	&ShowUsersCommand
 });

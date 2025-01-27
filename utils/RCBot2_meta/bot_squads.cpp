@@ -32,11 +32,11 @@
 
 #include "vector.h"
 
-#include "bot_const.h"
 #include "bot.h"
+#include "bot_const.h"
+#include "bot_getprop.h"
 #include "bot_globals.h"
 #include "bot_squads.h"
-#include "bot_getprop.h"
 
 #include <algorithm>
 #include <cstring>
@@ -83,7 +83,7 @@ void CBotSquads::removeSquadMember (CBotSquad* pSquad, const edict_t* pMember)
 	}
 }
 
-edict_t *CBotSquad::getMember ( size_t iMember )
+edict_t *CBotSquad::getMember (const size_t iMember)
 {
 	// TODO: this is only used in CBotSquads::SquadJoin() -- inline the logic
 	if (iMember < 0 || iMember >= m_SquadMembers.size()) {
@@ -187,7 +187,7 @@ CBotSquad *CBotSquads::SquadJoin ( edict_t *pLeader, edict_t *pMember )
 	return theSquad;
 }
 
-CBotSquad *CBotSquads::FindSquadByLeader ( edict_t *pLeader )
+CBotSquad *CBotSquads::FindSquadByLeader (const edict_t *pLeader)
 {
 	for (CBotSquad *squad : m_theSquads) {
 		if (squad->IsLeader(pLeader)) {
@@ -359,15 +359,17 @@ Vector CBotSquad :: GetFormationVector (const edict_t* pEdict)
 			vBase = -v_forward + v_right;
 		}
 		break;
+	//case SQUAD_FORM_NONE:
+	//	break;
 	}
 	
-	vBase = vBase * m_fDesiredSpread * iPosition;
+	vBase = vBase * static_cast<int>(m_fDesiredSpread) * iPosition;
 
 	CBotGlobals::quickTraceline(pLeader,vLeaderOrigin,vLeaderOrigin+vBase);
 
 	if ( tr->fraction < 1.0f )
 	{
-		return vLeaderOrigin + vBase*tr->fraction*0.5f;
+		return vLeaderOrigin + vBase * tr->fraction * 0.5f;
 	}
 
 	return vLeaderOrigin+vBase;
@@ -376,13 +378,13 @@ Vector CBotSquad :: GetFormationVector (const edict_t* pEdict)
 /**
  * Returns the edict's position in the squad.
  */
-int CBotSquad::GetFormationPosition (const edict_t* pEdict)
+int CBotSquad::GetFormationPosition(const edict_t* pEdict)
 {
 	const auto it = std::find(m_SquadMembers.begin(), m_SquadMembers.end(), pEdict);
-	return it != m_SquadMembers.end()? std::distance(m_SquadMembers.begin(), it) : 0;
+	return it != m_SquadMembers.end() ? std::distance(m_SquadMembers.begin(), it) : 0;
 }
 
-void CBotSquad::removeMember (const edict_t* pMember)
+void CBotSquad::removeMember(const edict_t* pMember)
 {
 	const auto it = std::find(m_SquadMembers.begin(), m_SquadMembers.end(), pMember);
 	if (it != m_SquadMembers.end()) {
@@ -415,7 +417,7 @@ size_t CBotSquad::numMembers () const
 
 void CBotSquad :: ReturnAllToFormation ()
 {
-	for (edict_t *member : m_SquadMembers) {
+	for (const edict_t *member : m_SquadMembers) {
 		CBot *pBot = CBots::getBotPointer(member);
 		if (pBot) {
 			pBot->removeCondition(CONDITION_PUSH);

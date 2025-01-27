@@ -31,16 +31,22 @@
 #ifndef __CSS_RCBOT_H__
 #define __CSS_RCBOT_H__
 
-#define CS_TEAM_UNASSIGNED 0
-#define CS_TEAM_SPECTATOR 1
-#define CS_TEAM_TERRORIST 2
-#define CS_TEAM_COUNTERTERRORIST 3
+enum : std::uint8_t
+{
+	CS_TEAM_UNASSIGNED = 0,
+	CS_TEAM_SPECTATOR = 1,
+	CS_TEAM_TERRORIST = 2,
+	CS_TEAM_COUNTERTERRORIST = 3
+};
 
-#define CS_WEAPON_SLOT_PRIMARY 0
-#define CS_WEAPON_SLOT_SECONDARY 1
-#define CS_WEAPON_SLOT_MELEE 2
-#define CS_WEAPON_SLOT_GRENADE 3
-#define CS_WEAPON_SLOT_C4 4
+enum : std::uint8_t
+{
+	CS_WEAPON_SLOT_PRIMARY = 0,
+	CS_WEAPON_SLOT_SECONDARY = 1,
+	CS_WEAPON_SLOT_MELEE = 2,
+	CS_WEAPON_SLOT_GRENADE = 3,
+	CS_WEAPON_SLOT_C4 = 4
+};
 
 class CCSSBotBuying;
 
@@ -69,8 +75,8 @@ public:
 	bool canGotoWaypoint(Vector vPrevWaypoint, CWaypoint *pWaypoint, CWaypoint *pPrev = nullptr) override;
 	bool setVisible(edict_t *pEntity, bool bVisible) override;
 	virtual void modThinkSlow();
-	unsigned int maxEntityIndex() override { return gpGlobals->maxEntities; }
-	void getTasks (unsigned int iIgnore=0) override;
+	unsigned maxEntityIndex() override { return gpGlobals->maxEntities; }
+	void getTasks (unsigned iIgnore=0) override;
 	virtual bool executeAction(eBotAction iAction);
 	virtual void runBuy();
 	virtual void say(const char *message);

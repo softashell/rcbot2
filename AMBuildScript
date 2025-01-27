@@ -2,7 +2,17 @@ proj_c_flags = [
   '-Wall',
   '-Wno-non-virtual-dtor',
   '-Wno-overloaded-virtual',
-  '-Werror',
+  #'-Werror',
+  '-Wno-uninitialized',
+  '-Wno-unused',
+  '-Wno-switch',
+  '-Wno-format',
+  '-Wno-format-security',
+  '-Wno-unknown-attributes',
+  '-Wno-logical-op-parentheses',
+  '-Wno-return-stack-address',
+  '-Wno-null-dereference',
+  '-Wno-implicit-const-int-float-conversion'
 ]
 proj_c_flags_opt = [
   '-O2',
@@ -180,6 +190,8 @@ class MMSConfig(object):
       cxx.defines += [
         'stricmp=strcasecmp',
         '_stricmp=strcasecmp',
+        'strcmpi=strcasecmp',
+        '_strcmpi=strcasecmp',
         '_snprintf=snprintf',
         '_vsnprintf=vsnprintf',
         '_alloca=alloca',
@@ -190,7 +202,7 @@ class MMSConfig(object):
         '-fPIC',
         '-fno-exceptions',
         '-fno-rtti',
-        '-msse2',
+        '-msse4.2',
         '-fno-strict-aliasing',
       ]
 
@@ -198,8 +210,7 @@ class MMSConfig(object):
         cxx.cflags += [
           '-fvisibility=hidden',
           '-fvisibility-inlines-hidden',
-          '-std=c++14',
-          '-w',
+          '-std=c++17',
           '-D__linux__',
         ]
       # apple clang <-> llvm clang version correspondence is just a guess as there is no way to figure it out for real
@@ -230,13 +241,17 @@ class MMSConfig(object):
       ]
       cxx.cflags += [
         '/W3',
-		'/std:c++14',
-		'/arch:SSE2',
+        '/we4267', # treat loss of data from type to type conversion as an error
+        '/we4311', # 'type cast': pointer truncation 
+        '/we4302', # 'type cast': truncation from 
       ]
       cxx.cxxflags += [
         '/EHsc',
         '/GR-',
         '/TP',
+        '/Qspectre',
+        '/std:c++17',
+        '/arch:SSE2',
       ]
       cxx.linkflags += [
         '/MACHINE:X86',
@@ -246,8 +261,8 @@ class MMSConfig(object):
     if builder.options.opt == '1':
       if cxx.behavior == 'gcc':
         cxx.cflags += proj_c_flags_opt
-      elif cxx.behavior == 'msvc':
-        cxx.cflags += ['/Ox', '/Zo']
+      elif cxx.behavior == 'msvc': # /Ob3 needs to be after /Ox, enables aggressive function inling -caxanga334
+        cxx.cflags += ['/O2', '/Zo', '/Ob3', '/GF']
         cxx.linkflags += ['/OPT:ICF', '/OPT:REF']
 
     # Debugging

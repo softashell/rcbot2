@@ -31,9 +31,11 @@
 #ifndef __BOT_COMMANDS_H__
 #define __BOT_COMMANDS_H__
 
-#include <utility>
-#include <vector>
+#include "edict.h"
+#include <cstddef>
+#include <deque>
 #include <functional>
+#include <vector>
 
 class CClient;
 
@@ -41,25 +43,41 @@ typedef enum
 {
 	COMMAND_NOT_FOUND,     // command not found
 	COMMAND_ACCESSED,      // okay
-	COMMAND_ERROR,		   // accessed but error occurred
+	COMMAND_ERROR,         // accessed but error occurred
 	COMMAND_REQUIRE_ACCESS // dont have access to command
-}eBotCommandResult;
+} eBotCommandResult;
 
 #define NEED_ARG(x) if ( !(x) || !*(x) ) return COMMAND_ERROR;
 
-
-#define CMD_ACCESS_NONE				0
-#define CMD_ACCESS_WAYPOINT			(1<<0)
-#define CMD_ACCESS_BOT				(1<<1)
-#define CMD_ACCESS_UTIL				(1<<2)
-#define CMD_ACCESS_CONFIG			(1<<3)
-#define CMD_ACCESS_DEBUG			(1<<4)
-#define CMD_ACCESS_USERS			(1<<5)
-#define CMD_ACCESS_DEDICATED		(1<<6) // replaces canbeUsedDedicated
+enum
+{
+	CMD_ACCESS_NONE = 0,
+	CMD_ACCESS_WAYPOINT = 1<<0,
+	CMD_ACCESS_BOT = 1<<1,
+	CMD_ACCESS_UTIL = 1<<2,
+	CMD_ACCESS_CONFIG = 1<<3,
+	CMD_ACCESS_DEBUG = 1<<4,
+	CMD_ACCESS_USERS = 1<<5,
+	CMD_ACCESS_DEDICATED = 1<<6 // replaces canbeUsedDedicated
+};
 
 #define CMD_ACCESS_ALL (CMD_ACCESS_WAYPOINT|CMD_ACCESS_UTIL|CMD_ACCESS_BOT|CMD_ACCESS_CONFIG|CMD_ACCESS_DEBUG|CMD_ACCESS_USERS)
 
-using BotCommandCallback = std::function<eBotCommandResult(CClient*, const char*, const char*, const char*, const char*, const char*, const char*)>;
+/**
+ * This is just a deque that returns nullptr if we access an out-of-bounds array element.
+ */
+class BotCommandArgs : public std::deque<const char*> {
+public:
+	const char* operator[](const size_t at) const
+	{
+		if (at >= this->size()) {
+			return nullptr;
+		}
+		return std::deque<const char*>::operator[](at);
+	}
+};
+
+using BotCommandCallback = std::function<eBotCommandResult(CClient*, BotCommandArgs)>;
 
 class CBotCommand
 {
@@ -67,20 +85,24 @@ protected:
 	CBotCommand () : m_iAccessLevel{0}, m_szCommand{nullptr}, m_szHelp{nullptr} { }
 	
 public:
+	virtual ~CBotCommand() = default;
+	
 	// initialise
 	//CBotCommand(const char *command, int iAccessLevel = 0) :
 	//		m_iAccessLevel{iAccessLevel}, m_szCommand{command} {};
-	
-	CBotCommand(const char* command, int iAccessLevel = 0, const char* help = nullptr) :
+
+	CBotCommand(const char* command, const int iAccessLevel = 0, const char* help = nullptr) :
 			m_iAccessLevel{iAccessLevel}, m_szCommand{command}, m_szHelp{help} {}
 
 	// check command name
 	bool isCommand ( const char *szCommand ) const;	
 
 	// execute command
-	virtual eBotCommandResult execute ( CClient *pClient, const char *pcmd, const char *arg1, const char *arg2, const char *arg3, const char *arg4, const char *arg5 );
+	// we pass byval / copy the argument list so they can be pushed / shifted without
+	// affecting the original list
+	virtual eBotCommandResult execute(CClient* pClient, const BotCommandArgs& args);
 
-	bool hasAccess ( CClient *pClient ) const;
+	bool hasAccess (const CClient *pClient ) const;
 
 	virtual void printCommand ( edict_t *pPrintTo, int indent = 0);
 
@@ -99,12 +121,10 @@ protected:
 class CBotCommandInline : public CBotCommand
 {
 public:
-	CBotCommandInline(const char* cmd, int iAccessLevel, BotCommandCallback callback, const char* help = nullptr) :
-		CBotCommand(cmd, iAccessLevel, help), m_Callback(std::move(callback))
-	{
-	}
+	CBotCommandInline(const char* cmd, const int iAccessLevel, BotCommandCallback callback, const char* help = nullptr) : CBotCommand(cmd, iAccessLevel, help), m_Callback(std::move(
+		callback)) {}
 	
-	eBotCommandResult execute( CClient *pClient, const char *pcmd, const char *arg1, const char *arg2, const char *arg3, const char *arg4, const char *arg5) override;
+	eBotCommandResult execute(CClient* pClient, const BotCommandArgs& args) override;
 	
 	BotCommandCallback m_Callback;
 };
@@ -112,10 +132,9 @@ public:
 class CBotSubcommands : public CBotCommand
 {
 public:
-	CBotSubcommands(const char* cmd, int iAccessLevel, std::vector<CBotCommand*> subcommands) : CBotCommand(cmd, iAccessLevel, nullptr), m_theCommands{std::move(subcommands)
-	} {}
+	CBotSubcommands(const char* cmd, const int iAccessLevel, const std::vector<CBotCommand*>& subcommands) : CBotCommand(cmd, iAccessLevel, nullptr), m_theCommands{subcommands} {}
 	
-	eBotCommandResult execute(CClient *pClient, const char *pcmd, const char *arg1, const char *arg2, const char *arg3, const char *arg4, const char *arg5) override;
+	eBotCommandResult execute(CClient* pClient, const BotCommandArgs& args) override;
 	
 	void printCommand(edict_t *pPrintTo, int indent = 0) override;
 	void printHelp(edict_t *pPrintTo) override;

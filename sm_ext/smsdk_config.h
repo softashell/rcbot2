@@ -32,7 +32,7 @@
 #ifndef _INCLUDE_SOURCEMOD_CONFIG_H_
 #define _INCLUDE_SOURCEMOD_CONFIG_H_
 
-#include <stdio.h>
+#include <cstdio>
 
 /**
  * @brief Acquires the interfaces enabled at the bottom of this header.
@@ -57,18 +57,18 @@ void SM_UnsetInterfaces();
  */
 //#define SMEXT_ENABLE_FORWARDSYS
 //#define SMEXT_ENABLE_HANDLESYS
-//#define SMEXT_ENABLE_PLAYERHELPERS
+#define SMEXT_ENABLE_PLAYERHELPERS
 //#define SMEXT_ENABLE_DBMANAGER
-//#define SMEXT_ENABLE_GAMECONF
+#define SMEXT_ENABLE_GAMECONF
 //#define SMEXT_ENABLE_MEMUTILS
-//#define SMEXT_ENABLE_GAMEHELPERS
-//#define SMEXT_ENABLE_TIMERSYS
+#define SMEXT_ENABLE_GAMEHELPERS
+#define SMEXT_ENABLE_TIMERSYS
 //#define SMEXT_ENABLE_THREADER
 //#define SMEXT_ENABLE_LIBSYS
 //#define SMEXT_ENABLE_MENUS
 //#define SMEXT_ENABLE_ADTFACTORY
 //#define SMEXT_ENABLE_PLUGINSYS
-//#define SMEXT_ENABLE_ADMINSYS
+#define SMEXT_ENABLE_ADMINSYS
 //#define SMEXT_ENABLE_TEXTPARSERS
 //#define SMEXT_ENABLE_TRANSLATOR
 
@@ -77,8 +77,8 @@ void SM_UnsetInterfaces();
  * There is no need to edit below.
  */
 
-#include <IShareSys.h>
 #include <IExtensionSys.h>
+#include <IShareSys.h>
 extern SourceMod::IExtension *myself;
 extern SourceMod::IExtensionManager *smexts;
 extern SourceMod::IShareSys *sharesys;

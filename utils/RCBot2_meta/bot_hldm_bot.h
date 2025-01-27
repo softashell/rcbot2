@@ -45,7 +45,7 @@ public:
 
 	void modThink() override;
 
-	void init();
+	void init(bool bVarInit = false) override;
 	void setup() override;
 
 	bool startGame() override;
@@ -57,14 +57,14 @@ public:
 
 	bool isEnemy(edict_t* pEdict, bool bCheckWeapons = true) override;
 
-	void getTasks(unsigned int iIgnore = 0) override;
+	void getTasks(unsigned iIgnore = 0) override;
 	bool executeAction(eBotAction iAction);
 
 	float getArmorPercent() const { return (0.01f * m_pPlayerInfo->GetArmorValue()); }
 
 	bool setVisible(edict_t* pEntity, bool bVisible) override;
 
-	unsigned int maxEntityIndex() override { return gpGlobals->maxEntities; }
+	unsigned maxEntityIndex() override { return gpGlobals->maxEntities; }
 
 	void enemyLost(edict_t* pEnemy) override;
 
@@ -82,7 +82,7 @@ public:
 
 	edict_t* getFailedObject() const { return m_FailedPhysObj; }
 
-	virtual void touchedWpt(CWaypoint* pWaypoint);
+	void touchedWpt(CWaypoint* pWaypoint, int iNextWaypoint = -1, int iPrevWaypoint = -1) override;
 
 private:
 	// blah blah

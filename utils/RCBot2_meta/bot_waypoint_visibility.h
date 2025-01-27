@@ -33,7 +33,7 @@
 
 #include "bot_waypoint.h"
 
-const int g_iMaxVisibilityByte = CWaypoints::MAX_WAYPOINTS*CWaypoints::MAX_WAYPOINTS/8; // divide by 8 bits, need byte number
+constexpr int g_iMaxVisibilityByte = CWaypoints::MAX_WAYPOINTS*CWaypoints::MAX_WAYPOINTS/8; // divide by 8 bits, need byte number
 
 typedef struct
 {
@@ -59,7 +59,7 @@ public:
 
 	void init ()
 	{
-		const int iSize = g_iMaxVisibilityByte;
+		constexpr int iSize = g_iMaxVisibilityByte;
 
 		/////////////////////////////
 		// for "concurrent" reading of 
@@ -74,7 +74,7 @@ public:
 		m_VisTable = new unsigned char[iSize];
 
 		m_iPrevPercent = 0;
-		memset(m_VisTable,0,iSize);
+		std::memset(m_VisTable,0,iSize);
 	}
 
 	bool SaveToFile () const;
@@ -83,7 +83,7 @@ public:
 
 	void workVisibilityForWaypoint ( int i, int iNumWaypoints, bool bTwoway = false ) const;
 
-	bool GetVisibilityFromTo ( int iFrom, int iTo ) const
+	bool GetVisibilityFromTo (const int iFrom, const int iTo) const
 	{
 		// work out the position 
 		const int iPosition = iFrom*CWaypoints::MAX_WAYPOINTS+iTo;
@@ -104,7 +104,7 @@ public:
 	void ClearVisibilityTable ()
 	{
 		if ( m_VisTable )
-			memset(m_VisTable,0,g_iMaxVisibilityByte);
+			std::memset(m_VisTable,0,g_iMaxVisibilityByte);
 
 		/////////////////////////////
 		// for "concurrent" reading of 
@@ -132,7 +132,7 @@ public:
 		////////////////////////////
 	}
 
-	void SetVisibilityFromTo ( int iFrom, int iTo, bool bVisible ) const
+	void SetVisibilityFromTo (const int iFrom, const int iTo, const bool bVisible) const
 	{
 		const int iPosition = iFrom*CWaypoints::MAX_WAYPOINTS+iTo;
 
@@ -153,14 +153,14 @@ public:
 	void WorkOutVisibilityTable ( );
 
 	bool needToWorkVisibility() const { return bWorkVisibility; }
-	void setWorkVisiblity ( bool bSet ) { bWorkVisibility = bSet; }
+	void setWorkVisiblity (const bool bSet) { bWorkVisibility = bSet; }
 
 private:
 
 	bool bWorkVisibility;
 	unsigned short int iCurFrom;
 	unsigned short int iCurTo;
-	static const int WAYPOINT_VIS_TICKS = 64;
+	static constexpr int WAYPOINT_VIS_TICKS = 64;
 	unsigned char *m_VisTable;
 	float m_fNextShowMessageTime;
 	int m_iPrevPercent;

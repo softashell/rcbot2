@@ -88,11 +88,11 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\alliedmodders\hl2sdk-tf2\public\mathlib;..\..\alliedmodders\hl2sdk-tf2\public;..\..\alliedmodders\hl2sdk-tf2\public\engine;..\..\alliedmodders\hl2sdk-tf2\public\tier0;..\..\alliedmodders\hl2sdk-tf2\public\tier1;..\..\alliedmodders\hl2sdk-tf2\game\shared;..\..\alliedmodders\hl2sdk-tf2\game\server;..\..\alliedmodders\hl2sdk-tf2\public\game\server;..\..\alliedmodders\metamod-source\core\;..\..\alliedmodders\metamod-source\core\sourcehook\;..\..\alliedmodders\metamod-source\public\;..\..\sm_ext\;..\..\versioning;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>SOURCE_ENGINE=4;WIN32;_DEBUG;_WINDOWS;HOMEFOLDER;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\alliedmodders\hl2sdk-tf2\public\mathlib;..\..\alliedmodders\hl2sdk-tf2\public;..\..\alliedmodders\hl2sdk-tf2\public\engine;..\..\alliedmodders\hl2sdk-tf2\public\tier0;..\..\alliedmodders\hl2sdk-tf2\public\tier1;..\..\alliedmodders\hl2sdk-tf2\game\shared;..\..\alliedmodders\hl2sdk-tf2\game\server;..\..\alliedmodders\hl2sdk-tf2\public\game\server;..\..\alliedmodders\metamod-source\core\;..\..\alliedmodders\metamod-source\core\sourcehook\;..\..\alliedmodders\metamod-source\public\;..\..\alliedmodders\sourcemod\sourcepawn\include;..\..\alliedmodders\sourcemod\public\amtl;..\..\alliedmodders\sourcemod\public\amtl\amtl;..\..\alliedmodders\sourcemod\public\extensions;..\..\alliedmodders\sourcemod\public;..\..\sm_ext\;..\..\rcbot\;..\..\rcbot\tf2;..\..\rcbot_subcmds;..\..\utils\RCBot2_meta;..\..\versioning;..\..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>SOURCE_ENGINE=11;SE_TF2=11;WIN32;_DEBUG;_WINDOWS;HOMEFOLDER;_CRT_SECURE_NO_WARNINGS;RCBOT_MAXPLAYERS=101;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <BrowseInformation>true</BrowseInformation>
       <WarningLevel>Level4</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -100,6 +100,7 @@
       <CompileAs>Default</CompileAs>
       <AdditionalOptions>/D SE_EPISODEONE=1 /D SE_DARKMESSIAH=2 /D SE_ORANGEBOX=3 /D SE_ORANGEBOXVALVE=4 /D SE_LEFT4DEAD=5 /D SE_LEFT4DEAD2=6 /D SE_ALIENSWARM=7 /FS</AdditionalOptions>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -135,12 +136,12 @@
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>..\..\alliedmodders\hl2sdk-tf2\public\mathlib;..\..\alliedmodders\hl2sdk-tf2\public;..\..\alliedmodders\hl2sdk-tf2\public\engine;..\..\alliedmodders\hl2sdk-tf2\public\tier0;..\..\alliedmodders\hl2sdk-tf2\public\tier1;..\..\alliedmodders\hl2sdk-tf2\game\shared;..\..\alliedmodders\hl2sdk-tf2\game\server;..\..\alliedmodders\hl2sdk-tf2\public\game\server;..\..\alliedmodders\metamod-source\core\;..\..\alliedmodders\metamod-source\core\sourcehook\;..\..\alliedmodders\metamod-source\public\;..\..\sm_ext\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>SOURCE_ENGINE=4;WIN32;NDEBUG;_WINDOWS;HOMEFOLDER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\alliedmodders\hl2sdk-tf2\public\mathlib;..\..\alliedmodders\hl2sdk-tf2\public;..\..\alliedmodders\hl2sdk-tf2\public\engine;..\..\alliedmodders\hl2sdk-tf2\public\tier0;..\..\alliedmodders\hl2sdk-tf2\public\tier1;..\..\alliedmodders\hl2sdk-tf2\game\shared;..\..\alliedmodders\hl2sdk-tf2\game\server;..\..\alliedmodders\hl2sdk-tf2\public\game\server;..\..\alliedmodders\metamod-source\core\;..\..\alliedmodders\metamod-source\core\sourcehook\;..\..\alliedmodders\metamod-source\public\;..\..\alliedmodders\sourcemod\sourcepawn\include;..\..\alliedmodders\sourcemod\public\amtl;..\..\alliedmodders\sourcemod\public\amtl\amtl;..\..\alliedmodders\sourcemod\public\extensions;..\..\alliedmodders\sourcemod\public;..\..\sm_ext\;..\..\rcbot\;..\..\rcbot\tf2;..\..\rcbot_subcmds;..\..\utils\RCBot2_meta;..\..\versioning;..\..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>SOURCE_ENGINE=11;SE_TF2=11;WIN32;NDEBUG;_WINDOWS;HOMEFOLDER;_CRT_SECURE_NO_WARNINGS;RCBOT_MAXPLAYERS=101;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
       <TreatWarningAsError>false</TreatWarningAsError>
@@ -150,7 +151,7 @@
       <OmitDefaultLibName>false</OmitDefaultLibName>
       <AdditionalOptions>/D SE_EPISODEONE=1 /D SE_DARKMESSIAH=2 /D SE_ORANGEBOX=3 /D SE_ORANGEBOXVALVE=4 /D SE_LEFT4DEAD=5 /D SE_LEFT4DEAD2=6 /D SE_ALIENSWARM=7</AdditionalOptions>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-      <LanguageStandard>/std:c++11</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -178,15 +179,14 @@
       <HeaderFileName />
     </Midl>
     <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>.;..\..\alliedmodders\hl2sdk-tf2\public\mathlib;..\..\alliedmodders\hl2sdk-tf2\public;..\..\alliedmodders\hl2sdk-tf2\public\engine;..\..\alliedmodders\hl2sdk-tf2\public\tier0;..\..\alliedmodders\hl2sdk-tf2\public\tier1;..\..\alliedmodders\hl2sdk-tf2\game\shared;..\..\alliedmodders\hl2sdk-tf2\game\server;..\..\alliedmodders\hl2sdk-tf2\public\game\server;..\..\alliedmodders\metamod-source\core;..\..\alliedmodders\metamod-source\core\sourcehook;..\..\alliedmodders\metamod-source\public;..\..\alliedmodders\sourcemod\public;..\..\alliedmodders\sourcemod\public\amtl;..\..\alliedmodders\sourcemod\sourcepawn\include;..\..\rcbot;..\..\rcbot_subcmds;..\..\sm_ext;..\..\versioning;..\..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>SOURCE_ENGINE=11;SOURCE_ENGINE=SE_TF2;SOURCE_ENGINE=TF2;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Optimization>Full</Optimization>
+      <AdditionalIncludeDirectories>..\..\alliedmodders\hl2sdk-tf2\public\mathlib;..\..\alliedmodders\hl2sdk-tf2\public;..\..\alliedmodders\hl2sdk-tf2\public\engine;..\..\alliedmodders\hl2sdk-tf2\public\tier0;..\..\alliedmodders\hl2sdk-tf2\public\tier1;..\..\alliedmodders\hl2sdk-tf2\game\shared;..\..\alliedmodders\hl2sdk-tf2\game\server;..\..\alliedmodders\hl2sdk-tf2\public\game\server;..\..\alliedmodders\metamod-source\core\;..\..\alliedmodders\metamod-source\core\sourcehook\;..\..\alliedmodders\metamod-source\public\;..\..\alliedmodders\sourcemod\sourcepawn\include;..\..\alliedmodders\sourcemod\public\amtl;..\..\alliedmodders\sourcemod\public\amtl\amtl;..\..\alliedmodders\sourcemod\public\extensions;..\..\alliedmodders\sourcemod\public;..\..\sm_ext\;..\..\rcbot\;..\..\rcbot\tf2;..\..\rcbot_subcmds;..\..\utils\RCBot2_meta;..\..\versioning;..\..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>SOURCE_ENGINE=11;SE_TF2=11;WIN32;NDEBUG;_WINDOWS;NOMINMAX;_CRT_SECURE_NO_WARNINGS;RCBOT_MAXPLAYERS=101;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <PrecompiledHeader />
-      <WarningLevel>EnableAllWarnings</WarningLevel>
       <TreatWarningAsError>false</TreatWarningAsError>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -194,11 +194,13 @@
       <OmitDefaultLibName>false</OmitDefaultLibName>
       <AdditionalOptions>/D SE_EPISODEONE=1 /D SE_DARKMESSIAH=2 /D SE_ORANGEBOX=3 /D SE_ORANGEBOXVALVE=4 /D SE_LEFT4DEAD=5 /D SE_LEFT4DEAD2=6 /D SE_ALIENSWARM=7 /FS %(AdditionalOptions)</AdditionalOptions>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <DisableSpecificWarnings>4005;4028;4058;4061;4062;4242;4265;4365;4464;4471;4625;4710;4820;4996;5045;5204;5219;5220;5264;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <LanguageStandard_C>Default</LanguageStandard_C>
-      <UseStandardPreprocessor>true</UseStandardPreprocessor>
-      <LanguageStandard>stdcpp14</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <WarningLevel>Level4</WarningLevel>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -218,10 +220,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\loader\loader.cpp" />
     <ClCompile Include="..\..\rcbot\entprops.cpp" />
     <ClCompile Include="..\..\rcbot\helper.cpp" />
     <ClCompile Include="..\..\rcbot\logging.cpp" />
     <ClCompile Include="..\..\rcbot\math_fix.cpp" />
+    <ClCompile Include="..\..\rcbot\propvar.cpp" />
     <ClCompile Include="..\..\rcbot\tf2\conditions.cpp" />
     <ClCompile Include="..\..\rcbot_subcmds\config.cpp" />
     <ClCompile Include="..\..\rcbot_subcmds\debug.cpp" />
@@ -234,6 +238,7 @@
     <ClCompile Include="..\..\sm_ext\smsdk_config.cpp" />
     <ClCompile Include="bot.cpp" />
     <ClCompile Include="bot_accessclient.cpp" />
+    <ClCompile Include="bot_black_mesa.cpp" />
     <ClCompile Include="bot_buttons.cpp" />
     <ClCompile Include="bot_client.cpp" />
     <ClCompile Include="bot_commands.cpp" />
@@ -286,6 +291,7 @@
     <ClInclude Include="..\..\rcbot\entprops.h" />
     <ClInclude Include="..\..\rcbot\helper.h" />
     <ClInclude Include="..\..\rcbot\logging.h" />
+    <ClInclude Include="..\..\rcbot\propvar.h" />
     <ClInclude Include="..\..\rcbot\tf2\conditions.h" />
     <ClInclude Include="..\..\sm_ext\bot_sm_ext.h" />
     <ClInclude Include="..\..\sm_ext\bot_sm_natives.h" />
@@ -293,14 +299,15 @@
     <ClInclude Include="bot.h" />
     <ClInclude Include="bot_accessclient.h" />
     <ClInclude Include="bot_belief.h" />
+    <ClInclude Include="bot_black_mesa.h" />
     <ClInclude Include="bot_buttons.h" />
     <ClInclude Include="bot_client.h" />
     <ClInclude Include="bot_commands.h" />
-    <ClInclude Include="bot_config.h" />
     <ClInclude Include="bot_configfile.h" />
     <ClInclude Include="bot_const.h" />
     <ClInclude Include="bot_coop.h" />
     <ClInclude Include="bot_css_bot.h" />
+    <ClInclude Include="bot_css_buying.h" />
     <ClInclude Include="bot_cvars.h" />
     <ClInclude Include="bot_dod_bot.h" />
     <ClInclude Include="bot_dystopia.h" />
@@ -309,12 +316,12 @@
     <ClInclude Include="bot_fortress.h" />
     <ClInclude Include="bot_ga.h" />
     <ClInclude Include="bot_ga_ind.h" />
+    <ClInclude Include="bot_ga_nn_const.h" />
     <ClInclude Include="bot_genclass.h" />
     <ClInclude Include="bot_getprop.h" />
     <ClInclude Include="bot_globals.h" />
     <ClInclude Include="bot_hl1dmsrc_bot.h" />
     <ClInclude Include="bot_hldm_bot.h" />
-    <ClInclude Include="bot_hooks.h" />
     <ClInclude Include="bot_kv.h" />
     <ClInclude Include="bot_menu.h" />
     <ClInclude Include="bot_mods.h" />
@@ -344,6 +351,7 @@
     <ClInclude Include="bot_wpt_dist.h" />
     <ClInclude Include="bot_zombie.h" />
     <ClInclude Include="engine_wrappers.h" />
+    <ClInclude Include="logging.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\alliedmodders\hl2sdk-tf2\lib\public\mathlib.lib" />

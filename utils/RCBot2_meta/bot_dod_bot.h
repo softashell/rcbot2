@@ -31,18 +31,23 @@
 #ifndef __DOD_RCBOT_H__
 #define __DOD_RCBOT_H__
 
-#define TEAM_ALLIES 2
-#define TEAM_AXIS 3
+#include "bot.h"
 
-#define MAX_GREN_THROW_DIST 1024.0f
+enum : std::uint8_t
+{
+	TEAM_ALLIES = 2,
+	TEAM_AXIS = 3
+};
 
-#define SMOKE_RADIUS 150.0f
-#define DOD_BOMB_EXPLODE_IMMINENT_TIME 7.0f
+constexpr float MAX_GREN_THROW_DIST = 1024.0f;
+
+constexpr float SMOKE_RADIUS = 150.0f;
+constexpr float DOD_BOMB_EXPLODE_IMMINENT_TIME = 7.0f;
 
 class CBroadcastBombEvent : public IBotFunction
 {
 public:
-	CBroadcastBombEvent ( int iEvent, int iCP, int iTeam ) 
+	CBroadcastBombEvent (const int iEvent, const int iCP, const int iTeam) 
 	{ 
 		m_iEvent = iEvent; m_iCP = iCP; m_iTeam = iTeam; 
 	}
@@ -54,9 +59,9 @@ private:
 	int m_iEvent;
 };
 
-typedef enum
+typedef enum : std::uint8_t
 {
-   DOD_VC_GOGOGO = 0,
+	DOD_VC_GOGOGO = 0,
 	DOD_VC_YES = 1,
 	DOD_VC_DROPWEAP = 2,
     DOD_VC_HOLD = 3,
@@ -89,10 +94,10 @@ typedef enum
 typedef struct
 {
 	eDODVoiceCMD id;
-	char *pcmd;
+	const char *pcmd;
 }eDODVoiceCommand_t;
 
-typedef enum
+typedef enum : std::uint8_t
 {
 	DOD_CLASS_RIFLEMAN = 1,
 	DOD_CLASS_ASSAULT = 2,
@@ -102,16 +107,22 @@ typedef enum
 	DOD_CLASS_ROCKET = 6
 }DOD_Class;
 
-#define DOD_BOMB_STATE_UNAVAILABLE 0
-#define DOD_BOMB_STATE_AVAILABLE   1
-#define DOD_BOMB_STATE_ACTIVE	   2
+enum : std::uint8_t
+{
+	DOD_BOMB_STATE_UNAVAILABLE = 0,
+	DOD_BOMB_STATE_AVAILABLE = 1,
+	DOD_BOMB_STATE_ACTIVE = 2
+};
 
-#define DOD_BOMB_EXPLODED		0
-#define DOD_BOMB_DEFUSE			1
-#define DOD_BOMB_PLANT			2
-#define DOD_BOMB_PATH_PLANT		3
-#define DOD_BOMB_PATH_DEFUSE	4
-#define DOD_POINT_CAPTURED		5
+enum : std::uint8_t
+{
+	DOD_BOMB_EXPLODED = 0,
+	DOD_BOMB_DEFUSE = 1,
+	DOD_BOMB_PLANT = 2,
+	DOD_BOMB_PATH_PLANT = 3,
+	DOD_BOMB_PATH_DEFUSE = 4,
+	DOD_POINT_CAPTURED = 5
+};
 
 #define DOD_CLASSNAME_CONTROLPOINT "dod_control_point"
 #define DOD_CLASSNAME_BOMBTARGET "dod_bomb_target"
@@ -164,9 +175,9 @@ public:
 
 	bool isEnemy ( edict_t *pEdict,bool bCheckWeapons = true ) override;
 
-	float getArmorPercent () const { return 0.01f * int(m_pPlayerInfo->GetArmorValue()); }
+	float getArmorPercent () const { return 0.01f * static_cast<float>(m_pPlayerInfo->GetArmorValue()); }
 
-	void getTasks (unsigned int iIgnore) override;
+	void getTasks (unsigned iIgnore) override;
 
 	bool executeAction ( CBotUtility *util );
 
@@ -186,7 +197,7 @@ public:
 
 	bool handleAttack ( CBotWeapon *pWeapon, edict_t *pEnemy ) override;
 
-	void hearVoiceCommand ( edict_t *pPlayer, byte cmd ) override;
+	void hearVoiceCommand ( edict_t *pPlayer, byte voiceCmd ) override;
 
 	void handleWeapons () override;
 
@@ -201,9 +212,9 @@ public:
 	CBotWeapon *getSniperRifle () const;
 	bool hasSniperRifle () const;
 
-	void voiceCommand ( int cmd ) override;
+	void voiceCommand (byte voiceCmd) override;
 
-	unsigned int maxEntityIndex ( ) override { return gpGlobals->maxEntities; }
+	unsigned maxEntityIndex ( ) override { return gpGlobals->maxEntities; }
 
 	void seeFriendlyDie ( edict_t *pDied, edict_t *pKiller, CWeapon *pWeapon ) override;
 	void seeFriendlyKill ( edict_t *pTeamMate, edict_t *pDied, CWeapon *pWeapon ) override;

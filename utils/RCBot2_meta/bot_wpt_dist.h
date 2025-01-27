@@ -3,7 +3,10 @@
 
 #include "bot_waypoint.h"
 
-#define WPT_DIST_VER 0x03
+enum : std::uint8_t
+{
+	WPT_DIST_VER = 0x03
+};
 
 #define BOT_WAYPOINT_DST_EXTENSION "rcd"
 
@@ -17,12 +20,12 @@ public:
 
 	static float getDistance ( int iFrom, int iTo );
 
-	static bool isSet ( int iFrom, int iTo )
+	static bool isSet (const int iFrom, const int iTo)
 	{
 		return m_Distances[iFrom][iTo] >= 0;
 	}
 
-	static void setDistance ( int iFrom, int iTo, float fDist )
+	static void setDistance (const int iFrom, const int iTo, const float fDist)
 	{
 		m_Distances[iFrom][iTo] = static_cast<int>(fDist);
 	}
@@ -33,7 +36,7 @@ public:
 
 	static void reset ()
 	{
-		memset(m_Distances,0xFF,sizeof(int)*CWaypoints::MAX_WAYPOINTS*CWaypoints::MAX_WAYPOINTS);
+		std::memset(m_Distances,0xFF,sizeof(int)*CWaypoints::MAX_WAYPOINTS*CWaypoints::MAX_WAYPOINTS);
 	}
 private:
 	static int m_Distances [CWaypoints::MAX_WAYPOINTS][CWaypoints::MAX_WAYPOINTS];

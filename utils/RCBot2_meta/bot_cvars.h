@@ -7,7 +7,7 @@ extern ConVar rcbot_const_point_master_offset;
 extern ConVar rcbot_tf2_pyro_airblast;
 extern ConVar rcbot_projectile_tweak;
 extern ConVar bot_cmd_enable_wpt_sounds;
-extern ConVar bot_general_difficulty;
+//extern ConVar bot_general_difficulty;
 extern ConVar bot_visrevs_clients;
 extern ConVar bot_spyknifefov;
 extern ConVar bot_visrevs;
@@ -113,6 +113,6 @@ extern ConVarRef mp_stalemate_enable;
 extern ConVarRef mp_roundtime;
 extern ConVarRef mp_c4timer;
 
-void RCBOT2_Cvar_setup (ICvar *cvar);
+void RCBOT2_Cvar_setup (ICvar* cvar);
 
 #endif

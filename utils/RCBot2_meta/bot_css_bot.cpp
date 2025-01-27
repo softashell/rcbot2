@@ -60,9 +60,9 @@
 
 extern IServerGameEnts *servergameents; // for accessing the server game entities
 
-void CCSSBot::init(bool bVarInit)
+void CCSSBot::init(const bool bVarInit)
 {
-	CBot::init();// require this
+	CBot::init(bVarInit);// require this
 
 	// initialize stuff for counter-strike source bot
 	m_pBuyManager = nullptr;
@@ -327,7 +327,7 @@ void CCSSBot::selectModel() const
 void CCSSBot::say(const char *message)
 {
 	char buffer[256];
-	std::sprintf(buffer, "say \"%s\"", message);
+	snprintf(buffer, sizeof(buffer), "say \"%s\"", message);
 	helpers->ClientCommand(m_pEdict,buffer);
 }
 
@@ -340,7 +340,7 @@ void CCSSBot::say(const char *message)
 void CCSSBot::sayteam(const char *message)
 {
 	char buffer[256];
-	std::sprintf(buffer, "say_team \"%s\"", message);
+	snprintf(buffer, sizeof(buffer), "say_team \"%s\"", message);
 	helpers->ClientCommand(m_pEdict,buffer);
 }
 
@@ -356,7 +356,7 @@ void CCSSBot::runBuy()
 /**
  * Update visible entities
  **/
-bool CCSSBot::setVisible(edict_t *pEntity, bool bVisible)
+bool CCSSBot::setVisible(edict_t *pEntity, const bool bVisible)
 {
 	static float fDist;
 
@@ -440,7 +440,7 @@ bool CCSSBot::IsSniper()
  * @param hold		Hold the attack button? (full-auto)
  * @return			No return
  **/
-void CCSSBot::primaryattackCS(bool hold)
+void CCSSBot::primaryattackCS(const bool hold)
 {
 	if(hold)
 	{
@@ -523,21 +523,22 @@ bool CCSSBot::handleAttack(CBotWeapon *pWeapon, edict_t *pEnemy)
 
 float CCSSBot::getNextAttackDelay()
 {
-	static const float max = 4096.0f;
+	static constexpr float max = 4096.0f;
 	static float dist;
 	static float delay;
 	delay = 0.050f; // Base delay
 
 	dist = distanceFrom(getEnemy());
 	delay = dist/max;
-	clamp(delay, 0.050f, 0.300f);
+	//clamp(delay, 0.050f, 0.300f);
+	delay = clamp(delay, 0.050f, 0.300f); // Uses the macro from mathlib.h [APG]RoboCop[CL]
 
 	//CClients::clientDebugMsg(this, BOT_DEBUG_AIM, "[CSS-ATTACK] Next Attack Delay: %2.4f", delay);
 
 	return delay;
 }
 
-void CCSSBot::modAim(edict_t *pEntity, Vector &v_origin, Vector *v_desired_offset, Vector &v_size, float fDist, float fDist2D)
+void CCSSBot::modAim(edict_t *pEntity, Vector &v_origin, Vector *v_desired_offset, Vector &v_size, const float fDist, const float fDist2D)
 {
 	static bool aimforhead;
 	static CBotWeapon *pWp;
@@ -660,18 +661,18 @@ void CCSSBot::modThinkSlow()
 	}
 }
 
-void CCSSBot::getTasks(unsigned int iIgnore)
+void CCSSBot::getTasks(unsigned iIgnore)
 {
-    static CBotUtilities utils;
-    static CBotUtility* next;
-    static bool bCheckCurrent;
+	static CBotUtilities utils;
+	static CBotUtility* next;
+	static bool bCheckCurrent;
 	static int team;
 
 	if(!hasSomeConditions(CONDITION_CHANGED) && !m_pSchedules->isEmpty())
 		return;
 
-    removeCondition(CONDITION_CHANGED);
-    bCheckCurrent = true; // important for checking current schedule
+	removeCondition(CONDITION_CHANGED);
+	bCheckCurrent = true; // important for checking current schedule
 	team = getTeam();
 	setMoveSpeed(CClassInterface::getMaxSpeed(m_pEdict)); // Some tasks changes the bot move speed, reset it back.
 
@@ -683,14 +684,14 @@ void CCSSBot::getTasks(unsigned int iIgnore)
 		{
 			if(CCounterStrikeSourceMod::isMapType(CS_MAP_BOMBDEFUSAL))
 			{
-				ADD_UTILITY(BOT_UTIL_DEFEND_BOMB, !CCounterStrikeSourceMod::isBombPlanted() && bot_defrate.GetFloat() <= randomFloat(0.0f, 1.0f), 0.80f);
-				ADD_UTILITY(BOT_UTIL_SEARCH_FOR_BOMB, !CCounterStrikeSourceMod::wasBombFound() && CCounterStrikeSourceMod::isBombPlanted(), 0.81f);
-				ADD_UTILITY(BOT_UTIL_DEFUSE_BOMB, CCounterStrikeSourceMod::wasBombFound(), 0.85f);
+				ADD_UTILITY(BOT_UTIL_DEFEND_BOMB, !CCounterStrikeSourceMod::isBombPlanted() && bot_defrate.GetFloat() <= randomFloat(0.0f, 1.0f), 0.80f)
+				ADD_UTILITY(BOT_UTIL_SEARCH_FOR_BOMB, !CCounterStrikeSourceMod::wasBombFound() && CCounterStrikeSourceMod::isBombPlanted(), 0.81f)
+				ADD_UTILITY(BOT_UTIL_DEFUSE_BOMB, CCounterStrikeSourceMod::wasBombFound(), 0.85f)
 			}
 			else if(CCounterStrikeSourceMod::isMapType(CS_MAP_HOSTAGERESCUE))
 			{
-				ADD_UTILITY(BOT_UTIL_GET_HOSTAGE, CCounterStrikeSourceMod::canRescueHostages(), 0.85f);
-				ADD_UTILITY(BOT_UTIL_RESCUE, IsLeadingHostage(), 0.84f);
+				ADD_UTILITY(BOT_UTIL_GET_HOSTAGE, CCounterStrikeSourceMod::canRescueHostages(), 0.85f)
+				ADD_UTILITY(BOT_UTIL_RESCUE, IsLeadingHostage(), 0.84f)
 			}
 			break;
 		}
@@ -698,28 +699,28 @@ void CCSSBot::getTasks(unsigned int iIgnore)
 		{
 			if(CCounterStrikeSourceMod::isMapType(CS_MAP_BOMBDEFUSAL))
 			{
-				ADD_UTILITY(BOT_UTIL_PLANT_BOMB, CCounterStrikeSourceMod::isBombCarrier(this), 0.80f);
-				ADD_UTILITY(BOT_UTIL_PICKUP_BOMB, CCounterStrikeSourceMod::isBombDropped(), 0.80f);
-				ADD_UTILITY(BOT_UTIL_DEFEND_NEAREST_BOMB, CCounterStrikeSourceMod::isBombPlanted(), 0.85f);
+				ADD_UTILITY(BOT_UTIL_PLANT_BOMB, CCounterStrikeSourceMod::isBombCarrier(this), 0.80f)
+				ADD_UTILITY(BOT_UTIL_PICKUP_BOMB, CCounterStrikeSourceMod::isBombDropped(), 0.80f)
+				ADD_UTILITY(BOT_UTIL_DEFEND_NEAREST_BOMB, CCounterStrikeSourceMod::isBombPlanted(), 0.85f)
 			}
 			else if (CCounterStrikeSourceMod::isMapType(CS_MAP_HOSTAGERESCUE))
 			{
-				ADD_UTILITY(BOT_UTIL_GUARD_RESCUE_ZONE, CCounterStrikeSourceMod::canRescueHostages(), 0.70f);
+				ADD_UTILITY(BOT_UTIL_GUARD_RESCUE_ZONE, CCounterStrikeSourceMod::canRescueHostages(), 0.70f)
 			}
 			break;
 		}
 	}
 
-	ADD_UTILITY(BOT_UTIL_SNIPE, IsSniper(), randomFloat(0.7900f, 0.8200f));
+	ADD_UTILITY(BOT_UTIL_SNIPE, IsSniper(), randomFloat(0.7900f, 0.8200f))
 
 	// Combat Utilities
-	ADD_UTILITY(BOT_UTIL_ENGAGE_ENEMY, hasSomeConditions(CONDITION_SEE_CUR_ENEMY) && !hasSomeConditions(CONDITION_OUT_OF_AMMO), 1.00f);
-	ADD_UTILITY(BOT_UTIL_WAIT_LAST_ENEMY, hasSomeConditions(CONDITION_ENEMY_OBSCURED), 0.95f);
-	ADD_UTILITY(BOT_UTIL_HIDE_FROM_ENEMY, hasSomeConditions(CONDITION_SEE_CUR_ENEMY) && hasSomeConditions(CONDITION_OUT_OF_AMMO), 0.98f);
+	ADD_UTILITY(BOT_UTIL_ENGAGE_ENEMY, hasSomeConditions(CONDITION_SEE_CUR_ENEMY) && !hasSomeConditions(CONDITION_OUT_OF_AMMO), 1.00f)
+	ADD_UTILITY(BOT_UTIL_WAIT_LAST_ENEMY, hasSomeConditions(CONDITION_ENEMY_OBSCURED), 0.95f)
+	ADD_UTILITY(BOT_UTIL_HIDE_FROM_ENEMY, hasSomeConditions(CONDITION_SEE_CUR_ENEMY) && hasSomeConditions(CONDITION_OUT_OF_AMMO), 0.98f)
 
 	// Generic Utilities
-	ADD_UTILITY(BOT_UTIL_BUY, m_pBuyManager->wantsToBuy(), 1.0f); // Buy weapons
-	ADD_UTILITY(BOT_UTIL_ROAM, true, 0.001f); // Roam around
+	ADD_UTILITY(BOT_UTIL_BUY, m_pBuyManager->wantsToBuy(), 1.0f) // Buy weapons
+	ADD_UTILITY(BOT_UTIL_ROAM, true, 0.001f) // Roam around
 
 	utils.execute();
 
@@ -761,10 +762,10 @@ void CCSSBot::getTasks(unsigned int iIgnore)
 	utils.freeMemory();
 }
 
-bool CCSSBot::executeAction(eBotAction iAction)
+bool CCSSBot::executeAction(const eBotAction iAction)
 {
-    switch (iAction)
-    {
+	switch (iAction)
+	{
 		case BOT_UTIL_ENGAGE_ENEMY:
 		{
 			CBotSchedule* pSched = new CBotSchedule();
@@ -772,7 +773,7 @@ bool CCSSBot::executeAction(eBotAction iAction)
 			pSched->addTask(new CCSSEngageEnemyTask(m_pEnemy.get()));
 			m_pSchedules->add(pSched);
 			return true;
-			break;
+			//break;
 		}
 		case BOT_UTIL_WAIT_LAST_ENEMY:
 		{
@@ -784,7 +785,7 @@ bool CCSSBot::executeAction(eBotAction iAction)
 			pSched->addTask(pTask);
 			m_pSchedules->add(pSched);
 			return true;
-			break;
+			//break;
 		}
 		case BOT_UTIL_HIDE_FROM_ENEMY:
 		{
@@ -808,7 +809,7 @@ bool CCSSBot::executeAction(eBotAction iAction)
 			pSched->addTask(new CCSSPerformBuyTask());
 			m_pSchedules->add(pSched);
 			return true;
-			break;
+			//break;
 		}
 		case BOT_UTIL_PLANT_BOMB:
 		{
@@ -909,7 +910,7 @@ bool CCSSBot::executeAction(eBotAction iAction)
 			if(pWaypoint)
 			{
 				CWaypoint* pRoute = CWaypoints::randomRouteWaypoint(this, getOrigin(), pWaypoint->getOrigin(), getTeam(),
-				                                                    pWaypoint->getArea());
+																	pWaypoint->getArea());
 				if(m_fUseRouteTime <= engine->Time())
 				{
 					if(pRoute)
@@ -934,7 +935,6 @@ bool CCSSBot::executeAction(eBotAction iAction)
 		case BOT_UTIL_GET_HOSTAGE:
 		{
 			// Select a random hostage to rescue
-			CWaypoint* pRoute;
 			CBotSchedule* pSched = new CBotSchedule();
 			edict_t* pHostage = CCounterStrikeSourceMod::getRandomHostage();
 			pSched->setID(SCHED_GOTONEST);
@@ -942,7 +942,7 @@ bool CCSSBot::executeAction(eBotAction iAction)
 			if (pHostage)
 			{
 				const Vector vHostage = CBotGlobals::entityOrigin(pHostage);
-				pRoute = CWaypoints::randomRouteWaypoint(this, getOrigin(), vHostage, getTeam(), 0);
+				CWaypoint* pRoute = CWaypoints::randomRouteWaypoint(this, getOrigin(), vHostage, getTeam(), 0);
 				if((m_fUseRouteTime <= engine->Time()))
 				{
 					if(pRoute)
@@ -988,12 +988,12 @@ bool CCSSBot::executeAction(eBotAction iAction)
 			pSched->setID(SCHED_GOTO_ORIGIN);
 
 			CWaypoint* pWaypoint = CWaypoints::randomWaypointGoal(CWaypointTypes::W_FL_RESCUEZONE, getTeam(), 0, false, this,
-			                                                      false);
+																  false);
 
 			if(pWaypoint)
 			{
 				CWaypoint* pRoute = CWaypoints::randomRouteWaypoint(this, getOrigin(), pWaypoint->getOrigin(), getTeam(),
-				                                                    pWaypoint->getArea());
+																	pWaypoint->getArea());
 				if((m_fUseRouteTime <= engine->Time()))
 				{
 					if(pRoute)
@@ -1013,11 +1013,10 @@ bool CCSSBot::executeAction(eBotAction iAction)
 		}
 		case BOT_UTIL_SNIPE:
 		{
-			CWaypoint *pWaypoint;
 			CBotSchedule* pSched = new CBotSchedule();
 			pSched->setID(SCHED_SNIPE);
 
-			pWaypoint = CWaypoints::randomWaypointGoal(CWaypointTypes::W_FL_SNIPER, getTeam(), 0, false);
+			CWaypoint* pWaypoint = CWaypoints::randomWaypointGoal(CWaypointTypes::W_FL_SNIPER, getTeam(), 0, false);
 			if(pWaypoint)
 			{
 				CFindPathTask *pFindPath = new CFindPathTask(CWaypoints::getWaypointIndex(pWaypoint));
@@ -1049,9 +1048,9 @@ bool CCSSBot::executeAction(eBotAction iAction)
 			}
 			break;
 		}
-    }
+	}
 
-    return false;
+	return false;
 }
 
 // Called when the round starts
@@ -1068,15 +1067,15 @@ void CCSSBot::onRoundStart()
 bool CCSSBot::IsLeadingHostage()
 {
 	const std::vector<CBaseHandle> hostages = CCounterStrikeSourceMod::getHostageVector();
-	edict_t *pHostage = nullptr;
+	//edict_t *pHostage = nullptr;
 
 	if(getTeam() != CS_TEAM_COUNTERTERRORIST)
 		return false;
 
-	if(hostages.size() == 0)
+	if(hostages.empty())
 		return false;
 
-	for(CBaseHandle i : hostages)
+	for(const CBaseHandle& i : hostages)
 	{
 		edict_t *pHostage = INDEXENT(i.GetEntryIndex());
 
@@ -1089,7 +1088,7 @@ bool CCSSBot::IsLeadingHostage()
 	return false;
 }
 
-void CCSSBot::touchedWpt(CWaypoint *pWaypoint, int iNextWaypoint, int iPrevWaypoint)
+void CCSSBot::touchedWpt(CWaypoint *pWaypoint, const int iNextWaypoint, const int iPrevWaypoint)
 {
 	if(iNextWaypoint != -1 && pWaypoint->hasFlag(CWaypointTypes::W_FL_DOOR)) // Use waypoint: Check for door
 	{
@@ -1102,8 +1101,8 @@ void CCSSBot::touchedWpt(CWaypoint *pWaypoint, int iNextWaypoint, int iPrevWaypo
 			CTraceFilterHitAll filter;
 			const trace_t *tr = CBotGlobals::getTraceResult();
 			CBotGlobals::traceLine(pWaypoint->getOrigin() + Vector(0, 0, CWaypoint::WAYPOINT_HEIGHT / 2),
-			                       pNext->getOrigin() + Vector(0, 0, CWaypoint::WAYPOINT_HEIGHT / 2), MASK_PLAYERSOLID,
-			                       &filter);
+								   pNext->getOrigin() + Vector(0, 0, CWaypoint::WAYPOINT_HEIGHT / 2), MASK_PLAYERSOLID,
+								   &filter);
 			if(tr->fraction < 1.0f)
 			{
 				if(tr->m_pEnt)
@@ -1122,7 +1121,7 @@ void CCSSBot::touchedWpt(CWaypoint *pWaypoint, int iNextWaypoint, int iPrevWaypo
 	CBot::touchedWpt(pWaypoint, iNextWaypoint, iPrevWaypoint);
 }
 
-bool CCSSBot::canGotoWaypoint(Vector vPrevWaypoint, CWaypoint *pWaypoint, CWaypoint *pPrev)
+bool CCSSBot::canGotoWaypoint(const Vector vPrevWaypoint, CWaypoint *pWaypoint, CWaypoint *pPrev)
 {
 	if (pWaypoint->hasFlag(CWaypointTypes::W_FL_NO_HOSTAGES) || pWaypoint->hasFlag(CWaypointTypes::W_FL_LADDER))
 	{

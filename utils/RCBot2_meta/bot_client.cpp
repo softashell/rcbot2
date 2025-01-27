@@ -153,12 +153,14 @@ void CClient :: playSound ( const char *pszSound )
 {
 	if ( isWaypointOn() )
 	{
-		if ( bot_cmd_enable_wpt_sounds.GetBool() )
-			std::sprintf(m_szSoundToPlay,"play \"%s\"",pszSound);
+		if (bot_cmd_enable_wpt_sounds.GetBool())
+		{
+			snprintf(m_szSoundToPlay, sizeof(m_szSoundToPlay), "play \"%s\"", pszSound);
+		}
 	}
 }
 
-void CClient :: autoEventWaypoint ( int iType, float fRadius, bool bAtOtherOrigin, int iTeam, const Vector& vOrigin, bool bIgnoreTeam, bool bAutoType )
+void CClient :: autoEventWaypoint (const int iType, const float fRadius, const bool bAtOtherOrigin, int iTeam, const Vector& vOrigin, const bool bIgnoreTeam, const bool bAutoType)
 {
 	m_iAutoEventWaypoint = iType;
 	m_fAutoEventWaypointRadius = fRadius;
@@ -208,7 +210,7 @@ void CClient :: teleportTo (const Vector& vOrigin)
 class CBotFunc_HighFiveSearch : public IBotFunction
 {
 public:
-	CBotFunc_HighFiveSearch ( edict_t *pPlayer, int iTeam )
+	CBotFunc_HighFiveSearch ( edict_t *pPlayer, const int iTeam )
 	{
 		m_pPlayer = pPlayer;
 		m_iTeam = iTeam;
@@ -265,8 +267,7 @@ void CClient :: think ()
 
 	#if SOURCE_ENGINE == SE_TF2
 		if ( m_fMonitorHighFiveTime < engine->Time() && m_pPlayer != nullptr && m_pPlayerInfo != nullptr && m_pPlayerInfo->IsConnected() && 
-			!m_pPlayerInfo->IsDead() && m_pPlayerInfo->IsPlayer() && !m_pPlayerInfo->IsObserver() && 
-			CClassInterface::getTF2HighFiveReady(m_pPlayer) )
+			CClassInterface::getTF2HighFiveReady(m_pPlayer) && !m_pPlayerInfo->IsFakeClient() && !m_pPlayerInfo->IsDead() && !m_pPlayerInfo->IsObserver())
 		{
 			m_fMonitorHighFiveTime = engine->Time() + 0.25f;
 
@@ -468,7 +469,7 @@ void CClient :: think ()
 			}
 
 			m_vLastAutoWaypointPlacePos = getOrigin();
-			m_bSetUpAutoWaypoint = TRUE;
+			m_bSetUpAutoWaypoint = true;
 			m_fCanPlaceJump = 0.0f;
 			m_iLastButtons = 0;
 
@@ -624,7 +625,7 @@ void CClient :: think ()
 				}				
 			}
 
-			bool bCheckDistance = iMoveType != MOVETYPE_FLY && m_fCanPlaceLadder == 0; // always check distance unless ladder climbing
+			bool bCheckDistance = iMoveType != MOVETYPE_FLY && m_fCanPlaceLadder == 0.0f; // always check distance unless ladder climbing
 
 			// ****************************************************
 			// Ladder waypoint
@@ -656,9 +657,9 @@ void CClient :: think ()
 				m_fCanPlaceLadder = 0.0f;
 
 				// need to unset every check point when going on ladder first time
-				for ( int i = 0; i < MAX_STORED_AUTOWAYPOINT; i ++ )
+				for (CAutoWaypointCheck& m_vLastAutoWaypointCheckP : m_vLastAutoWaypointCheckPos)
 				{
-						m_vLastAutoWaypointCheckPos[i].UnSetPoint();					
+					m_vLastAutoWaypointCheckP.UnSetPoint();					
 				}
 			}
 			else if ( iMoveType != MOVETYPE_FLY && m_iLastMoveType == MOVETYPE_FLY )
@@ -883,12 +884,12 @@ void CClient :: think ()
 				{
 					int inewwpt = CWaypoints::addWaypoint(m_pPlayer,vPlacePosition,iFlags,true);
 					CWaypoint *pWpt = CWaypoints::getWaypoint(inewwpt);
-					Vector v_floor;
+					Vector v_floor; //Unused? [APG]RoboCop[CL]
 
 					m_vLastAutoWaypointPlacePos = vPlacePosition;
 					bool bCanStand;
 
-					trace_t *tr;
+					//trace_t *tr;
 					
 					Vector v_src = vPlacePosition;
 
@@ -934,7 +935,7 @@ void CClient :: think ()
 	}
 }
 
-void CClient::giveMessage(const char *msg,float fTime)
+void CClient::giveMessage(const char *msg, const float fTime)
 {
 	if ( rcbot_tooltips.GetBool() )
 	{
@@ -943,7 +944,7 @@ void CClient::giveMessage(const char *msg,float fTime)
 	}
 }
 
-void CClients::giveMessage(const char* msg, float fTime, edict_t* pPlayer)
+void CClients::giveMessage(const char* msg, const float fTime, const edict_t* pPlayer)
 {
 	CClient *pClient;
 
@@ -1067,7 +1068,7 @@ Vector CClient :: getOrigin () const
 	return CBotGlobals::entityOrigin(m_pPlayer) + Vector(0,0,32);//m_pPlayer->GetCollideable()->GetCollisionOrigin();
 }
 
-void CClients :: clientActive ( edict_t *pPlayer )
+void CClients :: clientActive (const edict_t *pPlayer)
 {
 	CClient *pClient = &m_Clients[slotOfEdict(pPlayer)];
 
@@ -1083,12 +1084,12 @@ CClient *CClients :: clientConnected ( edict_t *pPlayer )
 	return pClient;
 }
 
-void CClients :: init ( edict_t *pPlayer )
+void CClients :: init (const edict_t *pPlayer)
 {
 	m_Clients[slotOfEdict(pPlayer)].init();
 }
 
-void CClients :: clientDisconnected ( edict_t *pPlayer )
+void CClients :: clientDisconnected (const edict_t *pPlayer)
 {
 	CClient *pClient = &m_Clients[slotOfEdict(pPlayer)];
 
@@ -1101,9 +1102,9 @@ void CClients :: clientThink ()
 
 	m_bClientsDebugging = false;
 
-	for ( int i = 0; i < RCBOT_MAXPLAYERS; i ++ )
+	for (CClient& m_Client : m_Clients)
 	{
-		pClient = &m_Clients[i];
+		pClient = &m_Client;
 
 		if ( !pClient->isUsed() )
 			continue;
@@ -1119,9 +1120,9 @@ void CClients :: clientThink ()
 
 CClient *CClients :: findClientBySteamID (const char* szSteamID)
 {
-	for ( int i = 0; i < RCBOT_MAXPLAYERS; i ++ )
+	for (CClient& m_Client : m_Clients)
 	{
-		CClient* pClient = &m_Clients[i];
+		CClient* pClient = &m_Client;
 
 		if ( pClient->isUsed() )
 		{
@@ -1133,43 +1134,42 @@ CClient *CClients :: findClientBySteamID (const char* szSteamID)
 	return nullptr;
 }
 
-void CClients::clientDebugMsg(CBot *pBot, int iLev, const char *fmt, ... )
+void CClients::clientDebugMsg(const CBot* pBot, const int iLev, const char* fmt, ...)
 {
-	va_list argptr; 
+	va_list argptr;
 	static char string[1024];
 
-	va_start (argptr, fmt);
-	std::vsprintf (string, fmt, argptr); 
-	va_end (argptr); 
+	va_start(argptr, fmt);
+	vsnprintf(string, sizeof(string), fmt, argptr);
+	va_end(argptr);
 
-	clientDebugMsg(iLev,string,pBot);
+	clientDebugMsg(iLev, string, pBot);
 }
 
 const char *g_szDebugTags[15] =
 {
-"GAME_EVENT",
-"NAV",
-"SPEED",
-"VIS",
-"TASK",
-"BUTTONS",
-"USERCMD",
-"UTIL",
-"PROFILE",
-"EDICTS",
-"THINK",
-"LOOK",
-"HUD",
-"AIM",
-"CHAT"
+	"GAME_EVENT",
+	"NAV",
+	"SPEED",
+	"VIS",
+	"TASK",
+	"BUTTONS",
+	"USERCMD",
+	"UTIL",
+	"PROFILE",
+	"EDICTS",
+	"THINK",
+	"LOOK",
+	"HUD",
+	"AIM",
+	"CHAT"
 };
 
-
-void CClients :: clientDebugMsg ( int iLev, const char *szMsg, CBot *pBot )
+void CClients :: clientDebugMsg (const int iLev, const char *szMsg, const CBot *pBot)
 {
-	for ( int i = 0; i < RCBOT_MAXPLAYERS; i ++ )
+	for (CClient& m_Client : m_Clients)
 	{
-		CClient* pClient = &m_Clients[i];
+		CClient* pClient = &m_Client;
 
 		if ( !pClient->isUsed() )
 			continue;
@@ -1179,7 +1179,7 @@ void CClients :: clientDebugMsg ( int iLev, const char *szMsg, CBot *pBot )
 			continue;
 
 		if (pClient->isDebugOn(BOT_DEBUG_CHAT)) {
-			char logmsg[128] = {0};
+			char logmsg[128] = {};
 			snprintf(logmsg, sizeof logmsg,"[DEBUG %s] %s",g_szDebugTags[iLev],szMsg);
 			RCBotPluginMeta::HudTextMessage(pClient->getPlayer(), logmsg);
 		}
@@ -1188,13 +1188,13 @@ void CClients :: clientDebugMsg ( int iLev, const char *szMsg, CBot *pBot )
 	}
 }
 
-	// get index in array
+// get index in array
 int CClients :: slotOfEdict (const edict_t* pPlayer)
 {
 	return ENTINDEX(pPlayer)-1;
 }
 
-bool CClients :: clientsDebugging (int iLev)
+bool CClients :: clientsDebugging (const int iLev)
 {
 	if ( iLev == 0 )
 		return m_bClientsDebugging;
@@ -1215,7 +1215,7 @@ bool CClients :: clientsDebugging (int iLev)
 	return false;
 }
 
-void CClient :: setWaypointCut (CWaypoint *pWaypoint)
+void CClient :: setWaypointCut (const CWaypoint *pWaypoint)
 {
 	if ( pWaypoint )
 	{
@@ -1232,7 +1232,7 @@ void CClient :: setWaypointCut (CWaypoint *pWaypoint)
 	}
 }
 
-void CClient :: setWaypointCopy (CWaypoint *pWaypoint) 
+void CClient :: setWaypointCopy (const CWaypoint *pWaypoint) 
 {
 	if (pWaypoint) 
 	{ 

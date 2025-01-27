@@ -39,6 +39,8 @@
 class CVisibleFunc
 {
 public:
+	virtual ~CVisibleFunc() = default;
+
 	virtual void execute ( edict_t *pEntity ) {
 	}
 };
@@ -110,7 +112,7 @@ public:
 
 	static void debugString ( char *string );
 
-	static const int DEFAULT_MAX_TICKS = 10; // max number of PVS checks fired every visible check
+	static constexpr int DEFAULT_MAX_TICKS = 10; // max number of PVS checks fired every visible check
 
 private:
 	//static const int NUM_BYTES = 4; // 32 entities

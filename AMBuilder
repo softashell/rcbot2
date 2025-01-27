@@ -6,6 +6,7 @@ projectName = 'rcbot'
 sourceFiles = [
   "utils/RCBot2_meta/bot.cpp",
   "utils/RCBot2_meta/bot_accessclient.cpp",
+  #"utils/RCBot2_meta/bot_black_mesa.cpp",
   "utils/RCBot2_meta/bot_buttons.cpp",
   "utils/RCBot2_meta/bot_client.cpp",
   "utils/RCBot2_meta/bot_commands.cpp",
@@ -56,7 +57,11 @@ sourceFiles = [
   "utils/RCBot2_meta/bot_plugin_meta.cpp",
 
   "rcbot/logging.cpp",
-  "rcbot/math_fix.cpp"
+  "rcbot/helper.cpp",
+  "rcbot/entprops.cpp",
+  "rcbot/propvar.cpp",
+  "rcbot/math_fix.cpp",
+  "rcbot/tf2/conditions.cpp",
 ]
 
 include_paths = [

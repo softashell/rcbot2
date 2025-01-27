@@ -35,18 +35,22 @@
 #include "bot_task.h"
 //#include "bot_fortress.h"
 
+#include <algorithm>
 #include <deque>
 
 class CBotTask;
 class CAttackEntityTask;
 class IBotTaskInterrupt;
 
-#define BITS_SCHED_PASS_INT		(1<<0)
-#define BITS_SCHED_PASS_FLOAT	(1<<1)
-#define BITS_SCHED_PASS_VECTOR	(1<<2)
-#define BITS_SCHED_PASS_EDICT	(1<<3)
+enum : std::uint8_t
+{
+	BITS_SCHED_PASS_INT = 1<<0,
+	BITS_SCHED_PASS_FLOAT = 1<<1,
+	BITS_SCHED_PASS_VECTOR = 1<<2,
+	BITS_SCHED_PASS_EDICT = 1<<3
+};
 
-typedef enum
+typedef enum : std::uint8_t
 {
 	SCHED_NONE = 0,
 	SCHED_ATTACK,
@@ -119,8 +123,11 @@ public:
 	CBotSchedule();
 
 	void _init ();
+
 	virtual void init () {
 	} // nothing, used by sub classes
+
+	virtual ~CBotSchedule() = default; //TODO: experimental [APG]RoboCop[CL]
 
 	void addTask( CBotTask *pTask );
 
@@ -169,15 +176,14 @@ public:
 	float passedFloat() const { return fPass; }
 	Vector passedVector() { return vPass; }
 	edict_t *passedEdict() const { return pPass; }
-	bool isID ( eBotSchedule iId ) const { return m_iSchedId == iId; }
+	bool isID (const eBotSchedule iId) const { return m_iSchedId == iId; }
 
 	bool hasPassInt () const { return (m_bitsPass&BITS_SCHED_PASS_INT)>0; }
 	bool hasPassFloat () const { return (m_bitsPass&BITS_SCHED_PASS_FLOAT)>0; }
 	bool hasPassVector () const { return (m_bitsPass&BITS_SCHED_PASS_VECTOR)>0; }
 	bool hasPassEdict () const { return (m_bitsPass&BITS_SCHED_PASS_EDICT)>0; }
 
-	void setID ( eBotSchedule iId ) { m_iSchedId = iId; }
-
+	void setID (const eBotSchedule iId) { m_iSchedId = iId; }
 
 private:
 	std::deque<CBotTask*> m_Tasks;
@@ -196,17 +202,15 @@ private:
 class CBotSchedules
 {
 public:
-	bool hasSchedule ( eBotSchedule iSchedule ) const
+	bool hasSchedule(eBotSchedule iSchedule) const
 	{
-		for (const CBotSchedule *sched : m_Schedules) {
-			if (sched->isID(iSchedule)) {
-				return true;
-			}
-		}
-		return false;
+		return std::any_of(m_Schedules.begin(), m_Schedules.end(),
+			[iSchedule](const CBotSchedule* sched) {
+				return sched->isID(iSchedule);
+			});
 	}
 
-	bool isCurrentSchedule ( eBotSchedule iSchedule ) const
+	bool isCurrentSchedule (const eBotSchedule iSchedule) const
 	{
 		if ( m_Schedules.empty() )
 			return false;
@@ -214,9 +218,9 @@ public:
 	}
 
 	// remove the first schedule in the queue matching this schedule identifier
-	void removeSchedule ( eBotSchedule iSchedule )
+	void removeSchedule (const eBotSchedule iSchedule)
 	{
-		for (auto it = m_Schedules.begin(); it != m_Schedules.end(); ) {
+		for (std::deque<CBotSchedule*>::iterator it = m_Schedules.begin(); it != m_Schedules.end(); ) {
 			if ((*it)->isID(iSchedule)) {
 				m_Schedules.erase(it);
 				return;
@@ -313,10 +317,7 @@ public:
 class CBotTF2DemoPipeEnemySched : public CBotSchedule
 {
 public:
-	CBotTF2DemoPipeEnemySched ( 
-		CBotWeapon *pLauncher,
-		Vector vStand, 
-		edict_t *pEnemy );
+	CBotTF2DemoPipeEnemySched ( CBotWeapon *pLauncher, Vector vStand, edict_t *pEnemy );
 
 	void init() override;
 };
@@ -371,7 +372,7 @@ public:
 class CBotAttackPointSched : public CBotSchedule
 {
 public:
-	CBotAttackPointSched (const Vector& vPoint, int iRadius, int iArea, bool bHasRoute = false, const Vector& vRoute = Vector(0,0,0), bool bNest = false, edict_t *pLastEnemySentry = nullptr);
+	CBotAttackPointSched (const Vector& vPoint, float fRadius, int iArea, bool bHasRoute = false, const Vector& vRoute = Vector(0,0,0), bool bNest = false, edict_t *pLastEnemySentry = nullptr);
 
 	void init () override;
 }; 
@@ -379,7 +380,7 @@ public:
 class CBotDefendPointSched : public CBotSchedule
 {
 public:
-	CBotDefendPointSched (const Vector& vPoint, int iRadius, int iArea );
+	CBotDefendPointSched (const Vector& vPoint, float fRadius, int iArea);
 
 	void init () override;
 }; 
@@ -411,7 +412,7 @@ public:
 class CBotUseDispSched : public CBotSchedule
 {
 public:
-	CBotUseDispSched ( CBot *pBot, edict_t *pDisp );
+	CBotUseDispSched (const CBot *pBot, edict_t *pDisp );
 
 	void init () override;
 }; 
@@ -420,7 +421,7 @@ public:
 class CBotTFEngiUpgrade : public CBotSchedule
 {
 public:
-	CBotTFEngiUpgrade ( CBot *pBot, edict_t *pBuilding );
+	CBotTFEngiUpgrade (const CBot *pBot, edict_t *pBuilding );
 
 	void init () override;
 };
@@ -436,7 +437,7 @@ public:
 class CBotTFEngiBuild : public CBotSchedule
 {
 public:
-	CBotTFEngiBuild ( CBot *pBot, eEngiBuild iObject, CWaypoint *pWaypoint );
+	CBotTFEngiBuild (const CBot *pBot, eEngiBuild iObject, CWaypoint *pWaypoint );
 
 	void init () override;
 };

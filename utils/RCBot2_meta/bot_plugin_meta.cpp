@@ -58,6 +58,9 @@
 
 #include <build_info.h>
 
+#if defined SM_EXT
+#include "rcbot/entprops.h"
+#endif
 SH_DECL_HOOK6(IServerGameDLL, LevelInit, SH_NOATTRIB, 0, bool, char const *, char const *, char const *, char const *, bool, bool);
 SH_DECL_HOOK3_void(IServerGameDLL, ServerActivate, SH_NOATTRIB, 0, edict_t *, int, int);
 SH_DECL_HOOK1_void(IServerGameDLL, GameFrame, SH_NOATTRIB, 0, bool);
@@ -112,9 +115,12 @@ CON_COMMAND(rcbotd, "access the bot commands on a server")
 		return;
 	}
 
-	//iResult = CBotGlobals::m_pCommands->execute(NULL,engine->Cmd_Argv(1),engine->Cmd_Argv(2),engine->Cmd_Argv(3),engine->Cmd_Argv(4),engine->Cmd_Argv(5),engine->Cmd_Argv(6));
-	eBotCommandResult iResult = CBotGlobals::m_pCommands->execute(nullptr, args.Arg(1), args.Arg(2), args.Arg(3),
-	                                                              args.Arg(4), args.Arg(5), args.Arg(6));
+	// shift args and call subcommand
+	BotCommandArgs argList;
+	for (size_t i = 1; i <= static_cast<size_t>(args.ArgC()); i++) {
+		argList.emplace_back(args.Arg(static_cast<int>(i)));
+	}
+	const eBotCommandResult iResult = CBotGlobals::m_pCommands->execute(nullptr, argList);
 
 	if (iResult == COMMAND_ACCESSED)
 	{
@@ -137,7 +143,7 @@ CON_COMMAND(rcbotd, "access the bot commands on a server")
 class CBotRecipientFilter : public IRecipientFilter
 {
 public:
-	CBotRecipientFilter(edict_t *pPlayer)
+	CBotRecipientFilter(const edict_t *pPlayer)
 	{
 		m_iPlayerSlot = ENTINDEX(pPlayer);
 	}
@@ -156,14 +162,16 @@ class CClientBroadcastRecipientFilter : public IRecipientFilter
 {
 public:
 
-	CClientBroadcastRecipientFilter() {
-		m_iMaxCount = 0;
+	CClientBroadcastRecipientFilter() : m_iMaxCount(0) {
+
+		// Initialize m_iPlayerSlot with a default value, e.g., -1
+		std::fill(std::begin(m_iPlayerSlot), std::end(m_iPlayerSlot), -1);
 
 		for (int i = 0; i < RCBOT_MAXPLAYERS; ++i) {
-			const CClient* client = CClients::get(i);
+			CClient* client = CClients::get(i);
 
 			if (client->isUsed()) {
-				IPlayerInfo *p = playerinfomanager->GetPlayerInfo(client->getPlayer());
+				IPlayerInfo* p = playerinfomanager->GetPlayerInfo(client->getPlayer());
 
 				if (p->IsConnected() && !p->IsFakeClient()) {
 					m_iPlayerSlot[m_iMaxCount] = i;
@@ -177,7 +185,7 @@ public:
 	bool IsInitMessage() const override { return false; }
 
 	int	GetRecipientCount() const override { return m_iMaxCount; }
-	int	GetRecipientIndex(int slot) const override { return m_iPlayerSlot[slot] + 1; }
+	int	GetRecipientIndex(const int slot) const override { return m_iPlayerSlot[slot] + 1; }
 
 private:
 
@@ -188,12 +196,12 @@ private:
 ///////////////
 // hud message
 ///////////////
-void RCBotPluginMeta::HudTextMessage(edict_t *pEntity, const char *szMessage)
+void RCBotPluginMeta::HudTextMessage(const edict_t* pEntity, const char* szMessage)
 {
 	int msgid = 0;
 	int imsgsize = 0;
 	char msgbuf[64];
-	bool bOK;
+	bool bOK; //Unused? [APG]RoboCop[CL]
 
 	int hint = -1;
 	int say = -1;
@@ -214,12 +222,12 @@ void RCBotPluginMeta::HudTextMessage(edict_t *pEntity, const char *szMessage)
 	// if (!bOK)
 	// return;
 
-	CBotRecipientFilter *filter = new CBotRecipientFilter(pEntity);
+	CBotRecipientFilter filter(pEntity);
 
-	bf_write *buf;
+	bf_write* buf;
 
 	if (hint > 0) {
-		buf = engine->UserMessageBegin(filter, hint);
+		buf = engine->UserMessageBegin(&filter, hint);
 		buf->WriteString(szMessage);
 		engine->MessageEnd();
 	}
@@ -228,25 +236,23 @@ void RCBotPluginMeta::HudTextMessage(edict_t *pEntity, const char *szMessage)
 		char chatline[128];
 		snprintf(chatline, sizeof(chatline), "\x01\x04[RCBot2]\x01 %s\n", szMessage);
 
-		buf = engine->UserMessageBegin(filter, say);
+		buf = engine->UserMessageBegin(&filter, say);
 		buf->WriteString(chatline);
 		engine->MessageEnd();
 	}
-
-	delete filter;
 }
 
 //////////////////////////
 // chat broadcast message
 //////////////////////////
-void RCBotPluginMeta::BroadcastTextMessage(const char *szMessage)
+void RCBotPluginMeta::BroadcastTextMessage(const char* szMessage)
 {
 	int msgid = 0;
 	int imsgsize = 0;
 	char msgbuf[64];
-	bool bOK;
+	bool bOK; //Unused? [APG]RoboCop[CL]
 
-	int hint = -1;
+	int hint = -1; //Unused? [APG]RoboCop[CL]
 	int say = -1;
 
 	while ((bOK = servergamedll->GetUserMessageInfo(msgid, msgbuf, 63, imsgsize)) == true)
@@ -262,18 +268,15 @@ void RCBotPluginMeta::BroadcastTextMessage(const char *szMessage)
 	if (msgid == 0)
 		return;
 
-	CClientBroadcastRecipientFilter *filter = new CClientBroadcastRecipientFilter();
-
+	CClientBroadcastRecipientFilter filter; // Allocate on stack
 	if (say > 0) {
 		char chatline[128];
 		snprintf(chatline, sizeof(chatline), "\x01\x04[RCBot2]\x01 %s\n", szMessage);
 
-		bf_write* buf = engine->UserMessageBegin(filter, say);
+		bf_write* buf = engine->UserMessageBegin(&filter, say);
 		buf->WriteString(chatline);
 		engine->MessageEnd();
 	}
-
-	delete filter;
 }
 
 void RCBotPluginMeta::Hook_PlayerRunCmd(CUserCmd *ucmd, IMoveHelper *moveHelper)
@@ -282,7 +285,7 @@ void RCBotPluginMeta::Hook_PlayerRunCmd(CUserCmd *ucmd, IMoveHelper *moveHelper)
 
 	CBaseEntity *pPlayer = META_IFACEPTR(CBaseEntity);
 
-	edict_t *pEdict = servergameents->BaseEntityToEdict(pPlayer);
+	const edict_t *pEdict = servergameents->BaseEntityToEdict(pPlayer);
 
 	pBot = CBots::getBotPointer(pEdict);
 	
@@ -313,6 +316,8 @@ void RCBotPluginMeta::Hook_PlayerRunCmd(CUserCmd *ucmd, IMoveHelper *moveHelper)
 class BaseAccessor : public IConCommandBaseAccessor
 {
 public:
+	virtual ~BaseAccessor() = default;
+
 	bool RegisterConCommandBase(ConCommandBase *pCommandBase) override
 	{
 		/* Always call META_REGCVAR instead of going through the engine. */
@@ -324,30 +329,30 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxle
 {
 	extern MTRand_int32 irand;
 
-	PLUGIN_SAVEVARS();
+	PLUGIN_SAVEVARS()
 
-	GET_V_IFACE_CURRENT(GetEngineFactory, enginetrace, IEngineTrace, INTERFACEVERSION_ENGINETRACE_SERVER);	
-	GET_V_IFACE_CURRENT(GetEngineFactory, engine, IVEngineServer, INTERFACEVERSION_VENGINESERVER);
-	GET_V_IFACE_CURRENT(GetEngineFactory, gameevents, IGameEventManager2, INTERFACEVERSION_GAMEEVENTSMANAGER2);
-	GET_V_IFACE_CURRENT(GetEngineFactory, helpers, IServerPluginHelpers, INTERFACEVERSION_ISERVERPLUGINHELPERS);
-	GET_V_IFACE_CURRENT(GetEngineFactory, icvar, ICvar, CVAR_INTERFACE_VERSION);
+	GET_V_IFACE_CURRENT(GetEngineFactory, enginetrace, IEngineTrace, INTERFACEVERSION_ENGINETRACE_SERVER)
+	GET_V_IFACE_CURRENT(GetEngineFactory, engine, IVEngineServer, INTERFACEVERSION_VENGINESERVER)
+	GET_V_IFACE_CURRENT(GetEngineFactory, gameevents, IGameEventManager2, INTERFACEVERSION_GAMEEVENTSMANAGER2)
+	GET_V_IFACE_CURRENT(GetEngineFactory, helpers, IServerPluginHelpers, INTERFACEVERSION_ISERVERPLUGINHELPERS)
+	GET_V_IFACE_CURRENT(GetEngineFactory, icvar, ICvar, CVAR_INTERFACE_VERSION)
 
 	GET_V_IFACE_ANY(GetEngineFactory, filesystem, IFileSystem, FILESYSTEM_INTERFACE_VERSION)
 
-	GET_V_IFACE_ANY(GetServerFactory, servergameents, IServerGameEnts, INTERFACEVERSION_SERVERGAMEENTS);
-	GET_V_IFACE_ANY(GetServerFactory, server, IServerGameDLL, INTERFACEVERSION_SERVERGAMEDLL);
-	GET_V_IFACE_ANY(GetServerFactory, gameclients, IServerGameClients, INTERFACEVERSION_SERVERGAMECLIENTS);
-	GET_V_IFACE_ANY(GetServerFactory, playerinfomanager, IPlayerInfoManager, INTERFACEVERSION_PLAYERINFOMANAGER);
+	GET_V_IFACE_ANY(GetServerFactory, servergameents, IServerGameEnts, INTERFACEVERSION_SERVERGAMEENTS)
+	GET_V_IFACE_ANY(GetServerFactory, server, IServerGameDLL, INTERFACEVERSION_SERVERGAMEDLL)
+	GET_V_IFACE_ANY(GetServerFactory, gameclients, IServerGameClients, INTERFACEVERSION_SERVERGAMECLIENTS)
+	GET_V_IFACE_ANY(GetServerFactory, playerinfomanager, IPlayerInfoManager, INTERFACEVERSION_PLAYERINFOMANAGER)
 
-	GET_V_IFACE_ANY(GetServerFactory, g_pEffects, IEffects, IEFFECTS_INTERFACE_VERSION);
-	GET_V_IFACE_ANY(GetServerFactory, g_pBotManager, IBotManager, INTERFACEVERSION_PLAYERBOTMANAGER);
-	GET_V_IFACE_ANY(GetServerFactory, servertools, IServerTools, VSERVERTOOLS_INTERFACE_VERSION);
+	GET_V_IFACE_ANY(GetServerFactory, g_pEffects, IEffects, IEFFECTS_INTERFACE_VERSION)
+	GET_V_IFACE_ANY(GetServerFactory, g_pBotManager, IBotManager, INTERFACEVERSION_PLAYERBOTMANAGER)
+	GET_V_IFACE_ANY(GetServerFactory, servertools, IServerTools, VSERVERTOOLS_INTERFACE_VERSION)
 
 #ifndef __linux__
-	GET_V_IFACE_CURRENT(GetEngineFactory,debugoverlay, IVDebugOverlay, VDEBUG_OVERLAY_INTERFACE_VERSION);
+	GET_V_IFACE_CURRENT(GetEngineFactory,debugoverlay, IVDebugOverlay, VDEBUG_OVERLAY_INTERFACE_VERSION)
 #endif
-	GET_V_IFACE_ANY(GetServerFactory, servergamedll, IServerGameDLL, INTERFACEVERSION_SERVERGAMEDLL);
-	GET_V_IFACE_ANY(GetServerFactory, gameclients, IServerGameClients, INTERFACEVERSION_SERVERGAMECLIENTS);
+	GET_V_IFACE_ANY(GetServerFactory, servergamedll, IServerGameDLL, INTERFACEVERSION_SERVERGAMEDLL)
+	GET_V_IFACE_ANY(GetServerFactory, gameclients, IServerGameClients, INTERFACEVERSION_SERVERGAMECLIENTS)
 
 	gpGlobals = ismm->GetCGlobals();
 
@@ -360,7 +365,6 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxle
 		ismm->EnableVSPListener();
 	}
 
-	
 	SH_ADD_HOOK_MEMFUNC(IServerGameDLL, LevelInit, server, this, &RCBotPluginMeta::Hook_LevelInit, true);
 	SH_ADD_HOOK_MEMFUNC(IServerGameDLL, ServerActivate, server, this, &RCBotPluginMeta::Hook_ServerActivate, true);
 	SH_ADD_HOOK_MEMFUNC(IServerGameDLL, GameFrame, server, this, &RCBotPluginMeta::Hook_GameFrame, true);
@@ -436,7 +440,7 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxle
 	if (!CBotGlobals::gameStart())
 		return false;
 
-	CBotMod *pMod = CBotGlobals::getCurrentMod();
+	CBotMod *pMod = CBotGlobals::getCurrentMod(); // `*pMod` Unused? [APG]RoboCop[CL]
 
 #ifdef OVERRIDE_RUNCMD
 	// TODO figure out a more robust gamedata fix instead of vtable
@@ -458,23 +462,24 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxle
 	//InitCVars( interfaceFactory ); // register any cvars we have defined
 
 	std::srand( static_cast<unsigned>(time(nullptr)) );  // initialize the random seed
-	irand.seed( static_cast<unsigned>(time(nullptr)) );
+	MTRand_int32::seed( static_cast<unsigned>(time(nullptr)) );
 
 	// Find the RCBOT2 Path from metamod VDF
-	extern IFileSystem *filesystem;
-	KeyValues *mainkv = new KeyValues("metamodplugin");
-	
-	const char *rcbot2path;
-	logger->Log(LogLevel::INFO, "Reading rcbot2 path from VDF...");
-	
-	mainkv->LoadFromFile(filesystem, "addons/metamod/rcbot2.vdf", "MOD");
-	
-	mainkv = mainkv->FindKey("Metamod Plugin");
+	extern IFileSystem* filesystem;
+	KeyValues* mainkv = new KeyValues("metamodplugin");
 
-	if (mainkv)
-		rcbot2path = mainkv->GetString("rcbot2path", "\0");
+	const char* rcbot2path; //Unused? [APG]RoboCop[CL]
+	logger->Log(LogLevel::INFO, "Reading rcbot2 path from VDF...");
+
+	mainkv->LoadFromFile(filesystem, "addons/metamod/rcbot2.vdf", "MOD");
+	KeyValues* temp = mainkv->FindKey("Metamod Plugin");
+
+	if (temp)
+		rcbot2path = temp->GetString("rcbot2path", "\0");
 
 	mainkv->deleteThis(); //mainkv possible redundant? [APG]RoboCop[CL]
+	mainkv = temp; // Memory leak fix [APG]RoboCop[CL]
+
 	//eventListener2 = new CRCBotEventListener();
 
 	// Initialize bot variables
@@ -492,7 +497,7 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxle
 
 	//CRCBotPlugin::ShowLicense();	
 
-	//RandomSeed((unsigned int)time(NULL));
+	//RandomSeed((unsigned)time(NULL));
 
 	CClassInterface::init();
 
@@ -504,8 +509,9 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxle
 	int bot_count = 0;
 	int human_count = 0;
 
-	for (int i = 0; i < RCBOT_MAXPLAYERS; ++i) {
-		m_iTargetBots[i] = 0;
+	for (int& m_iTargetBot : m_iTargetBots)
+	{
+		m_iTargetBot = 0;
 	}
 
 	CBotGlobals::buildFileName(filename, "bot_quota", BOT_CONFIG_FOLDER, "ini");
@@ -518,29 +524,32 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxle
 			if (bq_line[0] == '#')
 				continue;
 
-			for (int i = 0; i < sizeof(bq_line); ++i) {
-				if (bq_line[i] == '\0')
+			for (char& i : bq_line)
+			{
+				if (i == '\0')
 					break;
 
-				if (!isdigit(bq_line[i]))
-					bq_line[i] = ' ';
+				if (!isdigit(i))
+					i = ' ';
 			}
 
 			if (std::sscanf(bq_line, "%d %d", &human_count, &bot_count) == 2) {
-				if (human_count < 0 || human_count > 32) {
+				if (human_count < 0 || human_count > RCBOT_MAXPLAYERS) {
 					logger->Log(LogLevel::WARN, "Bot Quota - Invalid Human Count %d", human_count);
 					continue;
 				}
 
-				if (bot_count < 0 || bot_count > 32) {
+				if (bot_count < 0 || bot_count > RCBOT_MAXPLAYERS) {
 					logger->Log(LogLevel::WARN, "Bot Quota - Invalid Bot Count %d", bot_count);
 					continue;
 				}
 
-				m_iTargetBots[human_count] = bot_count;
-				logger->Log(LogLevel::INFO, "Bot Quota - Humans: %d, Bots: %d", human_count, bot_count);
+				if (human_count < RCBOT_MAXPLAYERS) { // Ensure human_count is within bounds
+					m_iTargetBots[human_count] = bot_count;
+					logger->Log(LogLevel::INFO, "Bot Quota - Humans: %d, Bots: %d", human_count, bot_count);
+				}
+			}
 		}
-	}
 	}
 
 	return true;
@@ -607,7 +616,7 @@ void RCBotPluginMeta::OnVSPListening(IServerPluginCallbacks *iface)
 	vsp_callbacks = iface;
 }
 
-void RCBotPluginMeta::Hook_ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
+void RCBotPluginMeta::Hook_ServerActivate(edict_t *pEdictList, const int edictCount, const int clientMax)
 {
 	META_LOG(g_PLAPI, "ServerActivate() called: edictCount = %d, clientMax = %d", edictCount, clientMax);
 
@@ -640,7 +649,7 @@ void* RCBotPluginMeta::OnMetamodQuery(const char* iface, int *ret) {
 }
 #endif
 
-void RCBotPluginMeta::Hook_ClientActive(edict_t *pEntity, bool bLoadGame)
+void RCBotPluginMeta::Hook_ClientActive(edict_t *pEntity, const bool bLoadGame)
 {
 	META_LOG(g_PLAPI, "Hook_ClientActive(%d, %d)", IndexOfEdict(pEntity), bLoadGame);
 
@@ -671,8 +680,12 @@ void RCBotPluginMeta::Hook_ClientCommand(edict_t *pEntity)
 	// is bot command?
 	if ( CBotGlobals::m_pCommands->isCommand(pcmd) )
 	{		
-		//eBotCommandResult iResult = CBotGlobals::m_pCommands->execute(pClient,engine->Cmd_Argv(1),engine->Cmd_Argv(2),engine->Cmd_Argv(3),engine->Cmd_Argv(4),engine->Cmd_Argv(5),engine->Cmd_Argv(6));
-		eBotCommandResult iResult = CBotGlobals::m_pCommands->execute(pClient,args.Arg(1),args.Arg(2),args.Arg(3),args.Arg(4),args.Arg(5),args.Arg(6));
+		// create shifted command list
+		BotCommandArgs argList;
+		for (size_t i = 1; i <= static_cast<size_t>(args.ArgC()); i++) {
+			argList.emplace_back(args.Arg(static_cast<int>(i)));
+		}
+		const eBotCommandResult iResult = CBotGlobals::m_pCommands->execute(pClient, argList);
 
 		if ( iResult == COMMAND_ACCESSED )
 		{
@@ -724,21 +737,21 @@ bool RCBotPluginMeta::Hook_ClientConnect(edict_t *pEntity,
 									char *reject,
 									int maxrejectlen)
 {
-	META_LOG(g_PLAPI, "Hook_ClientConnect(%d, \"%s\", \"%s\")", IndexOfEdict(pEntity), pszName, pszAddress);
+	META_LOG(g_PLAPI, R"(Hook_ClientConnect(%d, "%s", "%s"))", IndexOfEdict(pEntity), pszName, pszAddress);
 
 	CClients::init(pEntity);
 
 	return true;
 }
 
-void RCBotPluginMeta::Hook_ClientPutInServer(edict_t *pEntity, char const *playername)
+void RCBotPluginMeta::Hook_ClientPutInServer(edict_t *pEntity, char const* playername)
 {
-	CBaseEntity *pEnt = servergameents->EdictToBaseEntity(pEntity);
-	const bool is_Rcbot = false;
+	CBaseEntity *pEnt = servergameents->EdictToBaseEntity(pEntity); //`*pEnt` Unused? [APG]RoboCop[CL]
+	constexpr bool is_Rcbot = false;
 
 	CClient *pClient = CClients::clientConnected(pEntity);
 
-	if ( !is_Rcbot && pClient )
+	if ( !is_Rcbot && pClient ) //`!is_Rcbot` Unused? [APG]RoboCop[CL]
 	{
 		if ( !engine->IsDedicatedServer() )
 		{
@@ -766,7 +779,7 @@ void RCBotPluginMeta::Hook_ClientPutInServer(edict_t *pEntity, char const *playe
 
 void RCBotPluginMeta::Hook_ClientDisconnect(edict_t *pEntity)
 {
-	CBaseEntity *pEnt = servergameents->EdictToBaseEntity(pEntity);
+	CBaseEntity *pEnt = servergameents->EdictToBaseEntity(pEntity); //`*pEnt` Unused? [APG]RoboCop[CL]
 
 #ifdef OVERRIDE_RUNCMD
 	if ( pEnt )
@@ -780,7 +793,7 @@ void RCBotPluginMeta::Hook_ClientDisconnect(edict_t *pEntity)
 	META_LOG(g_PLAPI, "Hook_ClientDisconnect(%d)", IndexOfEdict(pEntity));
 }
 
-void RCBotPluginMeta::Hook_GameFrame(bool simulating)
+void RCBotPluginMeta::Hook_GameFrame(const bool simulating)
 {
 	/**
 	 * simulating:
@@ -832,11 +845,8 @@ void RCBotPluginMeta::BotQuotaCheck() {
 		m_fBotQuotaTimer = engine->Time() + 10.0f; // Sleep 10 seconds
 	}
 
-	if (m_fBotQuotaTimer < engine->Time() - rcbot_bot_quota_interval.GetInt()) {
+	if (m_fBotQuotaTimer < engine->Time() - rcbot_bot_quota_interval.GetFloat()) {
 		m_fBotQuotaTimer = engine->Time();
-
-		// Target Bot Count
-		int bot_target = 0; //not used? [APG]RoboCop[CL]
 
 		// Change Notification
 		bool notify = false;
@@ -872,18 +882,19 @@ void RCBotPluginMeta::BotQuotaCheck() {
 		}
 
 		// Get Bot Quota
-		bot_target = m_iTargetBots[human_count];
+		const int bot_target = m_iTargetBots[human_count];
 
 		// Change Bot Quota
 		if (bot_count > bot_target) {
-			CBots::kickRandomBot(bot_count - bot_target);
+			CBots::kickRandomBot(static_cast<size_t>(bot_count - bot_target));
 			notify = true;
-		} else if (bot_target > bot_count) {
+		}
+		else if (bot_target > bot_count) {
 			const int bot_diff = bot_target - bot_count;
 
 			for (int i = 0; i < bot_diff; ++i) {
 				CBots::createBot("", "", "");
-				break; // Bug-Fix, only add one bot at a time
+				//break; // Bug-Fix, only add one bot at a time
 			}
 
 			notify = true;
@@ -944,7 +955,7 @@ bool RCBotPluginMeta::Hook_LevelInit(const char *pMapName,
 	CClients::setListenServerClient(nullptr);
 
 	// Setup game rules
-	extern void **g_pGameRules;
+	extern void **g_pGameRules; //Unused? [APG]RoboCop[CL]
 
 	if (g_pGameRules_Obj && g_pGameRules_Obj->found())
 	{

@@ -9,6 +9,10 @@
 
 #include <cstring>
 
+#ifdef _WIN32
+#define strcmpi _strcmpi
+#endif 
+
 CClassInterfaceValue CClassInterface :: g_GetProps[GET_PROPDATA_MAX];
 bool CClassInterfaceValue :: m_berror = false;
 
@@ -44,8 +48,6 @@ void UTIL_FindServerClassnamePrint(const char *name_cmd)
 
 	CBotGlobals::botMessage(nullptr,0,"Not found");
 }
-
-
 
 void UTIL_FindServerClassPrint(const char *name_cmd)
 {
@@ -93,7 +95,6 @@ ServerClass *UTIL_FindServerClass(const char *name)
 	}
 
 	return nullptr;
-	
 }
 
 /**
@@ -164,17 +165,17 @@ SendProp *UTIL_FindSendProp(SendTable *pTable, const char *name)
 struct sm_sendprop_info_t
 {
 	SendProp *prop;					/**< Property instance. */
-	unsigned int actual_offset;		/**< Actual computed offset. */
+	unsigned actual_offset;		/**< Actual computed offset. */
 };
 
 bool UTIL_FindInSendTable(SendTable *pTable, 
 						  const char *name,
 						  sm_sendprop_info_t *info,
-						  unsigned int offset)
+						  const unsigned offset)
 {
 	const int props = pTable->GetNumProps();
 
-	for (int i=0; i<props; i++)
+	for (int i = 0; i<props; i++)
 	{
 		SendProp* prop = pTable->GetProp(i);
 		const char* pname = prop->GetName();
@@ -206,7 +207,7 @@ bool UTIL_FindInSendTable(SendTable *pTable,
 	return false;
 }
 
-bool UTIL_FindSendPropInfo(ServerClass *pInfo, const char *szType, unsigned int *offset)
+bool UTIL_FindSendPropInfo(const ServerClass *pInfo, const char *szType, unsigned *offset)
 {
 	if ( !pInfo )
 	{
@@ -240,7 +241,6 @@ edict_t *CClassInterfaceValue :: getEntity ( edict_t *edict )
 
 	getData(edict); 
 
-
 	if (m_berror)
 		return nullptr;
 
@@ -252,7 +252,7 @@ edict_t *CClassInterfaceValue :: getEntity ( edict_t *edict )
 	return nullptr;
 }
 
-void CClassInterfaceValue :: init (const char* key, char* value, unsigned preoffset)
+void CClassInterfaceValue :: init (const char* key, const char* value, const unsigned preoffset)
 {
 	m_class = CStrings::getString(key);
 	m_value = CStrings::getString(value);
@@ -263,11 +263,11 @@ void CClassInterfaceValue :: init (const char* key, char* value, unsigned preoff
 
 void UTIL_FindPropPrint(const char *prop_name)
 {
-	unsigned int offset;
+	unsigned offset;
 
 	try
 	{
-		ServerClass *pClass = servergamedll->GetAllServerClasses();
+		const ServerClass *pClass = servergamedll->GetAllServerClasses();
 
 		while (pClass)
 		{
@@ -285,11 +285,11 @@ void UTIL_FindPropPrint(const char *prop_name)
 	}
 	catch (...)
 	{
-		bool bInterfaceErr = true;
+		bool bInterfaceErr = true; //Unused? [APG]RoboCop[CL]
 	}
 }
 
-void CClassInterfaceValue :: findOffset ( )
+void CClassInterfaceValue :: findOffset ()
 {
 	//if (!m_offset)
 	//{
@@ -324,7 +324,7 @@ void CClassInterfaceValue :: findOffset ( )
  * @param name		Name of the property to find.
  * @return		Offset of a data map property, or 0 if not found.
  */
-unsigned int UTIL_FindInDataMap(datamap_t* pMap, const char* name)
+unsigned UTIL_FindInDataMap(const datamap_t* pMap, const char* name)
 {
 	while (pMap)
 	{
@@ -340,7 +340,7 @@ unsigned int UTIL_FindInDataMap(datamap_t* pMap, const char* name)
 			}
 			if (pMap->dataDesc[i].td)
 			{
-				unsigned int offset;
+				unsigned offset;
 				if ((offset = UTIL_FindInDataMap(pMap->dataDesc[i].td, name)) != 0)
 				{
 					return offset;
@@ -354,9 +354,14 @@ unsigned int UTIL_FindInDataMap(datamap_t* pMap, const char* name)
 }
 
 class VEmptyClass {};
-datamap_t* VGetDataDescMap(CBaseEntity* pThisPtr, int offset)
+datamap_t* VGetDataDescMap(CBaseEntity* pThisPtr, const int offset)
 {
-	void** this_ptr = *reinterpret_cast<void***>(&pThisPtr);
+	// Ensure pThisPtr is not null
+	if (!pThisPtr)
+	{
+		return nullptr;
+	}
+	// Get the vtable from the entity
 	void** vtable = *reinterpret_cast<void***>(pThisPtr);
 	void* vfunc = vtable[offset];
 
@@ -377,8 +382,8 @@ datamap_t* VGetDataDescMap(CBaseEntity* pThisPtr, int offset)
 	u.s.addr = vfunc;
 	u.s.adjustor = 0;
 #endif
-
-	return (reinterpret_cast<VEmptyClass*>(this_ptr)->*u.mfpnew)();
+	// Cast pThisPtr to VEmptyClass* and call the member function pointer
+	return (reinterpret_cast<VEmptyClass*>(pThisPtr)->*u.mfpnew)();
 }
 
 datamap_t* CBaseEntity_GetDataDescMap(CBaseEntity* pEntity)
@@ -398,7 +403,6 @@ void CClassInterface:: init ()
 {
 	//	DEFINE_GETPROP			ID						Class			Variable	Offset
 		DEFINE_GETPROP(GETPROP_TF2MINIBUILDING,"CObjectSentryGun","m_bMiniBuilding",0);
-
 		DEFINE_GETPROP(GETPROP_TF2SCORE,"CTFPlayerResource","m_iTotalScore",0);
 		DEFINE_GETPROP(GETPROP_ENTITY_FLAGS,"CBaseEntity","m_iEffectFlags",0);
 		DEFINE_GETPROP(GETPROP_TEAM,"CBaseEntity","m_iTeamNum",0);
@@ -587,10 +591,10 @@ void CClassInterface:: init ()
 		DEFINE_GETPROP(GETPROP_PLAYER_FOV, "CBasePlayer", "m_iFOV", 0);
 		DEFINE_GETPROP(GETPROP_PLAYER_LIFESTATE, "CBasePlayer", "m_lifeState", 0);
 
-		for ( unsigned int i = 0; i < GET_PROPDATA_MAX; i ++ )
+		for (CClassInterfaceValue& g_GetProp : g_GetProps)
 		{
 			//if ( g_GetProps[i]
-			g_GetProps[i].findOffset();
+			g_GetProp.findOffset();
 		}
 }
 
@@ -598,8 +602,8 @@ void CClassInterface :: setupCTeamRoundTimer ( CTeamRoundTimer *pTimer )
 {
 	/*
 		GETPROP_TF2_RNDTM_m_flTimerEndTime,
-	GETPROP_TF2_RNDTM_m_nSetupTimeLength,
-	GETPROP_TF2_RNDTM_m_bInSetup,
+		GETPROP_TF2_RNDTM_m_nSetupTimeLength,
+		GETPROP_TF2_RNDTM_m_bInSetup,
 	*/
 	pTimer->m_flTimerEndTime = g_GetProps[GETPROP_TF2_RNDTM_m_flTimerEndTime].getFloatPointer(pTimer->m_Resource);
 	pTimer->m_nSetupTimeLength = g_GetProps[GETPROP_TF2_RNDTM_m_nSetupTimeLength].getIntPointer(pTimer->m_Resource);
@@ -641,7 +645,7 @@ bool CClassInterface :: getTF2ObjectiveResource ( CTFObjectiveResource *pResourc
 }
 
 
-void CClassInterfaceValue :: getData ( void *edict, bool bIsEdict )
+void CClassInterfaceValue :: getData ( void *edict, const bool bIsEdict )
 {
 	if (!m_offset || edict== nullptr)
 	{
@@ -677,13 +681,13 @@ void CClassInterfaceValue :: getData ( void *edict, bool bIsEdict )
 
 }
 
-edict_t *CClassInterface::FindEntityByClassnameNearest(const Vector& vstart, const char *classname, float fMindist, edict_t *pOwner)
+edict_t *CClassInterface::FindEntityByClassnameNearest(const Vector& vstart, const char *classname, float fMinDist, const edict_t *pOwner)
 {
 	edict_t *pfound = nullptr;
 	// speed up loop by by using smaller ints in register
 	const short max = static_cast<short>(gpGlobals->maxEntities);
 
-	for (short int i = 0; i < max; i++)
+	for (short i = 0; i < max; i++)
 	{
 		edict_t* current = engine->PEntityOfEntIndex(i);
 
@@ -705,9 +709,9 @@ edict_t *CClassInterface::FindEntityByClassnameNearest(const Vector& vstart, con
 		{
 			const float fDist = (vstart - CBotGlobals::entityOrigin(current)).Length();
 
-			if ( !pfound  || fDist < fMindist)
+			if ( !pfound  || fDist < fMinDist)
 			{
-				fMindist = fDist;
+				fMinDist = fDist;
 				pfound = current;
 			}
 		}
@@ -721,7 +725,7 @@ edict_t *CClassInterface::FindEntityByNetClassNearest(const Vector& vstart, cons
 	edict_t *pfound = nullptr;
 	float fMindist = 8192.0f;
 
-	for (short int i = 0; i < gpGlobals->maxEntities; i++)
+	for (int i = 0; i < gpGlobals->maxEntities; i++)
 	{
 		edict_t* current = engine->PEntityOfEntIndex(i);
 		if (current == nullptr)
@@ -758,7 +762,7 @@ edict_t *CClassInterface::FindEntityByNetClassNearest(const Vector& vstart, cons
 	return pfound;
 }
 
-const char *CClassInterface::FindEntityNetClass(int start, const char *classname)
+const char *CClassInterface::FindEntityNetClass(const int start, const char *classname)
 {
 	for (int i = start != -1 ? start : 0; i < gpGlobals->maxEntities; i++)
 	{
@@ -787,7 +791,7 @@ const char *CClassInterface::FindEntityNetClass(int start, const char *classname
 	return nullptr;
 }
 // http://svn.alliedmods.net/viewvc.cgi/trunk/extensions/tf2/extension.cpp?revision=2183&root=sourcemod&pathrev=2183
-edict_t *CClassInterface::FindEntityByNetClass(int start, const char *classname)
+edict_t *CClassInterface::FindEntityByNetClass(const int start, const char *classname)
 {
 	for (int i = start != -1 ? start : 0; i < gpGlobals->maxEntities; i++)
 	{
@@ -819,16 +823,16 @@ edict_t *CClassInterface::FindEntityByNetClass(int start, const char *classname)
 
 
  int CClassInterface::getTF2Score (const edict_t* edict) 
-	{ 
-		edict_t *res = CTeamFortress2Mod::findResourceEntity();
+{ 
+	edict_t *res = CTeamFortress2Mod::findResourceEntity();
 
-		if ( res )
-		{
-			const int* score_array = g_GetProps[GETPROP_TF2SCORE].getIntPointer(res);
+	if ( res )
+	{
+		const int* score_array = g_GetProps[GETPROP_TF2SCORE].getIntPointer(res);
 
-			if ( score_array )
-				return score_array[ENTINDEX(edict)-1];
-		}
-
-		return 0;
+		if ( score_array )
+			return score_array[ENTINDEX(edict)-1];
 	}
+
+	return 0;
+}

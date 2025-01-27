@@ -82,9 +82,12 @@ public:
 // default constructor: uses default seed only if this is the first instance
   MTRand_int32() { if (!init) seed(5489UL); init = true; }
 // constructor with 32 bit int as seed
-  MTRand_int32(unsigned long s) { seed(s); init = true; }
+  MTRand_int32(const unsigned long s) { seed(s); init = true; }
 // constructor with array of size 32 bit ints as seed
-  MTRand_int32(const unsigned long* array, int size) { seed(array, size); init = true; }
+  MTRand_int32(const unsigned long* array, const int size) { seed(array, size); init = true; }
+// make copy constructor and assignment operator unavailable, they don't make sense
+  MTRand_int32(const MTRand_int32&) = delete; // copy constructor not defined
+  void operator=(const MTRand_int32&) = delete; // assignment operator not defined
 // the two seed functions
 static void seed(unsigned long); // seed with 32 bit integer
   void seed(const unsigned long*, int size) const; // seed with array
@@ -95,7 +98,7 @@ static void seed(unsigned long); // seed with 32 bit integer
 protected: // used by derived classes, otherwise not accessible; use the ()-operator
   unsigned long rand_int32(); // generate 32 bit random integer
 private:
-  static const int n = 624, m = 397; // compile time constants
+  static constexpr int n = 624, m = 397; // compile time constants
 // the variables below are static (no duplicates can exist)
   static unsigned long state[n]; // state vector array
   static int p; // position in state array
@@ -103,15 +106,12 @@ private:
 // private functions used to generate the pseudo random numbers
 static unsigned long twiddle(unsigned long, unsigned long); // used by gen_state()
   void gen_state(); // generate new state
-// make copy constructor and assignment operator unavailable, they don't make sense
-  MTRand_int32(const MTRand_int32&); // copy constructor not defined
-  void operator=(const MTRand_int32&); // assignment operator not defined
 };
 
 // inline for speed, must therefore reside in header file
-inline unsigned long MTRand_int32::twiddle(unsigned long u, unsigned long v) {
-    return ((u & 0x80000000UL) | (v & 0x7FFFFFFFUL)) >> 1
-        ^ (v & 1UL ? 0x9908B0DFUL : 0x0UL);
+inline unsigned long MTRand_int32::twiddle(const unsigned long u, const unsigned long v) {
+	return ((u & 0x80000000UL) | (v & 0x7FFFFFFFUL)) >> 1
+		^ (v & 1UL ? 0x9908B0DFUL : 0x0UL);
 }
 
 inline unsigned long MTRand_int32::rand_int32() { // generate 32 bit random int
@@ -129,61 +129,66 @@ inline unsigned long MTRand_int32::rand_int32() { // generate 32 bit random int
 class MTRand : public MTRand_int32 {
 public:
   MTRand() = default;
-  MTRand(unsigned long seed) : MTRand_int32(seed) {}
-  MTRand(const unsigned long* seed, int size) : MTRand_int32(seed, size) {}
+  MTRand(const unsigned long seed) : MTRand_int32(seed) {}
+  MTRand(const unsigned long* seed, const int size) : MTRand_int32(seed, size) {}
   ~MTRand() override = default;
 
+  MTRand(const MTRand&) = delete; // copy constructor not defined
+  void operator=(const MTRand&) = delete; // assignment operator not defined
+
   double operator()() {
-    return static_cast<double>(rand_int32()) * (1. / 4294967296.); } // divided by 2^32
+	return static_cast<double>(rand_int32()) * (1.0 / 4294967296.0); } // divided by 2^32
 private:
-  MTRand(const MTRand&); // copy constructor not defined
-  void operator=(const MTRand&); // assignment operator not defined
 };
 
 // generates double floating point numbers in the closed interval [0, 1]
 class MTRand_closed : public MTRand_int32 {
 public:
   MTRand_closed() = default;
-  MTRand_closed(unsigned long seed) : MTRand_int32(seed) {}
-  MTRand_closed(const unsigned long* seed, int size) : MTRand_int32(seed, size) {}
+  MTRand_closed(const unsigned long seed) : MTRand_int32(seed) {}
+  MTRand_closed(const unsigned long* seed, const int size) : MTRand_int32(seed, size) {}
   ~MTRand_closed() override = default;
 
+  MTRand_closed(const MTRand_closed&) = delete; // copy constructor not defined
+  void operator=(const MTRand_closed&) = delete; // assignment operator not defined
+
   double operator()() {
-    return static_cast<double>(rand_int32()) * (1. / 4294967295.); } // divided by 2^32 - 1
+	return static_cast<double>(rand_int32()) * (1.0 / 4294967295.0); } // divided by 2^32 - 1
 private:
-  MTRand_closed(const MTRand_closed&); // copy constructor not defined
-  void operator=(const MTRand_closed&); // assignment operator not defined
+
 };
 
 // generates double floating point numbers in the open interval (0, 1)
 class MTRand_open : public MTRand_int32 {
 public:
   MTRand_open() = default;
-  MTRand_open(unsigned long seed) : MTRand_int32(seed) {}
-  MTRand_open(const unsigned long* seed, int size) : MTRand_int32(seed, size) {}
+  MTRand_open(const unsigned long seed) : MTRand_int32(seed) {}
+  MTRand_open(const unsigned long* seed, const int size) : MTRand_int32(seed, size) {}
   ~MTRand_open() override = default;
 
+  MTRand_open(const MTRand_open&) = delete; // copy constructor not defined
+  void operator=(const MTRand_open&) = delete; // assignment operator not defined
+
   double operator()() {
-    return (static_cast<double>(rand_int32()) + .5) * (1. / 4294967296.); } // divided by 2^32
+	return (static_cast<double>(rand_int32()) + 0.5) * (1.0 / 4294967296.0); } // divided by 2^32
 private:
-  MTRand_open(const MTRand_open&); // copy constructor not defined
-  void operator=(const MTRand_open&); // assignment operator not defined
 };
 
 // generates 53 bit resolution doubles in the half-open interval [0, 1)
 class MTRand53 : public MTRand_int32 {
 public:
   MTRand53() = default;
-  MTRand53(unsigned long seed) : MTRand_int32(seed) {}
-  MTRand53(const unsigned long* seed, int size) : MTRand_int32(seed, size) {}
+  MTRand53(const unsigned long seed) : MTRand_int32(seed) {}
+  MTRand53(const unsigned long* seed, const int size) : MTRand_int32(seed, size) {}
   ~MTRand53() override = default;
 
-  double operator()() {
-    return (static_cast<double>(rand_int32() >> 5) * 67108864. + 
-      static_cast<double>(rand_int32() >> 6)) * (1. / 9007199254740992.); }
-private:
-  MTRand53(const MTRand53&); // copy constructor not defined
+  MTRand53(const MTRand53&) = delete; // copy constructor not defined
   void operator=(const MTRand53&); // assignment operator not defined
+
+  double operator()() {
+	return (static_cast<double>(rand_int32() >> 5) * 67108864.0 + 
+	  static_cast<double>(rand_int32() >> 6)) * (1.0 / 9007199254740992.0); }
+private:
 };
 
 #endif // MTRAND_H

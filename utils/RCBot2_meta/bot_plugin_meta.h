@@ -60,8 +60,6 @@ class IMoveHelper;
 
 #if defined WIN32 && !defined snprintf
 #define snprintf _snprintf
-#elif defined __linux__ && !defined snprintf
-#define snprintf std::snprintf
 #endif
 
 class RCBotPluginMeta : public ISmmPlugin, public IMetamodListener
@@ -99,7 +97,7 @@ public:
 		char *reject,
 		int maxrejectlen);
 
-	static void HudTextMessage(edict_t *pEntity, const char *szMessage);
+	static void HudTextMessage(const edict_t *pEntity, const char *szMessage);
 	static void BroadcastTextMessage(const char *szMessage);
 
 #if SOURCE_ENGINE >= SE_ORANGEBOX
@@ -110,7 +108,7 @@ public:
 
 //public: // SourceMod
 #if defined SM_EXT
-	void *OnMetamodQuery(const char* iface, int *ret);
+	void *OnMetamodQuery(const char* iface, int *ret) override;
 #endif
 
 //public:
@@ -133,7 +131,7 @@ private:
 
 	// Bot Quota
 	float m_fBotQuotaTimer = 0.0f;
-	int m_iTargetBots[RCBOT_MAXPLAYERS];
+	int m_iTargetBots[RCBOT_MAXPLAYERS] = {};
 
 	void BotQuotaCheck();
 };

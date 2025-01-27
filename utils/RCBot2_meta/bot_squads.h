@@ -34,9 +34,9 @@
 #include "vector.h"
 #include "bot_ehandle.h"
 
-#define SQUAD_DEFAULT_SPREAD 80.0f// say 50 units between each member...?
+constexpr float SQUAD_DEFAULT_SPREAD = 80.0f;// say 50 units between each member...?; 
 
-enum eSquadForm
+enum eSquadForm : std::uint8_t
 {
 	SQUAD_FORM_NONE = 0,
 	SQUAD_FORM_WEDGE,
@@ -47,7 +47,7 @@ enum eSquadForm
 	SQUAD_FORM_VEE
 };
 
-enum eCombatType
+enum eCombatType : std::uint8_t
 {
 	COMBAT_NONE = 0,
 	COMBAT_STEALTH,
@@ -56,7 +56,7 @@ enum eCombatType
 	COMBAT_PRONE
 };
 
-enum eTacticType
+enum eTacticType : std::uint8_t
 {
 	TACTIC_FREE = 0,
 	TACTIC_IDLE,
@@ -125,7 +125,7 @@ public:
 		return m_pLeader.get();
 	}
 
-	void SetCombatType ( eCombatType iCombatType )
+	void SetCombatType (const eCombatType iCombatType)
 	{
 		const edict_t *pLeader = GetLeader();
 
@@ -145,15 +145,15 @@ public:
 			break;
 		case COMBAT_PRONE:
 			strcpy(szCombatType,"PRONE");
-            break;
-        case COMBAT_CROUCH:
-            strcpy(szCombatType,"CROUCH");
-            break;
+			break;
+		case COMBAT_CROUCH:
+			strcpy(szCombatType,"CROUCH");
+			break;
 		case COMBAT_NONE:
 		case COMBAT_COMBAT:
 			strcpy(szCombatType,"NORMAL");
 			break;
-        }
+		}
 
 		//BotPrintTalkMessageOne ( pLeader, "Combat mode is now %s\n", szCombatType );
 	}
@@ -162,7 +162,7 @@ public:
 
 	void removeMember (const edict_t* pMember);
 
-	bool IsLeader ( edict_t *pLeader )
+	bool IsLeader (const edict_t *pLeader)
 	{
 		return GetLeader() == pLeader;
 	}
@@ -173,12 +173,12 @@ public:
 
 	bool IsMember (const edict_t* pEdict);
 
-	bool isFormation (eSquadForm theFormation) const
+	bool isFormation (const eSquadForm theFormation) const
 	{
 		return m_theDesiredFormation == theFormation;
 	}
 
-	void ChangeFormation ( eSquadForm theNewFormation )
+	void ChangeFormation (const eSquadForm theNewFormation)
 	{
 		m_theDesiredFormation = theNewFormation;
 	}
@@ -188,7 +188,7 @@ public:
 		return m_fDesiredSpread;
 	}
 
-	void ChangeSpread ( float fNewSpread )
+	void ChangeSpread (const float fNewSpread)
 	{
 		m_fDesiredSpread = fNewSpread;
 	}
@@ -201,7 +201,7 @@ public:
 
 	bool isDefensive () const { return m_Tactics == TACTIC_DEFEND; }
 
-	void setTactic ( eTacticType iTactics ) { m_Tactics = iTactics; }
+	void setTactic (const eTacticType iTactics) { m_Tactics = iTactics; }
 
 	// Squad is waiting for another squad to Syncronize
 	bool isWaitingForOtherSquad () const
@@ -253,7 +253,7 @@ public:
 
 	static CBotSquad *SquadJoin ( edict_t *pLeader, edict_t *pMember );
 
-	static CBotSquad *FindSquadByLeader ( edict_t *pLeader );
+	static CBotSquad *FindSquadByLeader (const edict_t *pLeader );
 
 	static void RemoveSquad ( CBotSquad *pSquad );
 

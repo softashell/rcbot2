@@ -63,18 +63,18 @@ class CWaypointLocations
 {
 public:
 
-	static const int REACHABLE_RANGE = 400;
+	static constexpr int REACHABLE_RANGE = 400;
 
 	// max map size is 32768
-	static const int HALF_MAX_MAP_SIZE = 16384; // need to know half (negative + positive halves = max)
+	static constexpr int HALF_MAX_MAP_SIZE = 16384; // need to know half (negative + positive halves = max)
 	/*
 	// want bucket spacing of 256 units
 	static const int MAX_WPT_BUCKETS = 128;
 	*/
 	// want bucket spacing of 512 units
-	static const int MAX_WPT_BUCKETS = 64;
+	static constexpr int MAX_WPT_BUCKETS = 64;
 
-	static const int BUCKET_SPACING = HALF_MAX_MAP_SIZE*2/MAX_WPT_BUCKETS;
+	static constexpr int BUCKET_SPACING = HALF_MAX_MAP_SIZE*2/MAX_WPT_BUCKETS;
 
 	static unsigned char g_iFailedWaypoints [ CWaypoints::MAX_WAYPOINTS ];
 	
@@ -85,7 +85,7 @@ public:
 		Init();
 	}
 
-	static unsigned char *resetFailedWaypoints (WaypointList *iIgnoreWpts);
+	static unsigned char *resetFailedWaypoints (const WaypointList *iIgnoreWpts);
 
 	static void Init()
 	{
@@ -94,13 +94,13 @@ public:
 
 	static void Clear ()
 	{
-		for ( int i = 0; i < MAX_WPT_BUCKETS; i ++ )
+		for (WaypointList (&m_iLocation)[64][64] : m_iLocations)
 		{
-			for ( int j = 0; j < MAX_WPT_BUCKETS; j ++ )
+			for (WaypointList (&j)[64] : m_iLocation)
 			{
-				for ( int k = 0; k < MAX_WPT_BUCKETS; k ++ )
+				for (WaypointList& k : j)
 				{
-					m_iLocations[i][j][k].clear();
+					k.clear();
 				}
 			}
 		}
@@ -112,14 +112,14 @@ public:
 									    int *iMinLoci, int *iMinLocj, int *iMinLock,
 									    int *iMaxLoci, int *iMaxLocj, int *iMaxLock );
 
-	static int GetCoverWaypoint (const Vector& vPlayerOrigin, const Vector& vCoverFrom, WaypointList *iIgnoreWpts, Vector *vGoalOrigin = nullptr, int iTeam = 0, float fMinDist = MIN_COVER_MOVE_DIST, float fMaxDist = HALF_MAX_MAP_SIZE );
+	static int GetCoverWaypoint (const Vector& vPlayerOrigin, const Vector& vCoverFrom, WaypointList *iIgnoreWpts, const Vector *vGoalOrigin = nullptr, int iTeam = 0, float fMinDist = MIN_COVER_MOVE_DIST, float fMaxDist = HALF_MAX_MAP_SIZE);
 
-	static void FindNearestCoverWaypointInBucket ( int i, int j, int k, const Vector &vOrigin, float *pfMinDist, int *piIndex, WaypointList *iIgnoreWpts, int iCoverFromWpt, Vector *vGoalOrigin = nullptr, int iTeam = 0, float fMinDist = MIN_COVER_MOVE_DIST );
+	static void FindNearestCoverWaypointInBucket (int i, int j, int k, const Vector &vOrigin, float *pfMinDist, int *piIndex, WaypointList *iIgnoreWpts, int iCoverFromWpt, const Vector *vGoalOrigin = nullptr, int iTeam = 0, float fMinDist = MIN_COVER_MOVE_DIST);
 
 	static void AddWptLocation ( int iIndex, const float *fOrigin );
 
 	static void FindNearestInBucket ( int i, int j, int k, const Vector &vOrigin, float *pfMinDist, int *piIndex,int iIgnoreWpt, bool bGetVisible = true, bool bGetUnreachable = false, bool bIsBot = false, WaypointList *iFailedWpts = nullptr, bool bNearestAimingOnly = false, int iTeam = 0, bool bCheckArea = false, bool bGetVisibleFromOther = false, const Vector& vOther = Vector(0,0,0), int iFlagsOnly = 0, edict_t *pPlayer = nullptr);
-	static void DrawWaypoints ( CClient *pClient, float fDist );
+	static void DrawWaypoints (const CClient *pClient, float fDist);
 	
 	static void DeleteWptLocation ( int iIndex, const float *fOrigin );
 	
@@ -136,7 +136,7 @@ public:
 
 	static void AutoPath ( edict_t *pPlayer, int iWpt );
 
-	static void AutoPathInBucket ( edict_t *pPlayer, int i, int j, int k, int iWpt );
+	static void AutoPathInBucket (edict_t *pPlayer, int i, int j, int k, int iWptFrom);
 	
 	static int NearestBlastWaypoint ( const Vector &vOrigin, const Vector &vSrc, float fNearestDist, int iIgnoreWpt, bool bGetVisible, bool bGetUnReachable, bool bIsBot, bool bNearestAimingOnly, int iTeam, bool bCheckArea, float fBlastRadius = BLAST_RADIUS );
 

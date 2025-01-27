@@ -43,7 +43,7 @@ std::vector<CAccessClient*> CAccessClients :: m_Clients;
 
 ///////////
 
-CAccessClient :: CAccessClient( const char *szSteamID, int iAccessLevel )
+CAccessClient :: CAccessClient(const char *szSteamID, const int iAccessLevel)
 {
 	m_iAccessLevel = iAccessLevel;
 	m_szSteamID = CStrings::getString(szSteamID);
@@ -54,7 +54,7 @@ bool CAccessClient :: forBot () const
 	return isForSteamID("BOT");
 }
 
-bool CAccessClient :: isForSteamID ( const char *szSteamID ) const
+bool CAccessClient :: isForSteamID (const char *szSteamID) const
 {
 	logger->Log(LogLevel::DEBUG, "AccessClient: '%s','%s'", m_szSteamID, szSteamID);
 	return FStrEq(m_szSteamID,szSteamID);
@@ -85,10 +85,8 @@ void CAccessClients :: showUsers ( edict_t *pEntity )
 	if ( m_Clients.empty() )
 		logger->Log(LogLevel::DEBUG, "showUsers() : No users to show");
 
-	for ( unsigned int i = 0; i < m_Clients.size(); i ++ )
+	for (const CAccessClient* pPlayer : m_Clients)
 	{
-		const CAccessClient* pPlayer = m_Clients[i];
-
 		const CClient* pClient = CClients::findClientBySteamID(pPlayer->getSteamID());
 		
 		if ( pClient )
@@ -101,10 +99,10 @@ void CAccessClients :: showUsers ( edict_t *pEntity )
 
 void CAccessClients :: freeMemory ()
 {
-	for ( unsigned int i = 0; i < m_Clients.size(); i ++ )
+	for (CAccessClient*& m_Client : m_Clients)
 	{
-		delete m_Clients[i];
-		m_Clients[i] = nullptr;
+		delete m_Client;
+		m_Client = nullptr;
 	}
 
 	m_Clients.clear();
@@ -141,14 +139,14 @@ void CAccessClients :: load ()
 			if ( buffer[0] == '#' )
 				continue;
 
-			const int len = std::strlen(buffer);
+			const size_t len = std::strlen(buffer);
 
-			int i = 0;
+			size_t i = 0;
 
 			while (( i < len ) && ((buffer[i] == '\"') || (buffer[i] == ' ')))
 				i++;
 
-			int n = 0;
+			unsigned n = 0;
 
 			// parse Steam ID
 			while ( (n<31) && (i < len) && (buffer[i] != '\"') )			
@@ -200,9 +198,9 @@ void CAccessClients :: save ()
 
 	if ( fp )
 	{
-		for ( unsigned int i = 0; i < m_Clients.size(); i ++ )
+		for (CAccessClient* const& m_Client : m_Clients)
 		{
-			m_Clients[i]->save(fp);
+			m_Client->save(fp);
 		}
 	}
 	else
@@ -213,10 +211,8 @@ void CAccessClients :: save ()
 
 void CAccessClients :: checkClientAccess ( CClient *pClient )
 {
-	for ( unsigned int i = 0; i < m_Clients.size(); i ++ )
+	for (const CAccessClient* pAC : m_Clients)
 	{
-		const CAccessClient *pAC = m_Clients[i];
-
 		if ( pAC->isForSteamID(pClient->getSteamID()) )
 			pAC->giveAccessToClient(pClient);
 	}

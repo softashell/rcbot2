@@ -21,6 +21,9 @@
     <Filter Include="Source Files\rcbot\tf2">
       <UniqueIdentifier>{6884231c-53d4-4673-9b74-c1811a727656}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\loader">
+      <UniqueIdentifier>{64422f0c-16cb-4913-acca-78f7f22042de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bot.cpp">
@@ -182,12 +185,6 @@
     <ClCompile Include="..\..\rcbot_subcmds\pathwaypoint.cpp">
       <Filter>Source Files\rcbot_subcmds</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\rcbot_subcmds\users.cpp">
-      <Filter>Source Files\rcbot_subcmds</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\rcbot_subcmds\util.cpp">
-      <Filter>Source Files\rcbot_subcmds</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\rcbot_subcmds\waypoint.cpp">
       <Filter>Source Files\rcbot_subcmds</Filter>
     </ClCompile>
@@ -218,6 +215,21 @@
     <ClCompile Include="bot_dystopia_mod.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\rcbot\propvar.cpp">
+      <Filter>Source Files\rcbot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\loader\loader.cpp">
+      <Filter>Source Files\loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\rcbot_subcmds\users.cpp">
+      <Filter>Source Files\rcbot_subcmds</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\rcbot_subcmds\util.cpp">
+      <Filter>Source Files\rcbot_subcmds</Filter>
+    </ClCompile>
+    <ClCompile Include="bot_black_mesa.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bot.h">
@@ -236,9 +248,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="bot_commands.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="bot_config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="bot_configfile.h">
@@ -364,9 +373,6 @@
     <ClInclude Include="bot_sigscan.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="bot_hooks.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="bot_cvars.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -399,6 +405,22 @@
     </ClInclude>
     <ClInclude Include="..\..\rcbot\tf2\conditions.h">
       <Filter>Source Files\rcbot\tf2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\rcbot\propvar.h">
+      <Filter>Source Files\rcbot</Filter>
+    </ClInclude>
+    <ClInclude Include="bot_css_buying.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bot_ga_nn_const.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="logging.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bot_black_mesa.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="bot_dystopia.h">
       <Filter>Header Files</Filter>
     </ClInclude>

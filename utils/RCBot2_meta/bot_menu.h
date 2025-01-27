@@ -55,7 +55,7 @@ class CBotMenuItem;
 class WptColor;
 
 // menu types
-typedef enum
+typedef enum : std::uint8_t
 {
 	BOT_MENU_NONE = 0,
 	BOT_MENU_WAYPOINT_MAIN,
@@ -82,7 +82,10 @@ typedef enum
 	BOT_MENU_MAX_ITEMS
 }eBotMenus;
 
-#define MAX_MENU_CAPTION_LENGTH 64
+enum : std::uint8_t
+{
+	MAX_MENU_CAPTION_LENGTH = 64
+};
 
 class CBotMenuItem
 {
@@ -91,6 +94,8 @@ public:
 	{
 		m_szCaption[0] = 0;
 	}
+
+	virtual ~CBotMenuItem() = default;
 
 	virtual const char *getCaption ( CClient *pClient, WptColor &color );
 
@@ -111,7 +116,7 @@ protected:
 class CWaypointFlagMenuItem : public CBotMenuItem
 {
 public:
-	CWaypointFlagMenuItem ( int iFlag )
+	CWaypointFlagMenuItem (const int iFlag)
 	{
 		m_iFlag = iFlag;
 	}
@@ -176,7 +181,7 @@ public:
 
 	void activate ( CClient *pClient ) override;
 
-	Color getColor ( CClient *pClient ); // gets the colour of the caption
+	static Color getColor ( CClient *pClient ); // gets the colour of the caption - TODO: not implemented yet? [APG]RoboCop[CL]
 
 	virtual void addMenuItem ( CBotMenuItem *item )
 	{
@@ -185,7 +190,7 @@ public:
 
 	void render ( CClient *pClient );
 
-	void selectedMenu ( CClient *pClient, unsigned int iMenu ) const;
+	void selectedMenu ( CClient *pClient, unsigned iMenu ) const;
 
 private:
 	std::vector<CBotMenuItem*> m_MenuItems;
@@ -210,7 +215,7 @@ public:
 class CWaypointFlagShowMenuItem : public CBotMenuItem
 {
 public:
-	CWaypointFlagShowMenuItem ( int iFlag )
+	CWaypointFlagShowMenuItem (const int iFlag)
 	{
 		m_iFlag = iFlag;
 	}
@@ -454,7 +459,7 @@ public:
 	const char *getCaption(CClient *pClient,WptColor &color );
 };*/
 
-enum 
+enum : std::uint8_t
 {
 	BOT_MENU_WPT = 0,
 	//BOT_MENU_BOT = 1,
@@ -466,7 +471,7 @@ class CBotMenuList
 public:
 	CBotMenuList ()
 	{
-		memset(m_MenuList,0,sizeof(CBotMenu*)*BOT_MENU_MAX);
+		std::memset(m_MenuList,0,sizeof(CBotMenu*)*BOT_MENU_MAX);
 	}
 
 	static void setupMenus ();
@@ -475,9 +480,9 @@ public:
 	
 	static void render ( CClient *pClient ); // render
 
-	static void selectedMenu ( CClient *pClient, unsigned int iMenu );
+	static void selectedMenu ( CClient *pClient, unsigned iMenu );
 
-	static CBotMenu *getMenu ( int id ) { return m_MenuList[id]; }
+	static CBotMenu *getMenu (const int id) { return m_MenuList[id]; }
 
 private:
 	static CBotMenu *m_MenuList[BOT_MENU_MAX];

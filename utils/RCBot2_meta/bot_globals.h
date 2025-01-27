@@ -44,9 +44,12 @@
 #include <cctype>
 #endif
 
-#define MAX_MAP_STRING_LEN 64
-#define MAX_PATH_LEN 512
-#define MAX_ENTITIES 2048
+enum : std::uint16_t
+{
+	MAX_MAP_STRING_LEN = 64,
+	MAX_PATH_LEN = 512,
+	MAX_ENTITIES = 2048
+};
 
 class CBotGlobals
 {
@@ -74,7 +77,7 @@ public:
 
 	static bool walkableFromTo (edict_t *pPlayer, const Vector& v_src, const Vector& v_dest);
 
-	static void teleportPlayer ( edict_t *pPlayer, const Vector& v_dest );
+	static void teleportPlayer (const edict_t *pPlayer, const Vector& v_dest);
 
 	static float yawAngleFromEdict(edict_t *pEntity, const Vector& vOrigin);
 	//static float getAvoidAngle(edict_t *pEdict,Vector origin);
@@ -100,7 +103,7 @@ public:
 	static char *getMapName (); 
 
 	static bool IsMapRunning () { return m_bMapRunning; }
-	static void setMapRunning ( bool bSet ) { m_bMapRunning = bSet; }
+	static void setMapRunning (const bool bSet) { m_bMapRunning = bSet; }
 
 	static bool isNetworkable ( edict_t *pEntity );
 
@@ -109,7 +112,7 @@ public:
 		return pEntity && !pEntity->IsFree() && pEntity->GetNetworkable() != nullptr && pEntity->GetIServerEntity() != nullptr && pEntity->m_NetworkSerialNumber != 0;	
 	}
 
-	static void serverSay ( char *fmt, ... );
+	static void serverSay (const char* fmt, ... );
 
 	static bool isAlivePlayer ( edict_t *pEntity );
 
@@ -151,7 +154,7 @@ public:
 		const Vector &amins, const Vector &amaxs,
 		const Vector &bmins, const Vector &bmaxs );
 
-	static float grenadeWillLand (const Vector& vOrigin, const Vector& vEnemy, float fProjSpeed = 400.0f, float fGrenadePrimeTime = 5.0f, float *fAngle = nullptr);
+	static float grenadeWillLand (const Vector& vOrigin, const Vector& vEnemy, float fProjSpeed = 400.0f, float fGrenadePrimeTime = 5.0f, const float *fAngle = nullptr);
 	////////////////////////////////////////////////////////////////////////
 
 	/*static Vector forwardVec ();
@@ -164,7 +167,7 @@ public:
 	static bool isVisible ( edict_t *pPlayer, const Vector& vSrc, edict_t *pDest);
 	static bool isShotVisible ( edict_t *pPlayer, const Vector& vSrc, const Vector& vDest, edict_t *pDest );
 	static bool isVisible (const Vector& vSrc, const Vector& vDest);
-	static void traceLine (const Vector& vSrc, const Vector& vDest, unsigned int mask, ITraceFilter *pFilter);
+	static void traceLine (const Vector& vSrc, const Vector& vDest, unsigned mask, ITraceFilter *pFilter);
 	static float quickTraceline ( edict_t *pIgnore, const Vector& vSrc, const Vector& vDest ); // return fFraction
 	static bool traceVisible (edict_t *pEnt);
 	////////
@@ -175,21 +178,21 @@ public:
 	static int getTeam ( edict_t *pEntity );
 	static bool entityIsAlive ( edict_t *pEntity );
 	static bool isBrushEntity( edict_t *pEntity );
-	static int countTeamMatesNearOrigin (const Vector& vOrigin, float fRange, int iTeam, edict_t *pIgnore = nullptr);
+	static int countTeamMatesNearOrigin (const Vector& vOrigin, float fRange, int iTeam, const edict_t *pIgnore = nullptr);
 	static int numClients ();
 	static void levelInit();
 
-	static void setClientMax ( int iMaxClients ) { m_iMaxClients = iMaxClients; }
+	static void setClientMax (const int iMaxClients) { m_iMaxClients = iMaxClients; }
 
-	static void setEventVersion ( int iVersion ){m_iEventVersion = iVersion;}
+	static void setEventVersion (const int iVersion) { m_iEventVersion = iVersion; }
 
-	static bool isEventVersion ( int iVersion ){return m_iEventVersion == iVersion;}
+	static bool isEventVersion (const int iVersion) { return m_iEventVersion == iVersion; }
 
-	static bool getTeamplayOn (){return m_bTeamplay;}
+	static bool getTeamplayOn () { return m_bTeamplay; }
 
-	static void setTeamplay ( bool bOn ){m_bTeamplay = bOn;}
+	static void setTeamplay (const bool bOn) { m_bTeamplay = bOn; }
 
-	static bool isMod ( eModId iMod ) { return m_iCurrentMod == iMod; }
+	static bool isMod (const eModId iMod) { return m_iCurrentMod == iMod; }
 
 	static char *modFolder (){return m_szModFolder;}
 
@@ -197,7 +200,7 @@ public:
 
 	static edict_t *playerByUserId(int iUserId);
 
-	static bool isCurrentMod ( eModId modid );
+	static bool isCurrentMod ( eModId modid ); //TODO: not implemented? [APG]RoboCop[CL]
 
 	static bool checkOpensLater (const Vector& vSrc, const Vector& vDest );
 
@@ -205,7 +208,7 @@ public:
 
 	static bool isBreakableOpen ( edict_t *pBreakable );
 
-	static Vector getVelocity ( edict_t *pPlayer );
+	static Vector getVelocity (const edict_t *pPlayer );
 
 	static bool isBoundsDefinedInEntitySpace( edict_t *pEntity )
 	{

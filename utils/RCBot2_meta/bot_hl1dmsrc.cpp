@@ -38,16 +38,15 @@
 
 #include <cstring>
 
-void CHL1DMSrcBot :: init ()
+void CHL1DMSrcBot :: init (const bool bVarInit)
 {
-	CBot::init();
+	CBot::init(bVarInit);
 }
 
 void CHL1DMSrcBot :: setup ()
 {
 	CBot::setup();
 }
-
 
 bool CHL1DMSrcBot :: startGame ()
 {
@@ -59,7 +58,7 @@ void CHL1DMSrcBot :: killed ( edict_t *pVictim )
 	return;
 }
 
-void CHL1DMSrcBot :: died ( edict_t *pKiller )
+void CHL1DMSrcBot :: died (edict_t* pKiller, const char* pszWeapon)
 {
 	spawnInit();
 
@@ -114,5 +113,4 @@ bool CHL1DMSrcBot :: isEnemy ( edict_t *pEdict,bool bCheckWeapons )
 void CHL1DMSrcBot :: modThink ()
 {
 	// find weapons and neat stuff
-
 }

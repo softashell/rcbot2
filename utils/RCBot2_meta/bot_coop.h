@@ -33,12 +33,14 @@
 #ifndef __BOT_COOP_H__
 #define __BOT_COOP_H__
 
+#include "bot.h"
+
 class CBotCoop : public CBot
 {
 public:
 	void modThink () override;
 
-	bool isEnemy ( edict_t *pEdict, bool bCheckWeapons = true  ) override;
+	bool isEnemy ( edict_t *pEdict, bool bCheckWeapons = true ) override;
 
 	bool startGame () override;
 };

@@ -51,38 +51,38 @@ public:
 		return m_szFunction; 
 	}
 
-    void Start();
+	void Start();
 
-    void Stop();
+	void Stop();
 
 	void print(const double* high);
 
 #ifndef __linux__
 	__int64 getOverall() const
 #else
-	inline long long getOverall()
+	inline long long getOverall() const
 #endif
-    {
-        return m_overall;
-    }
-    
+	{
+		return m_overall;
+	}
+	
 private:
 #ifndef __linux__
-    unsigned __int64  start_cycle;
-    unsigned __int64  end_cycle;
-    unsigned __int64  m_average;
-    unsigned __int64  m_min;
-    unsigned __int64  m_max;
-    unsigned __int64  m_last;
-    unsigned __int64  m_overall;
+	unsigned __int64  start_cycle;
+	unsigned __int64  end_cycle;
+	unsigned __int64  m_average;
+	unsigned __int64  m_min;
+	unsigned __int64  m_max;
+	unsigned __int64  m_last;
+	unsigned __int64  m_overall;
 #else    
-    unsigned long long  start_cycle;
-    unsigned long long  end_cycle;
-    unsigned long long  m_average;
-    unsigned long long  m_min;
-    unsigned long long  m_max;
-    unsigned long long  m_last;
-    unsigned long long  m_overall;
+	unsigned long long  start_cycle;
+	unsigned long long  end_cycle;
+	unsigned long long  m_average;
+	unsigned long long  m_min;
+	unsigned long long  m_max;
+	unsigned long long  m_last;
+	unsigned long long  m_overall;
 #endif
 	
 	const char* m_szFunction;
@@ -94,7 +94,7 @@ private:
 	int m_iInvoked; 
 };
 
-enum
+enum : std::uint8_t
 {
 	BOTS_THINK_TIMER = 0,
 	BOT_THINK_TIMER = 1,

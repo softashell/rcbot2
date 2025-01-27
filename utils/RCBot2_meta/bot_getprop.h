@@ -3,187 +3,189 @@
 
 #include <engine_wrappers.h>
 
-typedef enum
+#include "bot_const.h"
+
+typedef enum : std::uint8_t
 {
 	TELE_ENTRANCE = 0,
 	TELE_EXIT
 }eTeleMode;
 
-typedef enum
+typedef enum : std::int16_t
 {
-	GETPROP_UNDEF = -1,
+	GETPROP_UNDEF = (-1),
 	GETPROP_TF2SCORE = 0,
-	GETPROP_ENTITY_FLAGS,
-	GETPROP_TEAM,
-	GETPROP_PLAYERHEALTH,
-	GETPROP_EFFECTS,
-	GETPROP_AMMO,
-	GETPROP_TF2_NUMHEALERS,
-	GETPROP_TF2_CONDITIONS,
-	GETPROP_VELOCITY,
-	GETPROP_TF2CLASS,
-	GETPROP_TF2SPYMETER,// CTFPlayer::
-	GETPROP_TF2SPYDISGUISED_TEAM,//CTFPlayer::m_nDisguiseTeam
-	GETPROP_TF2SPYDISGUISED_CLASS,//CTFPlayer::m_nDisguiseClass
-	GETPROP_TF2SPYDISGUISED_TARGET,//CTFPlayer::m_iDisguiseTargetIndex - nosoop fix for VScript update
-	GETPROP_TF2SPYDISGUISED_DIS_HEALTH,//CTFPlayer::m_iDisguiseHealth
- 	GETPROP_TF2MEDIGUN_HEALING,
-	GETPROP_TF2MEDIGUN_TARGETTING,
+	GETPROP_ENTITY_FLAGS = 1,
+	GETPROP_TEAM = 2,
+	GETPROP_PLAYERHEALTH = 3,
+	GETPROP_EFFECTS = 4,
+	GETPROP_AMMO = 5,
+	GETPROP_TF2_NUMHEALERS = 6,
+	GETPROP_TF2_CONDITIONS = 7,
+	GETPROP_VELOCITY = 8,
+	GETPROP_TF2CLASS = 9,
+	GETPROP_TF2SPYMETER = 10, // CTFPlayer::
+	GETPROP_TF2SPYDISGUISED_TEAM = 11, //CTFPlayer::m_nDisguiseTeam
+	GETPROP_TF2SPYDISGUISED_CLASS = 12, //CTFPlayer::m_nDisguiseClass
+	GETPROP_TF2SPYDISGUISED_TARGET = 13, //CTFPlayer::m_iDisguiseTargetIndex - nosoop fix for VScript update
+	GETPROP_TF2SPYDISGUISED_DIS_HEALTH = 14, //CTFPlayer::m_iDisguiseHealth
+	GETPROP_TF2MEDIGUN_HEALING = 15,
+	GETPROP_TF2MEDIGUN_TARGETTING = 16,
 	//SETPROP_SET_TICK_BASE,
-	GETPROP_TF2TELEPORTERMODE,
-	GETPROP_CURRENTWEAPON,
-	GETPROP_TF2UBERCHARGE_LEVEL,
-	GETPROP_TF2SENTRYHEALTH,
-	GETPROP_TF2DISPENSERHEALTH,
-	GETPROP_TF2TELEPORTERHEALTH,
-	GETPROP_TF2OBJECTCARRIED,
-	GETPROP_TF2OBJECTUPGRADELEVEL,
-	GETPROP_TF2OBJECTUPGRADEMETAL,
-	GETPROP_TF2OBJECTMAXHEALTH,
-	GETPROP_TF2DISPMETAL,
-	GETPROP_TF2MINIBUILDING,
-	GETPROP_MAXSPEED,
-	GETPROP_CONSTRAINT_SPEED,
-	GETPROP_TF2OBJECTBUILDING,
-	GETPROP_HL2DM_PHYSCANNON_ATTACHED,
-	GETPROP_HL2DM_PHYSCANNON_OPEN,
-	GETPROP_HL2DM_PLAYER_AUXPOWER,
-	GETPROP_HL2DM_LADDER_ENT,
-	GETPROP_WEAPONLIST,
-	GETPROP_WEAPONSTATE,
-	GETPROP_WEAPONCLIP1,
-	GETPROP_WEAPONCLIP2,
-	GETPROP_WEAPON_AMMOTYPE1,
-	GETPROP_WEAPON_AMMOTYPE2,
-	GETPROP_DOD_PLAYERCLASS,
-	GETPROP_DOD_DES_PLAYERCLASS,
-	GETPROP_DOD_STAMINA,
-	GETPROP_DOD_PRONE,
-	GETPROP_SEQUENCE,
-	GETPROP_CYCLE,
-	GETPROP_ENTITYFLAGS,
-	GETPROP_DOD_CP_NUMCAPS,
-	GETPROP_DOD_CP_POSITIONS,
-	GETPROP_DOD_CP_ALLIES_REQ_CAP,
-	GETPROP_DOD_CP_AXIS_REQ_CAP,
-	GETPROP_DOD_CP_NUM_AXIS,
-	GETPROP_DOD_CP_NUM_ALLIES,
-	GETPROP_DOD_CP_OWNER,
-	GETPROP_DOD_SNIPER_ZOOMED,
-	GETPROP_DOD_MACHINEGUN_DEPLOYED,
-	GETPROP_DOD_ROCKET_DEPLOYED,
-	GETPROP_DOD_SEMI_AUTO,
-	GETPROP_MOVETYPE,
-	GETPROP_DOD_GREN_THROWER,
-	GETPROP_DOD_SCORE,
-	GETPROP_DOD_OBJSCORE,
-	GETPROP_DOD_DEATHS,
-	GETPROP_DOD_SMOKESPAWN_TIME,
-	GETPROP_DOD_ROUNDTIME,
-	GETPROP_DOD_K98ZOOM,
-	GETPROP_DOD_GARANDZOOM,
-	GETPROP_DOD_ALLIESBOMBING,
-	GETPROP_DOD_AXISBOMBING,
-	GETPROP_DOD_BOMBSPLANTED,
-	GETPROP_DOD_BOMBSREQ,
-	GETPROP_DOD_BOMBSDEFUSED,
-	GETPROP_DOD_BOMBSREMAINING,
-	GETPROP_DOD_PLANTINGBOMB,
-	GETPROP_DOD_DEFUSINGBOMB,
-	GETPROP_ALL_ENTOWNER,
-	GETPROP_DOD_BOMB_STATE,
-	GETPROP_DOD_BOMB_TEAM,
-	GETPROP_DOD_CP_VISIBLE,
-	GETPROP_GROUND_ENTITY,
-	GETPROP_ORIGIN,
-	GETPROP_TAKEDAMAGE,
-	GETPROP_SENTRY_ENEMY,
-	GETPROP_WATERLEVEL,
-	GETPROP_TF2OBJECTSHELLS,
-	GETPROP_TF2OBJECTROCKETS,
-	GETPROP_TF2_TELEPORT_RECHARGETIME,
-	GETPROP_TF2_TELEPORT_RECHARGEDURATION,
-	GETPROP_TF2_OBJTR_m_vCPPositions,
-	GETPROP_TF2_OBJTR_m_bCPIsVisible,
-	GETPROP_TF2_OBJTR_m_iTeamIcons,
-	GETPROP_TF2_OBJTR_m_iTeamOverlays,
-	GETPROP_TF2_OBJTR_m_iTeamReqCappers,
-	GETPROP_TF2_OBJTR_m_flTeamCapTime,
-	GETPROP_TF2_OBJTR_m_iPreviousPoints,
-	GETPROP_TF2_OBJTR_m_bTeamCanCap,
-	GETPROP_TF2_OBJTR_m_iTeamBaseIcons,
-	GETPROP_TF2_OBJTR_m_iBaseControlPoints,
-	GETPROP_TF2_OBJTR_m_bInMiniRound,
-	GETPROP_TF2_OBJTR_m_iWarnOnCap,
-	GETPROP_TF2_OBJTR_m_iCPGroup,
-	GETPROP_TF2_OBJTR_m_bCPLocked,
-	GETPROP_TF2_OBJTR_m_bTrackAlarm,
-	GETPROP_TF2_OBJTR_m_flUnlockTimes,
-	GETPROP_TF2_OBJTR_m_flCPTimerTimes,
-	GETPROP_TF2_OBJTR_m_iNumTeamMembers,
-	GETPROP_TF2_OBJTR_m_iCappingTeam,
-	GETPROP_TF2_OBJTR_m_iTeamInZone,
-	GETPROP_TF2_OBJTR_m_bBlocked,
-	GETPROP_TF2_OBJTR_m_iOwner,
-	GETPROP_TF2_OBJTR_m_bCPCapRateScalesWithPlayers,
-	GETPROP_TF2_OBJTR_m_iNumControlPoints,
-	GETPROP_TF2_OBJTR_m_bPlayingMiniRounds,
-	GETPROP_TF2_RNDTM_m_flTimerEndTime,
-	GETPROP_TF2_RNDTM_m_nSetupTimeLength,
-	GETPROP_TF2_RNDTM_m_bInSetup,
-	GETPROP_PIPEBOMB_OWNER,
-	GETPROP_TF2_TAUNTYAW,
-	GETPROP_TF2_HIGHFIVE,
-	GETPROP_TF2_HIGHFIVE_PARTNER,
-	GETPROP_SENTRYGUN_PLACING,
-	GETPROP_TF2_ISCARRYINGOBJ,
-	GETPROP_TF2_GETCARRIEDOBJ,
-	GETPROP_TF2_ITEMDEFINITIONINDEX,
-	GETPROP_TF2_DISGUISEWEARABLE,
-	GETPROP_TF2_RAGEMETER,
-	GETPROP_TF2_RAGEDRAINING,
-	GETPROP_SIMULATIONTIME,
-	GETPROP_TF2_INUPGRADEZONE,
-	GETPROP_TF2_ENERGYDRINKMETER,
-	GETPROP_TF2_MEDIEVALMODE,
-	GETPROP_TF2_ACTIVEWEAPON,
-	GETPROP_TF2_BUILDER_TYPE,
-	GETPROP_TF2_BUILDER_MODE,
-	GETPROP_TF2_CHARGE_RESIST_TYPE,
-	GETPROP_TF2_ROUNDSTATE,
-	GETPROP_TF2DESIREDCLASS, //Jrob
-	GETPROP_SYN_PLAYER_VEHICLE,
-	GETPROP_SYN_VEHICLE_DRIVER,
-	GETPROP_SYN_SUITPOWER,
-	GETPROP_CSS_MONEY,
-	GETPROP_CSS_INBUYZONE,
-	GETPROP_CSS_INBOMBZONE,
-	GETPROP_CSS_INHOSTAGERESCUEZONE,
-	GETPROP_CSS_ARMOR,
-	GETPROP_CSS_HASDEFUSER,
-	GETPROP_CSS_HASHELMET,
-	GETPROP_CSS_BOMBTICKING,
-	GETPROP_PLAYER_FOV,
-	GETPROP_PLAYER_LIFESTATE,
-	GETPROP_CSS_HOSTAGE_HEALTH,
-	GETPROP_CSS_HOSTAGE_RESCUED,
-	GETPROP_CSS_HOSTAGE_LEADER,
-	GETPROP_DYS_PLAYERCLASS,
-	GETPROP_DYS_CUILINGTURRET_ENABLED,
-	GETPROP_DYS_CUILINGTURRET_ACTIVE,
-	GETPROP_DYS_CUILINGTURRET_THERMAL,
-	GETPROP_DYS_CUILINGTURRET_INVINCIBLE,
-	GETPROP_DYS_CUILINGTURRET_TEAM,
-	GETPROP_DYS_CUILINGTURRET_HEALTH,
-	GET_PROPDATA_MAX
-}getpropdata_id;
+	GETPROP_TF2TELEPORTERMODE = 17,
+	GETPROP_CURRENTWEAPON = 18,
+	GETPROP_TF2UBERCHARGE_LEVEL = 19,
+	GETPROP_TF2SENTRYHEALTH = 20,
+	GETPROP_TF2DISPENSERHEALTH = 21,
+	GETPROP_TF2TELEPORTERHEALTH = 22,
+	GETPROP_TF2OBJECTCARRIED = 23,
+	GETPROP_TF2OBJECTUPGRADELEVEL = 24,
+	GETPROP_TF2OBJECTUPGRADEMETAL = 25,
+	GETPROP_TF2OBJECTMAXHEALTH = 26,
+	GETPROP_TF2DISPMETAL = 27,
+	GETPROP_TF2MINIBUILDING = 28,
+	GETPROP_MAXSPEED = 29,
+	GETPROP_CONSTRAINT_SPEED = 30,
+	GETPROP_TF2OBJECTBUILDING = 31,
+	GETPROP_HL2DM_PHYSCANNON_ATTACHED = 32,
+	GETPROP_HL2DM_PHYSCANNON_OPEN = 33,
+	GETPROP_HL2DM_PLAYER_AUXPOWER = 34,
+	GETPROP_HL2DM_LADDER_ENT = 35,
+	GETPROP_WEAPONLIST = 36,
+	GETPROP_WEAPONSTATE = 37,
+	GETPROP_WEAPONCLIP1 = 38,
+	GETPROP_WEAPONCLIP2 = 39,
+	GETPROP_WEAPON_AMMOTYPE1 = 40,
+	GETPROP_WEAPON_AMMOTYPE2 = 41,
+	GETPROP_DOD_PLAYERCLASS = 42,
+	GETPROP_DOD_DES_PLAYERCLASS = 43,
+	GETPROP_DOD_STAMINA = 44,
+	GETPROP_DOD_PRONE = 45,
+	GETPROP_SEQUENCE = 46,
+	GETPROP_CYCLE = 47,
+	GETPROP_ENTITYFLAGS = 48,
+	GETPROP_DOD_CP_NUMCAPS = 49,
+	GETPROP_DOD_CP_POSITIONS = 50,
+	GETPROP_DOD_CP_ALLIES_REQ_CAP = 51,
+	GETPROP_DOD_CP_AXIS_REQ_CAP = 52,
+	GETPROP_DOD_CP_NUM_AXIS = 53,
+	GETPROP_DOD_CP_NUM_ALLIES = 54,
+	GETPROP_DOD_CP_OWNER = 55,
+	GETPROP_DOD_SNIPER_ZOOMED = 56,
+	GETPROP_DOD_MACHINEGUN_DEPLOYED = 57,
+	GETPROP_DOD_ROCKET_DEPLOYED = 58,
+	GETPROP_DOD_SEMI_AUTO = 59,
+	GETPROP_MOVETYPE = 60,
+	GETPROP_DOD_GREN_THROWER = 61,
+	GETPROP_DOD_SCORE = 62,
+	GETPROP_DOD_OBJSCORE = 63,
+	GETPROP_DOD_DEATHS = 64,
+	GETPROP_DOD_SMOKESPAWN_TIME = 65,
+	GETPROP_DOD_ROUNDTIME = 66,
+	GETPROP_DOD_K98ZOOM = 67,
+	GETPROP_DOD_GARANDZOOM = 68,
+	GETPROP_DOD_ALLIESBOMBING = 69,
+	GETPROP_DOD_AXISBOMBING = 70,
+	GETPROP_DOD_BOMBSPLANTED = 71,
+	GETPROP_DOD_BOMBSREQ = 72,
+	GETPROP_DOD_BOMBSDEFUSED = 73,
+	GETPROP_DOD_BOMBSREMAINING = 74,
+	GETPROP_DOD_PLANTINGBOMB = 75,
+	GETPROP_DOD_DEFUSINGBOMB = 76,
+	GETPROP_ALL_ENTOWNER = 77,
+	GETPROP_DOD_BOMB_STATE = 78,
+	GETPROP_DOD_BOMB_TEAM = 79,
+	GETPROP_DOD_CP_VISIBLE = 80,
+	GETPROP_GROUND_ENTITY = 81,
+	GETPROP_ORIGIN = 82,
+	GETPROP_TAKEDAMAGE = 83,
+	GETPROP_SENTRY_ENEMY = 84,
+	GETPROP_WATERLEVEL = 85,
+	GETPROP_TF2OBJECTSHELLS = 86,
+	GETPROP_TF2OBJECTROCKETS = 87,
+	GETPROP_TF2_TELEPORT_RECHARGETIME = 88,
+	GETPROP_TF2_TELEPORT_RECHARGEDURATION = 89,
+	GETPROP_TF2_OBJTR_m_vCPPositions = 90,
+	GETPROP_TF2_OBJTR_m_bCPIsVisible = 91,
+	GETPROP_TF2_OBJTR_m_iTeamIcons = 92,
+	GETPROP_TF2_OBJTR_m_iTeamOverlays = 93,
+	GETPROP_TF2_OBJTR_m_iTeamReqCappers = 94,
+	GETPROP_TF2_OBJTR_m_flTeamCapTime = 95,
+	GETPROP_TF2_OBJTR_m_iPreviousPoints = 96,
+	GETPROP_TF2_OBJTR_m_bTeamCanCap = 97,
+	GETPROP_TF2_OBJTR_m_iTeamBaseIcons = 98,
+	GETPROP_TF2_OBJTR_m_iBaseControlPoints = 99,
+	GETPROP_TF2_OBJTR_m_bInMiniRound = 100,
+	GETPROP_TF2_OBJTR_m_iWarnOnCap = 101,
+	GETPROP_TF2_OBJTR_m_iCPGroup = 102,
+	GETPROP_TF2_OBJTR_m_bCPLocked = 103,
+	GETPROP_TF2_OBJTR_m_bTrackAlarm = 104,
+	GETPROP_TF2_OBJTR_m_flUnlockTimes = 105,
+	GETPROP_TF2_OBJTR_m_flCPTimerTimes = 106,
+	GETPROP_TF2_OBJTR_m_iNumTeamMembers = 107,
+	GETPROP_TF2_OBJTR_m_iCappingTeam = 108,
+	GETPROP_TF2_OBJTR_m_iTeamInZone = 109,
+	GETPROP_TF2_OBJTR_m_bBlocked = 110,
+	GETPROP_TF2_OBJTR_m_iOwner = 111,
+	GETPROP_TF2_OBJTR_m_bCPCapRateScalesWithPlayers = 112,
+	GETPROP_TF2_OBJTR_m_iNumControlPoints = 113,
+	GETPROP_TF2_OBJTR_m_bPlayingMiniRounds = 114,
+	GETPROP_TF2_RNDTM_m_flTimerEndTime = 115,
+	GETPROP_TF2_RNDTM_m_nSetupTimeLength = 116,
+	GETPROP_TF2_RNDTM_m_bInSetup = 117,
+	GETPROP_PIPEBOMB_OWNER = 118,
+	GETPROP_TF2_TAUNTYAW = 119,
+	GETPROP_TF2_HIGHFIVE = 120,
+	GETPROP_TF2_HIGHFIVE_PARTNER = 121,
+	GETPROP_SENTRYGUN_PLACING = 122,
+	GETPROP_TF2_ISCARRYINGOBJ = 123,
+	GETPROP_TF2_GETCARRIEDOBJ = 124,
+	GETPROP_TF2_ITEMDEFINITIONINDEX = 125,
+	GETPROP_TF2_DISGUISEWEARABLE = 126,
+	GETPROP_TF2_RAGEMETER = 127,
+	GETPROP_TF2_RAGEDRAINING = 128,
+	GETPROP_SIMULATIONTIME = 129,
+	GETPROP_TF2_INUPGRADEZONE = 130,
+	GETPROP_TF2_ENERGYDRINKMETER = 131,
+	GETPROP_TF2_MEDIEVALMODE = 132,
+	GETPROP_TF2_ACTIVEWEAPON = 133,
+	GETPROP_TF2_BUILDER_TYPE = 134,
+	GETPROP_TF2_BUILDER_MODE = 135,
+	GETPROP_TF2_CHARGE_RESIST_TYPE = 136,
+	GETPROP_TF2_ROUNDSTATE = 137,
+	GETPROP_TF2DESIREDCLASS = 138, //Jrob
+	GETPROP_SYN_PLAYER_VEHICLE = 139,
+	GETPROP_SYN_VEHICLE_DRIVER = 140,
+	GETPROP_SYN_SUITPOWER = 141,
+	GETPROP_CSS_MONEY = 142,
+	GETPROP_CSS_INBUYZONE = 143,
+	GETPROP_CSS_INBOMBZONE = 144,
+	GETPROP_CSS_INHOSTAGERESCUEZONE = 145,
+	GETPROP_CSS_ARMOR = 146,
+	GETPROP_CSS_HASDEFUSER = 147,
+	GETPROP_CSS_HASHELMET = 148,
+	GETPROP_CSS_BOMBTICKING = 149,
+	GETPROP_PLAYER_FOV = 150,
+	GETPROP_PLAYER_LIFESTATE = 151,
+	GETPROP_CSS_HOSTAGE_HEALTH = 152,
+	GETPROP_CSS_HOSTAGE_RESCUED = 153,
+	GETPROP_CSS_HOSTAGE_LEADER = 154,
+	GETPROP_DYS_PLAYERCLASS = 155,
+	GETPROP_DYS_CUILINGTURRET_ENABLED = 156,
+	GETPROP_DYS_CUILINGTURRET_ACTIVE = 157,
+	GETPROP_DYS_CUILINGTURRET_THERMAL = 158,
+	GETPROP_DYS_CUILINGTURRET_INVINCIBLE = 159,
+	GETPROP_DYS_CUILINGTURRET_TEAM = 160,
+	GETPROP_DYS_CUILINGTURRET_HEALTH = 161,
+	GET_PROPDATA_MAX = 161
+} getpropdata_id;
 
-bool UTIL_FindSendPropInfo(ServerClass *pInfo, const char *szType, unsigned int *offset);
+bool UTIL_FindSendPropInfo(const ServerClass *pInfo, const char *szType, unsigned *offset);
 ServerClass *UTIL_FindServerClass(const char *name);
 void UTIL_FindServerClassPrint(const char*name_cmd);
 void UTIL_FindServerClassnamePrint(const char *name_cmd);
 void UTIL_FindPropPrint(const char *prop_name);
-unsigned int UTIL_FindInDataMap(datamap_t* pMap, const char* name);
+unsigned UTIL_FindInDataMap(const datamap_t* pMap, const char* name);
 datamap_t* CBaseEntity_GetDataDescMap(CBaseEntity* pEntity);
 datamap_t* VGetDataDescMap(CBaseEntity* pThisPtr, int offset);
 
@@ -196,14 +198,15 @@ public:
 		m_class = nullptr;
 		m_value = nullptr;
 		m_offset = 0;
+		m_preoffset = 0;
 	}
 
-	CClassInterfaceValue ( char *key, char *value, unsigned int preoffset )
+	CClassInterfaceValue (const char *key, const char *value, const unsigned preoffset)
 	{
 		init(key,value,preoffset);
 	}
 
-	void init (const char* key, char* value, unsigned preoffset = 0);
+	void init (const char* key, const char* value, unsigned preoffset = 0);
 
 	void findOffset ( );
 
@@ -213,7 +216,7 @@ public:
 
 	CBaseHandle *getEntityHandle ( edict_t *edict );
 
-	bool getBool(void *edict, bool defaultvalue, bool bIsEdict = true)
+	bool getBool(void *edict, const bool defaultvalue, const bool bIsEdict = true)
 	{ 
 		getData(edict, bIsEdict);
 		
@@ -251,7 +254,7 @@ public:
 		return m_data; 
 	}
 
-	float getFloat ( edict_t *edict, float defaultvalue ) 
+	float getFloat ( edict_t *edict, const float defaultvalue ) 
 	{ 
 		getData(edict); 
 		
@@ -306,7 +309,7 @@ public:
 		return false;
 	}
 
-	int getInt(void *edict, int defaultvalue, bool bIsEdict = true)
+	int getInt(void *edict, const int defaultvalue, const bool bIsEdict = true)
 	{ 
 		getData(edict, bIsEdict);
 		
@@ -338,7 +341,7 @@ public:
 		return static_cast<byte*>(m_data); 
 	}
 
-	float getFloatFromInt ( edict_t *edict, float defaultvalue )
+	float getFloatFromInt ( edict_t *edict, const float defaultvalue )
 	{
 		getData(edict); 
 
@@ -356,8 +359,8 @@ public:
 		return m_offset;
 	}
 private:
-	unsigned int m_offset;
-	unsigned int m_preoffset;
+	unsigned m_offset;
+	unsigned m_preoffset;
 	void *m_data;
 	char *m_class;
 	char *m_value;
@@ -380,7 +383,7 @@ public:
 	static const char *FindEntityNetClass(int start, const char *classname);
 	static edict_t *FindEntityByNetClass(int start, const char *classname);
 	static edict_t *FindEntityByNetClassNearest(const Vector& vstart, const char *classname);
-	static edict_t *FindEntityByClassnameNearest(const Vector& vstart, const char *classname, float fMinDist = 8192.0f, edict_t *pOwner = nullptr);
+	static edict_t *FindEntityByClassnameNearest(const Vector& vstart, const char *classname, float fMinDist = 8192.0f, const edict_t *pOwner = nullptr);
 
 
 
@@ -393,7 +396,7 @@ public:
 	static float getPlayerHealth ( edict_t *edict ) { return g_GetProps[GETPROP_PLAYERHEALTH].getFloatFromInt(edict,0); }
 	static int getEffects ( edict_t *edict ) { return g_GetProps[GETPROP_EFFECTS].getInt(edict,0); }
 	static int *getAmmoList ( edict_t *edict ) { return g_GetProps[GETPROP_AMMO].getIntPointer(edict); }
-	//static unsigned int findOffset(const char *szType,const char *szClass);
+	//static unsigned findOffset(const char *szType,const char *szClass);
 	static int getTF2NumHealers ( edict_t *edict ) { return g_GetProps[GETPROP_TF2_NUMHEALERS].getInt(edict,0); }
 	static int getTF2Conditions ( edict_t *edict ) { return g_GetProps[GETPROP_TF2_CONDITIONS].getInt(edict,0); }
 	static bool getVelocity ( edict_t *edict, Vector *v ) {return g_GetProps[GETPROP_VELOCITY].getVector(edict,v); }
@@ -401,13 +404,13 @@ public:
 	static float TF2_getEnergyDrinkMeter(edict_t * edict) { return g_GetProps[GETPROP_TF2_ENERGYDRINKMETER].getFloat(edict, 0); }
 	static edict_t *TF2_getActiveWeapon(edict_t *edict) { return g_GetProps[GETPROP_TF2_ACTIVEWEAPON].getEntity(edict); }
 	// set weapon
-	static bool TF2_setActiveWeapon(edict_t *edict, edict_t *pWeapon)
+	static void TF2_setActiveWeapon(edict_t* edict, edict_t* pWeapon) //-caxanga334
 	{
-		CBaseHandle *pHandle = g_GetProps[GETPROP_TF2_ACTIVEWEAPON].getEntityHandle(edict);
+		CBaseHandle* pHandle = g_GetProps[GETPROP_TF2_ACTIVEWEAPON].getEntityHandle(edict);
 		pHandle->Set(pWeapon->GetNetworkable()->GetEntityHandle());
 	}
 
-	static void TF2_SetBuilderType(edict_t *pBuilder, int itype)
+	static void TF2_SetBuilderType(edict_t *pBuilder, const int itype)
 	{
 		int *pitype = g_GetProps[GETPROP_TF2_BUILDER_TYPE].getIntPointer(pBuilder);
 
@@ -420,7 +423,7 @@ public:
 		return g_GetProps[GETPROP_TF2_CHARGE_RESIST_TYPE].getInt(pMedigun, 0);
 	}
 
-	static void TF2_SetBuilderMode(edict_t *pBuilder, int imode)
+	static void TF2_SetBuilderMode(edict_t *pBuilder, const int imode)
 	{
 		int *pitype = g_GetProps[GETPROP_TF2_BUILDER_MODE].getIntPointer(pBuilder);
 
@@ -430,7 +433,7 @@ public:
 	//Jrob
 	static int getTF2DesiredClass(edict_t *edict) { return g_GetProps[GETPROP_TF2DESIREDCLASS].getInt(edict, 0); }
 
-	static void setTF2Class(edict_t *edict, int _class)
+	static void setTF2Class(edict_t *edict, const int _class)
 	{
 		int* p = g_GetProps[GETPROP_TF2DESIREDCLASS].getIntPointer(edict);
 		if (p != nullptr) *p = _class;
@@ -482,9 +485,9 @@ public:
 	static edict_t *getMedigunTarget ( edict_t *edict ) { return g_GetProps[GETPROP_TF2MEDIGUN_TARGETTING].getEntity(edict); }
 	static edict_t *getSentryEnemy ( edict_t *edict ) { return g_GetProps[GETPROP_SENTRY_ENEMY].getEntity(edict); }
 	static edict_t *getOwner ( edict_t *edict ) { return g_GetProps[GETPROP_ALL_ENTOWNER].getEntity(edict); }
-	static bool isMedigunTargetting ( edict_t *pgun, edict_t *ptarget) { return g_GetProps[GETPROP_TF2MEDIGUN_TARGETTING].getEntity(pgun) == ptarget; }
+	static bool isMedigunTargetting ( edict_t *pgun, const edict_t *ptarget) { return g_GetProps[GETPROP_TF2MEDIGUN_TARGETTING].getEntity(pgun) == ptarget; }
 	//static void setTickBase ( edict_t *edict, int tickbase ) { return ;
-	static int isTeleporterMode (edict_t *edict, eTeleMode mode ) { return g_GetProps[GETPROP_TF2TELEPORTERMODE].getInt(edict,-1) == static_cast<int>(mode); }
+	static int isTeleporterMode (edict_t *edict, const eTeleMode mode ) { return g_GetProps[GETPROP_TF2TELEPORTERMODE].getInt(edict,-1) == static_cast<int>(mode); }
 	static edict_t *getCurrentWeapon (edict_t *player) { return g_GetProps[GETPROP_CURRENTWEAPON].getEntity(player); }
 	static int getUberChargeLevel (edict_t *pWeapon) { return static_cast<int>(g_GetProps[GETPROP_TF2UBERCHARGE_LEVEL].getFloat(pWeapon, 0) * 100.0f); }
 	//static void test ();
@@ -522,7 +525,7 @@ public:
 	static int getDODBombTeam ( edict_t *pBombTarget ) { return g_GetProps[GETPROP_DOD_BOMB_TEAM].getInt(pBombTarget,0); }
 	static int *getWeaponClip1Pointer ( edict_t *pgun ) { return g_GetProps[GETPROP_WEAPONCLIP1].getIntPointer(pgun); }
 	static int *getWeaponClip2Pointer ( edict_t *pgun ) { return g_GetProps[GETPROP_WEAPONCLIP2].getIntPointer(pgun); }
-	static int getOffset(int id) { return g_GetProps[id].getOffset(); }
+	static int getOffset(const int id) { return g_GetProps[id].getOffset(); }
 	static void getWeaponClip ( edict_t *pgun, int *iClip1, int *iClip2 ) { *iClip1 = g_GetProps[GETPROP_WEAPONCLIP1].getInt(pgun,0); *iClip2 = g_GetProps[GETPROP_WEAPONCLIP2].getInt(pgun,0); }
 	static void getAmmoTypes ( edict_t *pgun, int *iAmmoType1, int *iAmmoType2 ) { *iAmmoType1 = g_GetProps[GETPROP_WEAPON_AMMOTYPE1].getInt(pgun,-1); *iAmmoType2 = g_GetProps[GETPROP_WEAPON_AMMOTYPE2].getInt(pgun,-1);}
 
@@ -612,7 +615,7 @@ public:
 	static bool isMachineGunDeployed (edict_t *weapon) { return g_GetProps[GETPROP_DOD_MACHINEGUN_DEPLOYED].getBool(weapon,false); }
 	static bool isRocketDeployed ( edict_t *weapon ) { return g_GetProps[GETPROP_DOD_ROCKET_DEPLOYED].getBool(weapon,false); }
 
-	static bool isMoveType ( edict_t *pent, int movetype )
+	static bool isMoveType ( edict_t *pent, const int movetype )
 	{
 		return (g_GetProps[GETPROP_MOVETYPE].getInt(pent,0) & 15) == movetype;
 	}
@@ -928,7 +931,7 @@ public:
 	**/
 	static int GetEntPropInt(CBaseEntity *pEntity, const char *prop)
 	{
-		datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
+		const datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
 		const int offset = UTIL_FindInDataMap(pDataMap, prop);
 		const int propvalue = *reinterpret_cast<int*>(reinterpret_cast<uint8_t*>(pEntity) + offset); // to-do: bit count?
 		return propvalue;
@@ -943,7 +946,7 @@ public:
 	**/
 	static float GetEntPropFloat(CBaseEntity *pEntity, const char *prop)
 	{
-		datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
+		const datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
 		const int offset = UTIL_FindInDataMap(pDataMap, prop);
 		const float propvalue = *reinterpret_cast<float*>(reinterpret_cast<uint8_t*>(pEntity) + offset);
 		return propvalue;
@@ -958,7 +961,7 @@ public:
 	**/
 	static edict_t *GetEntPropEdict(CBaseEntity *pEntity, const char *prop)
 	{
-		datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
+		const datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
 		const int offset = UTIL_FindInDataMap(pDataMap, prop);
 		edict_t *pEdict = *reinterpret_cast<edict_t**>(reinterpret_cast<uint8_t*>(pEntity) + offset);
 		if(!pEdict || pEdict->IsFree())
@@ -978,7 +981,7 @@ public:
 	**/
 	static Vector *GetEntPropVector(CBaseEntity *pEntity, const char *prop)
 	{
-		datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
+		const datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
 		const int offset = UTIL_FindInDataMap(pDataMap, prop);
 		Vector *propvalue = reinterpret_cast<Vector*>(reinterpret_cast<uint8_t*>(pEntity) + offset);
 		return propvalue;
@@ -992,7 +995,7 @@ public:
 	**/
 	static int GetEntityHealth(CBaseEntity* pEntity)
 	{
-		datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
+		const datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
 		const int offset = UTIL_FindInDataMap(pDataMap, "m_iHealth");
 		const int iHealth = *reinterpret_cast<int*>(reinterpret_cast<char*>(pEntity) + offset);
 		return iHealth;
@@ -1005,7 +1008,7 @@ public:
 	**/
 	static int GetEntityMaxHealth(CBaseEntity* pEntity)
 	{
-		datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
+		const datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
 		const int offset = UTIL_FindInDataMap(pDataMap, "m_iMaxHealth");
 		const int iMaxHealth = *reinterpret_cast<int*>(reinterpret_cast<char*>(pEntity) + offset);
 		return iMaxHealth;
@@ -1018,12 +1021,12 @@ public:
 	**/
 	static float GetEntityHealthPercent(CBaseEntity* pEntity)
 	{
-		datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
+		const datamap_t* pDataMap = CBaseEntity_GetDataDescMap(pEntity);
 		const int offset = UTIL_FindInDataMap(pDataMap, "m_iHealth");
-		int offset2 = UTIL_FindInDataMap(pDataMap, "m_iMaxHealth");
+		//int offset2 = UTIL_FindInDataMap(pDataMap, "m_iMaxHealth"); //unused? [APG]RoboCop[CL]
 		const int iHealth = *reinterpret_cast<int*>(reinterpret_cast<char*>(pEntity) + offset);
 		const int iMaxHealth = *reinterpret_cast<int*>(reinterpret_cast<char*>(pEntity) + offset);
-		return static_cast<float>(iHealth / iMaxHealth);
+		return static_cast<float>(iHealth) / iMaxHealth;
 	}
 };
 

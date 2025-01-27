@@ -38,12 +38,12 @@ class CBotGAValues : public IIndividual
 public:
 	CBotGAValues();
 
-	CBotGAValues( std::vector<float> values );
+	CBotGAValues( const std::vector<float>& values );
 
 	void init ();
 
 	// crossover with other individual
-	void crossOver ( IIndividual *other ) override;
+	void crossOver(IIndividual* other) override;
 
 	// mutate some values
 	void mutate () override;
@@ -52,7 +52,7 @@ public:
 	// sub classes return their class with own values
 	IIndividual *copy () override;
 
-	void setVector ( std::vector<float> values );
+	void setVector (const std::vector<float>& values);
 
 	float get ( int iIndex ) const;
 
@@ -64,7 +64,7 @@ public:
 
 	void addRnd ();
 
-	void setup ( int iValues )
+	void setup (const int iValues)
 	{
 		for ( int i = 0; i < iValues; i ++ )
 			addRnd();

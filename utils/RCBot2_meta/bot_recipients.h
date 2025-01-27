@@ -35,12 +35,13 @@
 #include <edict.h>
 
 #include "bot_const.h"
+#include "engine_wrappers.h"
 #include "irecipientfilter.h"
 
 class CEdictRecipient : public IRecipientFilter
 {
 public:
-	CEdictRecipient ( edict_t *pEdict, bool bReliable )
+	CEdictRecipient (edict_t *pEdict, const bool bReliable)
 	{
 		m_pEdict = pEdict;
 		m_bReliable = bReliable;

@@ -7,7 +7,7 @@ class CBotZombie : public CBot
 
 	void modThink () override;
 
-	void getTasks (unsigned int iIgnore) override;
+	void getTasks (unsigned iIgnore) override;
 };
 
-#endif
+#endif // _BOT_ZOMBIE_H_

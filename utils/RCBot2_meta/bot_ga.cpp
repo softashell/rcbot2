@@ -35,6 +35,16 @@
 #include "bot_ga.h"
 #include "bot_globals.h"
 
+#include <algorithm>
+#include <random>
+
+//caxanga334: SDK 2013 contains macros for std::min and std::max which causes errors when compiling
+#if SOURCE_ENGINE == SE_SDK2013 || SOURCE_ENGINE == SE_BMS
+#include "valve_minmax_off.h"
+#endif
+
+#include "logging.h"
+
 const int CGA::g_iDefaultMaxPopSize = 16;
 const float CGA::g_fCrossOverRate = 0.7f;
 const float CGA::g_fMutateRate = 0.1f;
@@ -44,7 +54,7 @@ const float CGA::g_fMaxPerturbation = 0.3f;
 // POPULATION
 ////////////////////
 
-IIndividual* CPopulation::get(int iIndex) const
+IIndividual* CPopulation::get(const int iIndex) const
 {
 	return m_theIndividuals[iIndex];
 }
@@ -56,9 +66,6 @@ void CPopulation::add(IIndividual* individual)
 
 void CPopulation::freeMemory()
 {
-	for (unsigned int i = 0; i < m_theIndividuals.size(); i++)
-		delete m_theIndividuals[i];
-
 	m_theIndividuals.clear();
 }
 
@@ -71,7 +78,7 @@ ga_nn_value CPopulation::totalFitness() const
 {
 	float fTotalFitness = 0.0f;
 
-	for (unsigned int i = 0; i < size(); i++)
+	for (unsigned i = 0; i < size(); i++)
 	{
 		fTotalFitness += m_theIndividuals[i]->getFitness();
 	}
@@ -81,18 +88,11 @@ ga_nn_value CPopulation::totalFitness() const
 
 ga_nn_value CPopulation::bestFitness() const
 {
-	BOOL gotBestFitness = FALSE;
-	float fBestFitness = 0.0f;
+    float fBestFitness = std::numeric_limits<float>::lowest();
 
-	for (unsigned int i = 0; i < size(); i++)
+    for (IIndividual* const& individual : m_theIndividuals)
 	{
-		const float fFitness = m_theIndividuals[i]->getFitness();
-
-		if (!gotBestFitness || fFitness > fBestFitness)
-		{
-			fBestFitness = fFitness;
-			gotBestFitness = TRUE;
-		}
+        fBestFitness = std::max(fBestFitness, individual->getFitness());
 	}
 
 	return fBestFitness;
@@ -103,13 +103,12 @@ ga_nn_value CPopulation::averageFitness() const
 	return totalFitness() / static_cast<float>(m_theIndividuals.size());
 }
 
-IIndividual* CPopulation::pick()
+std::unique_ptr<IIndividual> CPopulation::pick()
 {
 	IIndividual* to_return = m_theIndividuals.back();
-
 	m_theIndividuals.pop_back();
 
-	return to_return;
+    return std::unique_ptr<IIndividual>(to_return);
 }
 
 ////////////////////
@@ -191,7 +190,7 @@ bool CGA::canPick() const
 	return m_theNewPopulation.size() > 0;
 }
 
-IIndividual* CGA::pick()
+std::unique_ptr<IIndividual> CGA::pick()
 {
 	return m_theNewPopulation.pick();
 }
@@ -202,12 +201,21 @@ IIndividual* CGA::pick()
 
 IIndividual* CRouletteSelection::select(CPopulation* population)
 {
-	const ga_nn_value fFitnessSlice = randomFloat(0, population->totalFitness());
+    if (population->size() == 0)
+        logger->Log(LogLevel::WARN, "GA Error: Population is empty. Selection cannot proceed.");
+
+    const ga_nn_value totalFitness = population->totalFitness();
+
+    if (totalFitness <= 0.0f)
+        logger->Log(LogLevel::WARN, "GA Error: Total fitness is zero or negative. Selection cannot proceed.");
+
+    const ga_nn_value fFitnessSlice = randomFloat(0, totalFitness);
+
 	ga_nn_value fFitnessSoFar = 0.0f;
 
-	for (unsigned int i = 0; i < population->size(); i++)
+	for (unsigned i = 0; i < population->size(); i++)
 	{
-		IIndividual* individual = population->get(i);
+        IIndividual* individual = population->get(static_cast<int>(i));
 
 		fFitnessSoFar += individual->getFitness();
 

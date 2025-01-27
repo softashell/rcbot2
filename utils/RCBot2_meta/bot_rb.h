@@ -7,8 +7,7 @@ class CBotOperator;
 class CBotRule
 {
 public:
-	CBotRule ()
-	= default;
+	CBotRule() = default;
 
 private:
 	std::vector<CBotOperator> m_Rules;
@@ -17,11 +16,13 @@ private:
 class CBotOperator
 {
 public:
+	virtual ~CBotOperator() = default;
+
 	CBotOperator ( const CBotFactOpertor& op ) : m_op(op)
 	{		
 	}
 
-	virtual bool operate ( bool bVal, CBotOperator *pNext )
+	virtual bool operate(const bool bVal, CBotOperator* pNext)
 	{
 		switch (m_op)
 		{
@@ -29,11 +30,15 @@ public:
 			return bVal;
 		case OP_PRE_NORM:
 			return pNext->value();
-		case OP_PRE_NOT:
-		case OP_AND:
-		case OP_OR:
-		case OP_AND_NOT:
-		case OP_OR_NOT:
+			// Uncomment and implement these cases as needed
+			// case OP_PRE_NOT:
+			// case OP_AND:
+			// case OP_OR:
+			// case OP_AND_NOT:
+			// case OP_OR_NOT:
+		default:
+			// Handle unexpected values of m_op
+			return false; // or some other default behavior
 		}
 	}
 
@@ -48,7 +53,7 @@ private:
 class CBotFact : public CBotOperator
 {
 public:
-	CBotFact ( unsigned int iFactId ) : m_fid(iFactId)
+	CBotFact (const unsigned iFactId) : m_fid(iFactId)
 	{
 	}
 
@@ -62,11 +67,11 @@ public:
 		return m_bVal;
 	}
 private:
-	unsigned int m_fid;
+	unsigned m_fid;
 	bool m_bVal;
 };
 
-typedef enum 
+typedef enum : std::uint8_t
 {
 	OP_NONE = 0,
 	OP_PRE_NORM,

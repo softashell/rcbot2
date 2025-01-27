@@ -3,13 +3,13 @@
 #else
 
 #include <cstdint>
-#define byte uint8_t
+//#define byte uint8_t
 
-#include "shake.h" //bir3yk
+//#include "shake.h" //bir3yk
 #include "elf.h"
 
 #define PAGE_SIZE 4096
-#define PAGE_ALIGN_UP(x) ((x + PAGE_SIZE - 1) & ~(PAGE_SIZE - 1))
+#define PAGE_ALIGN_UP(x) (((x) + PAGE_SIZE - 1) & ~(PAGE_SIZE - 1))
 
 #include <sys/mman.h>
 #include <errno.h>
@@ -23,10 +23,7 @@
 #include "engine/iserverplugin.h"
 #include "tier2/tier2.h"
 #ifdef __linux__
-#include "shake.h"    //bir3yk
-#ifndef sscanf_s
-#define sscanf_s sscanf
-#endif
+//#include "shake.h"    //bir3yk
 #endif
 #include "eiface.h"
 #include "bot_const.h"
@@ -53,7 +50,7 @@ void *GetGameRules()
 	return *g_pGameRules;
 }
 
-size_t CSignatureFunction::decodeHexString(unsigned char *buffer, size_t maxlength, const char *hexstr)
+size_t CSignatureFunction::decodeHexString(unsigned char* buffer, const size_t maxlength, const char* hexstr)
 {
 	size_t written = 0;
 	const size_t length = std::strlen(hexstr);
@@ -69,16 +66,23 @@ size_t CSignatureFunction::decodeHexString(unsigned char *buffer, size_t maxleng
 				continue;
 			// Get the hex part. 
 			char s_byte[3];
-			int r_byte; //char should be used not int? [APG]RoboCop[CL]
-			//char r_byte;
+			unsigned r_byte; // Use unsigned here
 			s_byte[0] = hexstr[i + 2];
 			s_byte[1] = hexstr[i + 3];
 			s_byte[2] = '\0';
 			// Read it as an integer 
-			sscanf_s(s_byte, "%x", &r_byte);
+			std::sscanf(s_byte, "%x", &r_byte);
 			
+			// Check if the value fits into a char
+			if (r_byte <= UCHAR_MAX)
+			{
 			// Save the value 
-			buffer[written - 1] = r_byte;
+				buffer[written - 1] = static_cast<unsigned char>(r_byte);
+			}
+			else
+			{
+				// Handle the error
+			}
 			// Adjust index 
 			i += 3;
 		}
@@ -135,7 +139,7 @@ bool CSignatureFunction::getLibraryInfo(const void *libPtr, DynLibInfo &lib)
 	}
 
 	//Finally, we can do this
-	lib.memorySize = opt->SizeOfImage;
+	lib.memorySize = static_cast<size_t>(opt->SizeOfImage);
 
 #else
 	Dl_info info;
@@ -211,7 +215,7 @@ bool CSignatureFunction::getLibraryInfo(const void *libPtr, DynLibInfo &lib)
 	return true;
 }
 
-void *CSignatureFunction::findPattern(const void *libPtr, const char *pattern, size_t len)
+void *CSignatureFunction::findPattern(const void *libPtr, const char *pattern, const size_t len)
 {
 	DynLibInfo lib;
 
@@ -264,7 +268,7 @@ void *CSignatureFunction::findSignature(const void* addrInBase, const char* sign
 
 void CSignatureFunction::findFunc(const CRCBotKeyValueList& kv, const char* pKey, const void* pAddrBase, const char* defaultsig)
 {
-	char *sig = nullptr;
+	const char* sig = nullptr;
 
 	if (kv.getString(pKey, &sig) && sig)
 		m_func = findSignature(pAddrBase, sig);
@@ -281,10 +285,10 @@ CGameRulesObject::CGameRulesObject(CRCBotKeyValueList &list, void *pAddrBase)
 #endif
 }
 
-CCreateGameRulesObject::CCreateGameRulesObject(CRCBotKeyValueList &list, void *pAddrBase)
+CCreateGameRulesObject::CCreateGameRulesObject(const CRCBotKeyValueList &list, const void *pAddrBase)
 {
 #ifdef _WIN32
-	findFunc(list, "create_gamerules_object_win", pAddrBase, "\\x55\\x8B\\xEC\\x8B\\x0D\\x2A\\x2A\\x2A\\x2A\\x85\\xC9\\x74\\x07");
+	findFunc(list, "create_gamerules_object_win", pAddrBase, R"(\x55\x8B\xEC\x8B\x0D\x2A\x2A\x2A\x2A\x85\xC9\x74\x07)");
 #else
 	m_func = NULL;
 #endif

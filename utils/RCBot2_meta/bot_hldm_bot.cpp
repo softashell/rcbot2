@@ -51,9 +51,9 @@
 #include <cstring>
 
 // initialise , i.e. set everything to a default value
-void CHLDMBot :: init ()
+void CHLDMBot :: init (const bool bVarInit)
 {
-	CBot::init();
+	CBot::init(bVarInit);
 }
 
 // initialize structures and classes used be the bot
@@ -72,11 +72,13 @@ bool CHLDMBot :: startGame ()
 // the bot killed pVictim
 void CHLDMBot :: killed ( edict_t *pVictim, char *weapon )
 {
-	CBot::killed(pVictim,weapon);
+    CBot::killed(pVictim, weapon);
 
 	// update belief around this waypoint
-	if ( pVictim && CBotGlobals::entityIsValid(pVictim) )
-		m_pNavigator->belief(CBotGlobals::entityOrigin(pVictim),getEyePosition(),bot_beliefmulti.GetFloat(),distanceFrom(pVictim),BELIEF_SAFETY);
+    if (pVictim && CBotGlobals::entityIsValid(pVictim))
+    {
+        m_pNavigator->belief(CBotGlobals::entityOrigin(pVictim), getEyePosition(), bot_beliefmulti.GetFloat(), distanceFrom(pVictim), BELIEF_SAFETY);
+	}
 }
 
 // the bot was killed by pKiller
@@ -97,17 +99,15 @@ void CHLDMBot :: died ( edict_t *pKiller, const char *pszWeapon )
 	}
 }
 
-void CHLDMBot :: touchedWpt ( CWaypoint *pWaypoint )
+void CHLDMBot :: touchedWpt (CWaypoint* pWaypoint, const int iNextWaypoint, const int iPrevWaypoint)
 {
-	CBot::touchedWpt(pWaypoint);
+	CBot::touchedWpt(pWaypoint, iNextWaypoint, iPrevWaypoint);
 
 	if ( pWaypoint->hasFlag(CWaypointTypes::W_FL_LIFT) )
 	{
 		if ( m_fUseButtonTime < engine->Time() )
 		{
-			edict_t *pButton = CHalfLifeDeathmatchMod::getButtonAtWaypoint(pWaypoint);
-
-			if ( pButton )
+			if ( edict_t *pButton = CHalfLifeDeathmatchMod::getButtonAtWaypoint(pWaypoint) )
 			{
 				m_fUseButtonTime = engine->Time() + randomFloat(5.0f,10.0f);
 
@@ -147,29 +147,29 @@ void CHLDMBot :: spawnInit ()
 // Is pEdict an enemy? return true if enemy / false if not
 // if checkWeapons is true, check if current weapon can attack enemy 
 //							return false if not 
-bool CHLDMBot :: isEnemy ( edict_t *pEdict,bool bCheckWeapons )
+bool CHLDMBot::isEnemy(edict_t* pEdict, bool bCheckWeapons)
 {
 	static int entity_index;
 
 	entity_index = ENTINDEX(pEdict);
 
 	// if no target on - listen sever player is a non target
-	if ( rcbot_notarget.GetBool() && entity_index == 1 )
+	if (rcbot_notarget.GetBool() && entity_index == 1)
 		return false;
 
 	// not myself
-	if ( pEdict == m_pEdict )
+	if (pEdict == m_pEdict)
 		return false;
 
 	// not a player - false
-	if ( !entity_index || entity_index > CBotGlobals::maxClients() )
+	if (!entity_index || entity_index > CBotGlobals::maxClients())
 	{
-		if ( !m_pCarryingObject && pEdict->GetUnknown() && pEdict == m_NearestBreakable && CClassInterface::getPlayerHealth(pEdict)>0 )
+		if (!m_pCarryingObject && pEdict->GetUnknown() && pEdict == m_NearestBreakable && CClassInterface::getPlayerHealth(pEdict) > 0)
 		{
-			if ( distanceFrom(CBotGlobals::entityOrigin(pEdict)) < rcbot_jump_obst_dist.GetFloat() )
+			if (distanceFrom(CBotGlobals::entityOrigin(pEdict)) < rcbot_jump_obst_dist.GetFloat())
 			{
-				if ( BotFunc_BreakableIsEnemy(m_NearestBreakable,m_pEdict) || (CBotGlobals::entityOrigin(pEdict) - m_vMoveTo).Length()+48 < (getOrigin() - m_vMoveTo).Length() )
-					return true;				
+				if (BotFunc_BreakableIsEnemy(m_NearestBreakable, m_pEdict) || (CBotGlobals::entityOrigin(pEdict) - m_vMoveTo).Length() + 48 < (getOrigin() - m_vMoveTo).Length())
+					return true;
 			}
 		}
 
@@ -177,22 +177,22 @@ bool CHLDMBot :: isEnemy ( edict_t *pEdict,bool bCheckWeapons )
 	}
 
 	// not alive -- false
-	if ( !CBotGlobals::entityIsAlive(pEdict) )
+	if (!CBotGlobals::entityIsAlive(pEdict))
 		return false;
 
 	// team game?
-	if ( CBotGlobals::getTeamplayOn() )
+	if (CBotGlobals::getTeamplayOn())
 	{
 		// same team ? false
-		if ( CBotGlobals::getTeam(pEdict) == getTeam() )
+		if (CBotGlobals::getTeam(pEdict) == getTeam())
 			return false;
 	}
 
-	return true;	
+	return true;
 }
 
 // from the bots UTILITIES , execute the given action
-bool CHLDMBot :: executeAction ( eBotAction iAction )
+bool CHLDMBot :: executeAction (const eBotAction iAction)
 {
 	switch ( iAction )
 	{
@@ -339,7 +339,7 @@ bool CHLDMBot :: executeAction ( eBotAction iAction )
 
 			if ( pWaypoint )
 			{
-				auto* snipe = new CBotSchedule();
+				CBotSchedule* snipe = new CBotSchedule();
 				CBotTask *findpath = new CFindPathTask(CWaypoints::getWaypointIndex(pWaypoint));
 
 				// use DOD task  //Unstable? [APG]RoboCop[CL]
@@ -425,7 +425,7 @@ bool CHLDMBot :: handleAttack ( CBotWeapon *pWeapon, edict_t *pEnemy )
 	return false;
 }
 // time to think about something new to do
-void CHLDMBot :: getTasks (unsigned int iIgnore)
+void CHLDMBot :: getTasks (unsigned iIgnore)
 {
 	static CBotUtilities utils;
 	static CBotUtility *next;
@@ -447,12 +447,12 @@ void CHLDMBot :: getTasks (unsigned int iIgnore)
 	{
 		edict_t *pent = INDEXENT(gravgun->getWeaponIndex());
 
-		if ( CBotGlobals::entityIsValid(pent) )
+		if (CBotGlobals::entityIsValid(pent))
 		{
 			ADD_UTILITY(BOT_UTIL_HL2DM_GRAVIGUN_PICKUP,
-			            (!m_pEnemy||m_pCurrentWeapon&&std::strcmp("weapon_physcannon",m_pCurrentWeapon->GetClassName())) &&
-			            gravgun && gravgun->hasWeapon() && (m_NearestPhysObj.get()!=NULL) && gravgun->getWeaponIndex() >
-			            0 && (CClassInterface::gravityGunObject(INDEXENT(gravgun->getWeaponIndex()))==NULL), 0.9f)
+				(!m_pEnemy || (m_pCurrentWeapon && std::strcmp("weapon_physcannon", m_pCurrentWeapon->GetClassName()) == 0)) &&
+				gravgun && gravgun->hasWeapon() && (m_NearestPhysObj.get() != NULL) && gravgun->getWeaponIndex() > 0 &&
+				(CClassInterface::gravityGunObject(INDEXENT(gravgun->getWeaponIndex())) == NULL), 0.9f)
 		}
 	}
 
@@ -493,7 +493,7 @@ void CHLDMBot :: getTasks (unsigned int iIgnore)
 
 		if ( fDistance > BLAST_RADIUS && fDistance < 1500 )
 		{
-			CWeapon *pWeapon = CWeapons::getWeapon(HL2DM_WEAPON_FRAG);
+			const CWeapon *pWeapon = CWeapons::getWeapon(HL2DM_WEAPON_FRAG);
 			const CBotWeapon *pBotWeapon = m_pWeapons->getWeapon(pWeapon);
 
 			ADD_UTILITY(BOT_UTIL_THROW_GRENADE, pBotWeapon && pBotWeapon->getAmmo(this) > 0,1.0f- getHealthPercent()*0.2f)
@@ -571,7 +571,7 @@ void CHLDMBot :: modThink ()
 		setMoveLookPriority(MOVELOOK_MODTHINK);
 	}
 
-	if ( m_fCurrentDanger >= 20.0f && CClassInterface::auxPower(m_pEdict) > 90.f && m_fSprintTime < engine->Time())
+	if ( m_fCurrentDanger >= 20.0f && CClassInterface::auxPower(m_pEdict) > 90.0f && m_fSprintTime < engine->Time())
 	{
 		m_pButtons->holdButton(IN_SPEED,0,1,0);
 	}
@@ -639,7 +639,8 @@ bool CHLDMBot::checkStuck()
 				if ( !m_pSchedules->hasSchedule(SCHED_GRAVGUN_PICKUP) )
 				{
 					m_pSchedules->freeMemory();
-					const auto pSched = new CBotSchedule(new CBotGravGunPickup(m_pCurrentWeapon,m_NearestPhysObj));
+					CBotSchedule* const pSched = new CBotSchedule(
+						new CBotGravGunPickup(m_pCurrentWeapon, m_NearestPhysObj));
 					pSched->setID(SCHED_GRAVGUN_PICKUP);
 					m_pSchedules->add(pSched);
 				}
@@ -722,7 +723,7 @@ void CHLDMBot :: handleWeapons ()
 }
 
 // update some edicts in my memory if I see them or not
-bool CHLDMBot :: setVisible ( edict_t *pEntity, bool bVisible )
+bool CHLDMBot :: setVisible ( edict_t *pEntity, const bool bVisible )
 {
 	static float fDist;
 
@@ -735,12 +736,12 @@ bool CHLDMBot :: setVisible ( edict_t *pEntity, bool bVisible )
 	{
 		const char* szClassname = pEntity->GetClassName();
 
-		if ( std::strncmp(szClassname,"item_ammo",9)==0 && 
+		if ( std::strncmp(szClassname,"item_ammo",9) == 0 && 
 			( !m_pAmmoKit.get() || fDist<distanceFrom(m_pAmmoKit.get()) ))
 		{
 			m_pAmmoKit = pEntity;
 		}
-		else if ( std::strncmp(szClassname,"item_health",11)==0 && 
+		else if ( std::strncmp(szClassname,"item_health",11) == 0 && 
 			( !m_pHealthKit.get() || fDist<distanceFrom(m_pHealthKit.get()) ))
 		{
 			//if ( getHealthPercent() < 1.0f )
@@ -748,17 +749,17 @@ bool CHLDMBot :: setVisible ( edict_t *pEntity, bool bVisible )
 
 			m_pHealthKit = pEntity;
 		}
-		else if ( std::strcmp(szClassname,"item_battery")==0 && 
+		else if ( std::strcmp(szClassname,"item_battery") == 0 && 
 			( !m_pBattery.get() || fDist<distanceFrom(m_pBattery.get()) ))
 		{
 			m_pBattery = pEntity;
 		}
-		else if ( ( std::strcmp(szClassname,"func_breakable")==0 || std::strncmp(szClassname,"prop_physics",12)==0 ) && CClassInterface::getPlayerHealth(pEntity)>0 &&
+		else if ( ( std::strcmp(szClassname,"func_breakable") == 0 || std::strncmp(szClassname,"prop_physics",12)==0 ) && CClassInterface::getPlayerHealth(pEntity)>0 &&
 			( !m_NearestBreakable.get() || fDist<distanceFrom(m_NearestBreakable.get()) ))
 		{
 			m_NearestBreakable = pEntity;
 		}
-		else if ( pEntity != m_pNearestButton && std::strcmp(szClassname,"func_button")==0 )
+		else if ( pEntity != m_pNearestButton && std::strcmp(szClassname,"func_button") == 0 )
 		{
 			if ( !m_pNearestButton.get() || fDist<distanceFrom(m_pNearestButton.get()) )
 				m_pNearestButton = pEntity;
@@ -774,7 +775,7 @@ bool CHLDMBot :: setVisible ( edict_t *pEntity, bool bVisible )
 			if ( !m_pAmmoCrate.get() || fDist<distanceFrom(m_pAmmoCrate.get()) )
 				m_pAmmoCrate = pEntity;
 		}
-		else if ( pEntity != m_FailedPhysObj && std::strncmp(szClassname,"prop_physics",12)==0 && 
+		else if ( pEntity != m_FailedPhysObj && std::strncmp(szClassname,"prop_physics",12) == 0 && 
 			( !m_NearestPhysObj.get() || fDist<distanceFrom(m_NearestPhysObj.get()) ))
 		{
 			//if ( !m_bCarryingObject )
@@ -782,7 +783,7 @@ bool CHLDMBot :: setVisible ( edict_t *pEntity, bool bVisible )
 
 			m_NearestPhysObj = pEntity;
 		}
-		else if ( std::strncmp(szClassname,"item_suitcharger",16)==0 && 
+		else if ( std::strncmp(szClassname,"item_suitcharger",16) == 0 && 
 			( !m_pCharger.get() || fDist<distanceFrom(m_pCharger.get()) ))
 		{
 			if ( m_pCharger.get() )
@@ -799,7 +800,7 @@ bool CHLDMBot :: setVisible ( edict_t *pEntity, bool bVisible )
 
 			m_pCharger = pEntity;
 		}
-		else if ( std::strncmp(szClassname,"item_healthcharger",18)==0 && 
+		else if ( std::strncmp(szClassname,"item_healthcharger",18) == 0 && 
 			( !m_pHealthCharger.get() || fDist<distanceFrom(m_pHealthCharger.get()) ))
 		{
 			if ( m_pHealthCharger.get() )
@@ -816,7 +817,7 @@ bool CHLDMBot :: setVisible ( edict_t *pEntity, bool bVisible )
 
 			m_pHealthCharger = pEntity;
 		}
-		else if ( std::strncmp(szClassname,"weapon_",7)==0 && 
+		else if ( std::strncmp(szClassname,"weapon_",7) == 0 && 
 			( !m_pNearbyWeapon.get() || fDist<distanceFrom(m_pNearbyWeapon.get()) ))
 		{
 			/*static CWeapon *pWeapon;

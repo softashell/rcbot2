@@ -31,6 +31,13 @@
 #ifndef __RCBOT_EHANDLE_H__
 #define __RCBOT_EHANDLE_H__
 
+#include "edict.h"
+
+ /**
+  * This is bad and should be nuked.
+  * The SDK's CBaseHandle should be used instead! -caxanga334
+ */
+
 ////// entity handling in network
 class MyEHandle 
 {
@@ -87,9 +94,9 @@ public:
 		return nullptr;
 	}
 
-	bool operator == ( int a )
+	bool operator == (const intptr_t a)
 	{
-		return reinterpret_cast<int>(get()) == a;
+		return (reinterpret_cast<int>(get()) == a);
 	}
 
 	bool operator == ( edict_t *pent )

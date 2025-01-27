@@ -35,62 +35,60 @@
 #include "bot_strings.h"
 #include <vector>    //bir3yk
 
-std::vector<char *> CStrings::m_Strings[MAX_STRINGS_HASH];
+std::vector<char*> CStrings::m_Strings[MAX_STRINGS_HASH];
 
-CStrings :: CStrings ()
+CStrings::CStrings()
 {
 	return;
 }
 
-void CStrings :: freeAllMemory()
+void CStrings::freeAllMemory()
 {
 	// clear strings 
-	for ( int i = 0; i < MAX_STRINGS_HASH; i ++ )
+	for (std::vector<char*>& m_String : m_Strings)
 	{
-		for ( unsigned int j = 0; j < m_Strings[i].size(); j ++ )
+		for (char*& j : m_String)
 		{
-			const char* pszFree = m_Strings[i][j];
+			const char* pszFree = j;
 
 			//if ( pszFree )
-				delete pszFree;
+			delete pszFree;
 
-			m_Strings[i][j] = nullptr;
+			j = nullptr;
 		}
 
-		m_Strings[i].clear();
+		m_String.clear();
 	}
 }
 
 // Either : 1 . Return the existing string or 2 . make a new string and return it.
-char *CStrings :: getString ( const char *szString )
+char* CStrings::getString(const char* szString)
 {
-	if ( szString == nullptr)
+	if (szString == nullptr)
 		return nullptr;
 
-	const unsigned short int iHash = szString[0]%MAX_STRINGS_HASH;
-	
-	for ( unsigned int i = 0; i < m_Strings[iHash].size(); i ++ )
-	{
-		char *szCompString = m_Strings[iHash][i];
+	const unsigned short iHash = szString[0] % MAX_STRINGS_HASH;
 
+	for (char* const szCompString : m_Strings[iHash])
+	{
 		// check if pointers match first
-		if ( szCompString == szString )
+		if (szCompString == szString)
 			return szCompString;
 
 		// if not do a full string comparison
-		if ( FStrEq(szString,szCompString) )
+		if (FStrEq(szString, szCompString))
 			return szCompString;
 	}
 
-	const unsigned int len = std::strlen(szString);
+	const size_t len = std::strlen(szString);
 
-	char *szNew = new char[len+1];
+	char* szNew = new char[len + 1];
 
-	std::strcpy(szNew,szString);
+	std::strcpy(szNew, szString);
 
 	szNew[len] = 0;
 
 	m_Strings[iHash].emplace_back(szNew);
 
-    return szNew;
+	return szNew;
 }

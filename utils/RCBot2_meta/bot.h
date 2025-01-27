@@ -40,6 +40,7 @@
 #ifndef __RCBOT2_H__
 #define __RCBOT2_H__
 
+#include <cstdint>
 //#include "cbase.h"
 //#include "baseentity.h"
 #include "toolframework/itoolentity.h"
@@ -71,8 +72,6 @@
 
 #if defined WIN32 && !defined snprintf
 #define snprintf _snprintf
-#elif defined __linux__ && !defined snprintf
-#define snprintf std::snprintf
 #endif
 
 #define MAX_AMMO_TYPES 32
@@ -87,15 +86,17 @@ extern IPlayerInfoManager *playerinfomanager;  // game dll interface to interact
 extern IServerPluginHelpers *helpers;  // special 3rd party plugin helpers from the engine
 extern IServerGameClients* gameclients;
 extern IEngineTrace *enginetrace;
-extern IEffects *g_pEffects;
+extern IEffects *g_pEffects; //Redundant? [APG]RoboCopCL]
 extern IBotManager *g_pBotManager;
 extern CGlobalVars *gpGlobals;
 
-#define GET_HEALTH 0
-#define GET_TEAM   1
-#define GET_AMMO   2
-
-#define T_OFFSETMAX  3
+enum : std::uint8_t
+{
+	GET_HEALTH = 0,
+	GET_TEAM = 1,
+	GET_AMMO = 2,
+	T_OFFSETMAX = 3
+};
 
 // use a fixed bitset for all the conditions in bot_const.h
 using ConditionBitSet = std::bitset<NUM_CONDITIONS>;
@@ -117,14 +118,14 @@ inline bool FStrEq(const char *sz1, const char *sz2)
 class IBotFunction
 {
 public:
-	//virtual ~IBotFunction() = default;
+	virtual ~IBotFunction() = default;
 	virtual void execute ( CBot *pBot ) = 0;
 };
 
 class CBroadcastVoiceCommand : public IBotFunction
 {
 public:
-	CBroadcastVoiceCommand (edict_t *pPlayer, byte voicecmd) { m_pPlayer = pPlayer; m_VoiceCmd = voicecmd; }
+	CBroadcastVoiceCommand (edict_t *pPlayer, const byte voicecmd) { m_pPlayer = pPlayer; m_VoiceCmd = voicecmd; }
 	void execute ( CBot *pBot ) override;
 
 private:
@@ -184,14 +185,17 @@ class CWaypoint;
 class CWeapon;
 class IBotNavigator;
 
-#define MOVELOOK_DEFAULT 0
-#define MOVELOOK_THINK 1
-#define MOVELOOK_MODTHINK 2
-#define MOVELOOK_TASK 3
-#define MOVELOOK_LISTEN 4
-#define MOVELOOK_EVENT 5
-#define MOVELOOK_ATTACK 6
-#define MOVELOOK_OVERRIDE 6
+enum : std::uint8_t
+{
+	MOVELOOK_DEFAULT = 0,
+	MOVELOOK_THINK = 1,
+	MOVELOOK_MODTHINK = 2,
+	MOVELOOK_TASK = 3,
+	MOVELOOK_LISTEN = 4,
+	MOVELOOK_EVENT = 5,
+	MOVELOOK_ATTACK = 6,
+	MOVELOOK_OVERRIDE = 6
+};
 
 class CBotLastSee
 {
@@ -211,7 +215,7 @@ public:
 
 	void update ();
 
-	bool check ( edict_t *pEdict )
+	bool check (const edict_t *pEdict)
 	{
 		return pEdict == m_pLastSee.get();
 	}
@@ -249,7 +253,7 @@ public:
 
 	void freeMapMemory()
 	{
-		unsigned int i;
+		unsigned i;
 
 		for ( i = 0; i < m_theSquads.size(); i ++ )
 			m_theSquads[i].freeMapMemory();
@@ -281,7 +285,7 @@ public:
 			m_Leader = NULL;
 
 			// find a new leader
-			unsigned int i;
+			unsigned i;
 
 			for ( i = 0; i < m_Members.size(); i ++ )
 			{
@@ -317,18 +321,18 @@ public:
     void clearFailedWeaponSelect () { m_iPrevWeaponSelectFailed = 0; }
     void failWeaponSelect () { m_iPrevWeaponSelectFailed ++; }
 
-	void debugMsg ( int iLev, const char *szMsg );
+	void debugMsg ( int iLev, const char *szMsg ) const;
 
-	virtual unsigned int maxEntityIndex ( ) { return RCBOT_MAXPLAYERS; }
+	virtual unsigned maxEntityIndex ( ) { return RCBOT_MAXPLAYERS; }
 
 // linux fix 1
 	virtual void onInventoryApplication (){}
 	
 	// return distance from this origin
 
-	int isDesiredClass ( int iclass ) const
+	int isDesiredClass (const int iClass) const
 	{
-		return m_iDesiredClass == iclass;
+		return m_iDesiredClass == iClass;
 	}
 
 	virtual void handleWeapons ();
@@ -337,6 +341,7 @@ public:
     {
 		return m_pController->GetLocalOrigin();
 	}
+
 	// linux fix 2
     float distanceFrom(const Vector& vOrigin) const
     {
@@ -394,7 +399,7 @@ public:
 
 	virtual bool isEnemy ( edict_t *pEdict, bool bCheckWeapons = true ) { return false; }
 
-    bool hasSomeConditions ( int iConditions ) const
+    bool hasSomeConditions (const int iConditions) const
     {
 		return (m_iConditions & static_cast<ConditionBitSet>(iConditions)).any();
 	}
@@ -404,8 +409,7 @@ public:
 	float DotProductFromOrigin (const Vector& pOrigin ) const;
 
 	bool FVisible ( edict_t *pEdict, bool bCheckHead = false );
-
-	bool isVisible ( edict_t *pEdict ) const;
+	bool isVisible (const edict_t *pEdict ) const;
 
     void setEnemy ( edict_t *pEnemy )
 	{
@@ -418,17 +422,17 @@ public:
 		return static_cast<int>(m_iConditions.to_ulong());
 	}
 
-    bool hasAllConditions ( int iConditions ) const
+    bool hasAllConditions (const int iConditions) const
     {
 		return (m_iConditions & static_cast<ConditionBitSet>(iConditions)) == iConditions;
 	}
 
-    void updateCondition ( int iCondition )
+    void updateCondition (const int iCondition)
 	{
 		m_iConditions |= iCondition;
 	}
 
-    void removeCondition ( int iCondition )
+    void removeCondition (const int iCondition)
 	{
 		m_iConditions &= ~iCondition;
 	}
@@ -439,9 +443,7 @@ public:
 	 * make bot start the gmae, e.g join a team first
 	 */
 	virtual bool startGame ();
-
 	virtual bool checkStuck ();
-
 	virtual void currentlyDead ();
 
 	/*
@@ -470,7 +472,6 @@ public:
 	virtual void friendlyFire( edict_t *pEdict ) {}
 
 	virtual void freeMapMemory ();
-
 	virtual void freeAllMemory ();
 
 	///////////////////////////////
@@ -484,7 +485,7 @@ public:
 		return m_bLookAtIsValid;
 	}
 
-    Vector getMoveTo ()
+	Vector getMoveTo() const
 	{
 		return m_vMoveTo;
 	}
@@ -521,7 +522,7 @@ public:
 	}
 
 	// this allows move speed to be changed in tasks
-    void setMoveSpeed ( float fNewSpeed )
+    void setMoveSpeed (const float fNewSpeed)
 	{
 		if ( m_iMoveLookPriority >= m_iMoveSpeedPriority )
 		{
@@ -537,7 +538,7 @@ public:
 
     IBotNavigator *getNavigator () const { return m_pNavigator; }
 
-    void setMoveLookPriority ( int iPriority ) { m_iMoveLookPriority = iPriority; }
+    void setMoveLookPriority (const int iPriority) { m_iMoveLookPriority = iPriority; }
 
     void stopMoving () 
 	{ 
@@ -559,7 +560,7 @@ public:
 		}
 	}
 
-    void setLookAtTask ( eLookTask lookTask, float fTime = 0 ) 
+    void setLookAtTask (const eLookTask lookTask, const float fTime = 0) 
 	{ 
 		if ( m_iMoveLookPriority >= m_iLookPriority && (fTime > 0 || m_fLookSetTime < engine->Time()) )
 		{
@@ -618,10 +619,10 @@ public:
 
 	bool isHoldingPrimaryAttack() const;
 
-	void primaryAttack ( bool bHold=false, float fTime =0.0f ) const;
-	void secondaryAttack( bool bHold=false, float fTime = 0.0f ) const;
+	void primaryAttack (bool bHold=false, float fTime =0.0f) const;
+	void secondaryAttack(bool bHold=false, float fTime = 0.0f) const;
 	void jump () const;
-	void duck ( bool hold = false ) const;
+	void duck (bool hold = false) const;
 	void use () const;
 	void reload() const;
 
@@ -648,7 +649,7 @@ public:
 	virtual void seeFriendlyDie ( edict_t *pDied, edict_t *pKiller, CWeapon *pWeapon ) {}
 	virtual void seeFriendlyKill ( edict_t *pTeamMate, edict_t *pDied, CWeapon *pWeapon ) {}
 
-    void selectWeapon ( int iWeaponId ) { m_iSelectWeapon = iWeaponId; }
+    void selectWeapon (const int iWeaponId ) { m_iSelectWeapon = iWeaponId; }
 
 	void selectWeaponName ( const char *szWeaponName ) const;
 
@@ -656,7 +657,7 @@ public:
 
 	void kill () const;
 
-	bool isUsingProfile ( CBotProfile *pProfile ) const;
+	bool isUsingProfile (const CBotProfile *pProfile ) const;
 
     CBotProfile *getProfile () const { return m_pProfile; }
 
@@ -666,10 +667,11 @@ public:
 
 	void tapButton ( int iButton ) const;
 
-    int getAmmo ( int iIndex ) const
-    { if ( !m_iAmmo ) return 0;
-	    if ( iIndex == -1 ) return 0;
-	    return m_iAmmo[iIndex]; }
+	int getAmmo(const size_t iIndex) const {
+		if (!m_iAmmo) return 0;
+		if (iIndex == static_cast<size_t>(-1)) return 0;
+		return m_iAmmo[iIndex];
+	}
 
     void lookAtEdict ( edict_t *pEdict ) { m_pLookEdict = pEdict; }
 
@@ -688,11 +690,11 @@ public:
 
     void setAiming (const Vector& aiming) { m_vWaypointAim = aiming; }
 
-    Vector getAiming () { return m_vWaypointAim; }
+	Vector getAiming() const { return m_vWaypointAim; }
 
     void setLookVector (const Vector& vLook) { m_vLookVector = vLook; }
 
-    Vector getLookVector () { return m_vLookVector; }
+	Vector getLookVector() const { return m_vLookVector; }
 
     void resetLookAroundTime () { m_fLookAroundTime = 0.0f; }
 
@@ -712,12 +714,12 @@ public:
 	virtual bool wantToListenToPlayerFootsteps ( edict_t *pPlayer ) { return true; }
 
 	virtual bool wantToInvestigateSound ();
-    void wantToInvestigateSound ( bool bSet ) { m_bWantToInvestigateSound = bSet; }
+    void wantToInvestigateSound (const bool bSet) { m_bWantToInvestigateSound = bSet; }
     bool wantToShoot () const { return m_bOpenFire; }
-    void wantToShoot ( bool bSet ) { m_bOpenFire = bSet; }
-    void wantToListen ( bool bSet ) { m_bWantToListen = bSet; }
+    void wantToShoot (const bool bSet) { m_bOpenFire = bSet; }
+    void wantToListen (const bool bSet) { m_bWantToListen = bSet; }
 	bool wantToListen () const;
-    void wantToChangeWeapon ( bool bSet ) { m_bWantToChangeWeapon = bSet; }
+    void wantToChangeWeapon (const bool bSet) { m_bWantToChangeWeapon = bSet; }
 
 	int nearbyFriendlies (float fDistance);
 	
@@ -726,7 +728,6 @@ public:
 	bool isOnLift () const;
 
 	virtual bool isDOD () { return false; }
-
 	virtual bool isTF2 () { return false; }
 
 	// return an enemy sentry gun / special visible (e.g.) for quick checking - voffset is the 'head'
@@ -739,7 +740,7 @@ public:
 	    if (m_fWaypointTouchDistance > MIN_WPT_TOUCH_DIST) { m_fWaypointTouchDistance *= 0.9f; }
     }
 
-    void resetTouchDistance ( float fDist ) { m_fWaypointTouchDistance = fDist; }
+    void resetTouchDistance (const float fDist) { m_fWaypointTouchDistance = fDist; }
 
     float getTouchDistance () const { return m_fWaypointTouchDistance; }
 
@@ -754,9 +755,9 @@ public:
 
 	virtual void grenadeThrown ();
 
-	virtual void voiceCommand ( int cmd );
+	virtual void voiceCommand (byte voiceCmd);
 
-	void addVoiceCommand ( int cmd );
+	void addVoiceCommand (byte voiceCmd);
 
 	void letGoOfButton ( int button ) const;
 
@@ -773,7 +774,7 @@ public:
     void resetAreaClear () { m_uSquadDetail.b1.said_area_clear = false; }
 
 
-    bool inSquad ( CBotSquad *pSquad ) const
+    bool inSquad (const CBotSquad *pSquad) const
     {
 		return m_pSquad == pSquad;
 	}
@@ -785,7 +786,7 @@ public:
 
 	bool isSquadLeader () const;
 
-    void setSquadIdleTime ( float fTime )
+    void setSquadIdleTime (const float fTime)
 	{
 		m_fSquadIdleTime = fTime;
 	}
@@ -805,7 +806,7 @@ public:
 
 	virtual void hearPlayerAttack( edict_t *pAttacker, int iWeaponID );
 
-    bool isListeningToPlayer ( edict_t *pPlayer ) 
+    bool isListeningToPlayer (const edict_t *pPlayer) 
 	{
 		return m_PlayerListeningTo.get() == pPlayer;
 	}
@@ -838,7 +839,6 @@ protected:
 	static void checkEntity ( edict_t **pEdict );
 	/////////////////////////
 	void doMove ();
-
 	void doLook ();
 
 	virtual void getLookAtVector ();
@@ -849,8 +849,7 @@ protected:
 	void changeAngles (float fSpeed, const float* fIdeal, float* fCurrent, float* fUpdate);
 
 	// look for new tasks
-	virtual void getTasks (unsigned int iIgnore=0);
-
+	virtual void getTasks (unsigned iIgnore=0);
 
 	// really only need 249 bits (32 bytes) + WEAPON_SUBTYPE_BITS (whatever that is)
 	static constexpr int CMD_BUFFER_SIZE = 64; 
@@ -1000,7 +999,7 @@ protected:
 	MyEHandle m_PlayerListeningTo;
 	float m_fWantToListenTime;
 	bool m_bOpenFire;
-	unsigned int m_iPrevWeaponSelectFailed;
+	unsigned m_iPrevWeaponSelectFailed;
 
 	bool m_bWantToListen;
 	float m_fListenFactor; // the current weight of bots listening vector (higher = better)
@@ -1012,7 +1011,7 @@ protected:
 	float m_fAvoidSideSwitch;
 	float m_fHealClickTime;
 
-	unsigned int m_iSpecialVisibleId;
+	int m_iSpecialVisibleId;
 	float m_fCurrentDanger;
 	float m_fLastHurtTime;
 
@@ -1048,6 +1047,10 @@ protected:
 	bool m_bIncreaseSensitivity; 
 	float m_fSpawnTime;
 	bool m_bWantToInvestigateSound;
+
+	float m_fEnemyAimLerp;
+	float m_fEnemyAimLerpTime;
+	Vector m_vEnemyAimLerpVelocity;
 };
 
 class CBots
@@ -1055,23 +1058,20 @@ class CBots
 public:
 	static void botThink ();
 
-	static CBot *getBotPointer ( edict_t *pEdict );
+	static CBot *getBotPointer (const edict_t *pEdict );
 	static CBot *getBot ( int slot );
 
 	static void freeMapMemory ();
-
 	static void freeAllMemory ();
 
-	static CBot *findBotByProfile ( CBotProfile *pProfile );
+	static CBot *findBotByProfile (const CBotProfile *pProfile );
 
 	static void init ();
 
 	static bool controlBot ( edict_t *pEdict );
-
 	static bool controlBot ( const char *szOldName, const char *szName, const char *szTeam, const char *szClass );
 
 	static bool createBot (const char *szClass, const char *szTeam, const char *szName);
-
 	static int createDefaultBot(const char* szName);
 
 	static int numBots ();
@@ -1081,30 +1081,26 @@ public:
 	static void roundStart ();
 
 	static void kickRandomBot (size_t count = 1);
-
 	static void kickRandomBotOnTeam ( int team );
 
 	static void mapInit ();
 
 	static bool needToAddBot ();
-
 	static bool needToKickBot ();
 
-	static void setMaxBots ( int iMax ) { m_iMaxBots = iMax; }
-
+	static void setMaxBots (const int iMax) { m_iMaxBots = iMax; }
 	static int getMaxBots () { return m_iMaxBots; }
 
-	static void setMinBots ( int iMin ) { m_iMinBots = iMin; }
-
+	static void setMinBots (const int iMin) { m_iMinBots = iMin; }
 	static int getMinBots () { return m_iMinBots; }
 
 	static void botFunction ( IBotFunction *function );
 
 	static void runPlayerMoveAll ();
 
-	static CBot *get ( int iIndex ) { return m_Bots[iIndex]; }
-	static CBot *get ( edict_t *pPlayer ) { return m_Bots[slotOfEdict(pPlayer)]; }
-	int levelInit();
+	static CBot* get(const size_t iIndex) { return m_Bots[iIndex]; }
+	static CBot *get (const edict_t *pPlayer ) { return m_Bots[slotOfEdict(pPlayer)]; }
+	static int levelInit(); //TODO: Not implemented? [APG]RoboCop[CL]
 
 private:
 	static CBot **m_Bots;
@@ -1115,14 +1111,17 @@ private:
 
 	// add or kick bot time
 	static float m_flAddKickBotTime;
-
 };
 
 // this is yoinked from server/util.h
 abstract_class IEntityFactory
 {
+protected:
+	~IEntityFactory() = default;
+
 public:
-	//virtual ~IEntityFactory() = default;
+	// TODO: Investigate why making this destructor virtual causes a crash - [APG]RoboCop[CL]
+	//virtual ~IEntityFactory() = default; //Unstable
 	virtual IServerNetworkable *Create( const char *pClassName ) = 0;
 	virtual void Destroy( IServerNetworkable *pNetworkable ) = 0;
 	virtual size_t GetEntitySize() = 0;
@@ -1130,6 +1129,9 @@ public:
 
 abstract_class IEntityFactoryDictionary
 {
+protected:
+	~IEntityFactoryDictionary() = default;
+
 public:
 	//virtual ~IEntityFactoryDictionary() = default;
 	virtual void InstallFactory( IEntityFactory *pFactory, const char *pClassName ) = 0;

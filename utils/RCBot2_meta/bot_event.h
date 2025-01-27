@@ -44,6 +44,8 @@ class IGameEvent;
 class CBotEvent
 {
 public:
+	virtual ~CBotEvent() = default;
+
 	CBotEvent()
 	{
 		m_pActivator = nullptr;
@@ -52,7 +54,7 @@ public:
 		m_iModId = MOD_ANY;
 	}
 
-	void setMod ( eModId iModId )
+	void setMod (const eModId iModId)
 	{
 		m_iModId = iModId;
 	}
@@ -68,12 +70,12 @@ public:
 	virtual void execute ( IBotEventInterface *pEvent ) {
 	}
 
-	void setEventId ( int iEventId )
+	void setEventId (const int iEventId)
 	{
 		m_iEventId = iEventId;
 	}
 
-	bool isEventId ( int iEventId ) const
+	bool isEventId (const int iEventId) const
 	{
 		return forCurrentMod() && m_iEventId == iEventId;
 	}
@@ -492,7 +494,7 @@ public:
 class CBossSummonedEvent : public CBotEvent
 {
 public:
-	CBossSummonedEvent(char *psztype)
+	CBossSummonedEvent(const char *psztype)
 	{
 		setType(psztype);
 	}
@@ -503,7 +505,7 @@ public:
 class CBossKilledEvent : public CBotEvent
 {
 public:
-	CBossKilledEvent(char *psztype)
+	CBossKilledEvent(const char *psztype)
 	{
 		setType(psztype);
 	}
@@ -743,7 +745,7 @@ public:
 	void execute(IBotEventInterface* pEvent) override;
 };
 
-typedef enum
+typedef enum : std::uint8_t
 {
 	TYPE_KEYVALUES = 0,
 	TYPE_IGAMEEVENT = 1
@@ -752,6 +754,7 @@ typedef enum
 class IBotEventInterface
 {
 public:
+	virtual ~IBotEventInterface() = default;
 	virtual float getFloat ( const char *keyName = nullptr, float defaultValue = 0 ) = 0;
 	virtual int getInt ( const char *keyName = nullptr, int defaultValue = 0 ) = 0;
 	virtual const char *getString ( const char *keyName = nullptr, const char *defaultValue = nullptr ) = 0;
@@ -767,15 +770,15 @@ public:
 		m_pEvent = pEvent;
 	}
 
-	float getFloat ( const char *keyName = nullptr, float defaultValue = 0 ) override
+	float getFloat ( const char *keyName = nullptr, const float defaultValue = 0 ) override
 	{
 		return m_pEvent->GetFloat(keyName,defaultValue);
 	}
-	int getInt ( const char *keyName = nullptr, int defaultValue = 0 ) override
+	int getInt ( const char *keyName = nullptr, const int defaultValue = 0 ) override
 	{
 		return m_pEvent->GetInt(keyName,defaultValue);
 	}
-	void setInt ( const char *keyName, int value ) override
+	void setInt ( const char *keyName, const int value ) override
 	{
 		m_pEvent->SetInt(keyName,value);
 	}
@@ -800,15 +803,15 @@ public:
 		m_pEvent = pEvent;
 	}
 
-	float getFloat ( const char *keyName = nullptr, float defaultValue = 0 ) override
+	float getFloat ( const char *keyName = nullptr, const float defaultValue = 0 ) override
 	{
 		return m_pEvent->GetFloat(keyName,defaultValue);
 	}
-	int getInt ( const char *keyName = nullptr, int defaultValue = 0 ) override
+	int getInt ( const char *keyName = nullptr, const int defaultValue = 0 ) override
 	{
 		return m_pEvent->GetInt(keyName,defaultValue);
 	}
-	void setInt ( const char *keyName, int value ) override
+	void setInt ( const char *keyName, const int value ) override
 	{
 		m_pEvent->SetInt(keyName,value);
 	}

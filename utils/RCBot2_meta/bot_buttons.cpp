@@ -32,22 +32,22 @@
 #include "bot_buttons.h"
 #include "in_buttons.h"
 
-void CBotButtons :: attack (float fFor, float fFrom) const
+void CBotButtons :: attack (const float fFor, const float fFrom) const
 {	
 	holdButton(IN_ATTACK,fFrom,fFor,0.1f);
 }
 
-void CBotButtons :: jump (float fFor, float fFrom) const
+void CBotButtons :: jump (const float fFor, const float fFrom) const
 {
 	holdButton(IN_JUMP,fFrom,fFor,0.25f);
 }
 
-void CBotButtons :: duck (float fFor, float fFrom) const
+void CBotButtons :: duck (const float fFor, const float fFrom) const
 {
 	holdButton(IN_DUCK,fFrom,fFor);
 }
 
-void CBotButton :: hold ( float fFrom, float fFor, float fLetGoTime )
+void CBotButton :: hold (float fFrom, const float fFor, const float fLetGoTime)
 {
 	fFrom += engine->Time();
 	m_fTimeStart = fFrom;
@@ -71,25 +71,25 @@ CBotButtons :: CBotButtons()
 	m_bLetGoAll = false;
 }
 
-void CBotButtons :: holdButton ( int iButtonId, float fFrom, float fFor, float fLetGoTime ) const
+void CBotButtons :: holdButton (const int iButtonId, const float fFrom, const float fFor, const float fLetGoTime) const
 {
-	for (unsigned int i = 0; i < m_theButtons.size(); i ++ )
+	for (CBotButton* const m_theButton : m_theButtons)
 	{			
-		if ( m_theButtons[i]->getID() == iButtonId )
+		if (m_theButton->getID() == iButtonId )
 		{
-			m_theButtons[i]->hold(fFrom,fFor,fLetGoTime);
+			m_theButton->hold(fFrom,fFor,fLetGoTime);
 			return;
 		}
 	}
 }
 
-void CBotButtons :: letGo (int iButtonId) const
+void CBotButtons :: letGo (const int iButtonId) const
 {
-	for (unsigned int i = 0; i < m_theButtons.size(); i ++ )
+	for (CBotButton* const m_theButton : m_theButtons)
 	{			
-		if ( m_theButtons[i]->getID() == iButtonId )
+		if (m_theButton->getID() == iButtonId )
 		{
-			m_theButtons[i]->letGo();
+			m_theButton->letGo();
 			return;
 		}
 	}
@@ -103,24 +103,24 @@ int CBotButtons :: getBitMask () const
 
 	const float fTime = engine->Time();
 
-	for (unsigned int i = 0; i < m_theButtons.size(); i ++ )
+	for (CBotButton* const m_theButton : m_theButtons)
 	{
-		if ( m_theButtons[i]->held(fTime) )
+		if (m_theButton->held(fTime) )
 		{
-			m_theButtons[i]->unTap();
-			iBitMask |= m_theButtons[i]->getID();
+			m_theButton->unTap();
+			iBitMask |= m_theButton->getID();
 		}
 	}
 
 	return iBitMask;
 }
 
-bool CBotButtons :: canPressButton ( int iButtonId ) const
+bool CBotButtons :: canPressButton (const int iButtonId) const
 {
-	for (unsigned int i = 0; i < m_theButtons.size(); i ++ )
+	for (const CBotButton* m_theButton : m_theButtons)
 	{			
-		if ( m_theButtons[i]->getID() == iButtonId )
-			return m_theButtons[i]->canPress(engine->Time());
+		if (m_theButton->getID() == iButtonId )
+			return m_theButton->canPress(engine->Time());
 	}
 	return false;		
 }
@@ -130,24 +130,24 @@ void CBotButtons :: add ( CBotButton *theButton )
 	m_theButtons.emplace_back(theButton);
 }
 
-bool CBotButtons :: holdingButton ( int iButtonId ) const
+bool CBotButtons :: holdingButton (const int iButtonId) const
 {
-	for ( unsigned int i = 0; i < m_theButtons.size(); i ++ )
+	for (const CBotButton* m_theButton : m_theButtons)
 	{
-		if ( m_theButtons[i]->getID() == iButtonId )
-			return m_theButtons[i]->held(engine->Time());
+		if (m_theButton->getID() == iButtonId )
+			return m_theButton->held(engine->Time());
 	}
 
 	return false;
 }
 
-void CBotButtons :: tap ( int iButtonId ) const
+void CBotButtons :: tap (const int iButtonId) const
 {
-	for ( unsigned int i = 0; i < m_theButtons.size(); i ++ )
+	for (CBotButton* const m_theButton : m_theButtons)
 	{
-		if ( m_theButtons[i]->getID() == iButtonId )
+		if (m_theButton->getID() == iButtonId )
 		{
-			 m_theButtons[i]->tap();
+			m_theButton->tap();
 
 			return;
 		}
